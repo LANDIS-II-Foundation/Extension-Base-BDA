@@ -1,6 +1,0 @@
-#  project information
-
-project-name	Landis.Output.LeafBiomass
-project-type	library
-version		1.0
-release		official
