@@ -131,7 +131,10 @@ namespace Landis.Extension.BaseFire
                 return 0;
             }
             ushort max = 0;
-            foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
+
+            //ISpeciesCohorts test = (Landis.Cohorts.TypeIndependent.ISpeciesCohorts) 
+
+            foreach (ISpeciesCohorts speciesCohorts in (Landis.Cohorts.TypeIndependent.ISpeciesCohorts) SiteVars.Cohorts[site])
             {
                 PlugIn.ModelCore.Log.WriteLine("Cohort = {0}.", speciesCohorts.Species.Name);
                 foreach (ICohort cohort in speciesCohorts)
