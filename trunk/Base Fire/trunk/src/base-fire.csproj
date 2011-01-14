@@ -47,7 +47,7 @@
     </Reference>
     <Reference Include="Landis.SpatialModeling, Version=1.0.4004.39395, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Landis.SpatialModeling.dll</HintPath>
+      <HintPath>C:\Program Files\LANDIS-II\6.0\bin\Landis.SpatialModeling.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Troschuetz.Random, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Troschuetz.Random.dll</HintPath>
+      <HintPath>C:\Program Files\LANDIS-II\6.0\bin\Troschuetz.Random.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

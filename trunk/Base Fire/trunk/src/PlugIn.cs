@@ -62,6 +62,7 @@ namespace Landis.Extension.BaseFire
         {
             Timestep = parameters.Timestep;
             mapNameTemplate = parameters.MapNamesTemplate;
+            SiteVars.InitializeCohort();
             dynamicEcos = parameters.DynamicFireRegions;
 
             summaryFireRegionEventCount = new int[FireRegions.Dataset.Count];
@@ -88,11 +89,11 @@ namespace Landis.Extension.BaseFire
         }
 
         //---------------------------------------------------------------------
-
-        new void InitializePhase2()
-        {
-            SiteVars.InitializeTimeOfLastWind();
-        }
+        
+        //new void InitializePhase2()
+        //{
+        //    SiteVars.InitializeTimeOfLastWind();
+        //}
 
         //---------------------------------------------------------------------
 
@@ -103,6 +104,7 @@ namespace Landis.Extension.BaseFire
         {
             modelCore.Log.WriteLine("   Processing landscape for Fire events ...");
 
+            SiteVars.InitializeDisturbances(Timestep);
             SiteVars.Event.SiteValues = null;
             SiteVars.Severity.ActiveSiteValues = 0;
             SiteVars.Disturbed.ActiveSiteValues = false;

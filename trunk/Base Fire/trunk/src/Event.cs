@@ -429,6 +429,7 @@ namespace Landis.Extension.BaseFire
                 //Otherwise, use damage table to calculate damage.
                 //Read table backwards; most severe first.
                 float ageAsPercent = (float) cohort.Age / (float) cohort.Species.Longevity;
+                PlugIn.ModelCore.Log.WriteLine("Cohort = {0} {1}.", cohort.Age, cohort.Species.Name);
                 foreach(IDamageTable damage in damages)
                 {
                     if (siteSeverity - cohort.Species.FireTolerance >= damage.SeverTolerDifference) 
