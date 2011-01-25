@@ -4,7 +4,7 @@
 
 using Landis.Core;
 
-using Landis.Cohorts;
+//using Landis.Cohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
 using System.IO;

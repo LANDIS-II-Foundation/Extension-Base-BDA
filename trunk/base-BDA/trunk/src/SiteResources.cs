@@ -35,9 +35,6 @@ namespace Landis.Extension.BaseBDA
 
                 foreach (ISpecies species in PlugIn.ModelCore.Species)
                 {
-
-                    //SiteVars.Cohorts = PlugIn.ModelCore.GetSiteVar<SiteCohorts>("Succession.Cohorts");
-
                     ageOldestCohort = Util.GetMaxAge(SiteVars.Cohorts[site][species]);
                     ISppParameters sppParms = agent.SppParameters[species.Index];
                     if (sppParms == null)

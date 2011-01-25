@@ -24,7 +24,7 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<double> vulnerability;
         private static ISiteVar<bool> disturbed;
         private static ISiteVar<Dictionary<int,int>> numberCFSconifersKilled;
-        private static ISiteVar<SiteCohorts> cohorts;
+        private static ISiteVar<ISiteCohorts> cohorts;
 
         //---------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ namespace Landis.Extension.BaseBDA
             SiteVars.SiteResourceDom.ActiveSiteValues = 0.0;
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
 
-            cohorts = PlugIn.ModelCore.GetSiteVar<SiteCohorts>("Succession.BaseCohorts");
+            cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
 
             foreach(ActiveSite site in modelCore.Landscape)
                 SiteVars.NumberCFSconifersKilled[site] = new Dictionary<int, int>();
@@ -138,7 +138,7 @@ namespace Landis.Extension.BaseBDA
             }
         }
 
-        public static ISiteVar<SiteCohorts> Cohorts
+        public static ISiteVar<ISiteCohorts> Cohorts
         {
             get
             {
