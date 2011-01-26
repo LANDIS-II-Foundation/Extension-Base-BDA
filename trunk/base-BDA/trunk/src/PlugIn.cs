@@ -66,7 +66,7 @@ namespace Landis.Extension.BaseBDA
         /// <summary>
         /// Initializes the extension with a data file.
         /// </summary>
-        public override void Initialize(string dataFile)
+        public override void Initialize()
         {
 
 
