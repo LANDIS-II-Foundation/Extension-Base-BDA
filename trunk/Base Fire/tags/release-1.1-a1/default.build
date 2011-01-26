@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<project name="Base Fire">
-    <property name="release-config__install-dir"
-            value="C:\Program Files\Landis-II\5.1-a2\bin" />
-    <include buildfile="${edu.wisc.forest.flel.build.nant-project}" />
-</project>

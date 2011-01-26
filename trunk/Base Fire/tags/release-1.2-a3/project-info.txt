@@ -1,6 +1,0 @@
-#  project information
-
-project-name	Landis.BaseFire_v1.2
-project-type	library
-version		1.2
-release		alpha 3

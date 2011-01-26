@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<project name="Base Fire">
-    <property name="Landis-core"
-              value="5.1-a4" />
-    <include buildfile="${edu.wisc.forest.flel.build}/project.build" />
-</project>

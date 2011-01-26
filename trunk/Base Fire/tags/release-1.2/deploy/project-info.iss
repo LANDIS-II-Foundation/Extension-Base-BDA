@@ -1,8 +1,0 @@
-#define ExtensionName     "Base Fire"
-#define Version           "1.2"
-#define ReleaseType       "alpha"
-#define ReleaseNumber     "3"
-#define ExtensionAssembly "Landis.BaseFire_v1.2.dll"
-#define UserGuide         "LANDIS-II Base Fire v1.2 User Guide.pdf"
-#define CoreVersion       "5.1"
-#define CoreReleaseAbbr   "rc1"
