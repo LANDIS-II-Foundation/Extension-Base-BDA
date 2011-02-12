@@ -7,7 +7,7 @@
 #define CoreVersion      "6.0"
 #define CoreReleaseAbbr  ""
 
-#include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Setup section).iss"
+#include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Setup section) v6.0.iss"
 
 #if ReleaseType != "official"
   #define Configuration  "debug"
@@ -19,13 +19,12 @@
 [Files]
 
 Source: C:\Program Files\LANDIS-II\6.0\bin\Landis.Extension.BaseBDA.dll; DestDir: {app}\bin; Flags: replacesameversion
-; Source: {#LandisBuildDir}\disturbanceextensions\base bda\src\Troschuetz.Random.dll; DestDir: {app}\bin
 
 ; Base BDA
 Source: docs\LANDIS-II Biological Disturbance Agent v2.0 User Guide.pdf; DestDir: {app}\docs
 Source: examples\*; DestDir: {app}\examples\BaseBDA
 
-#define BaseBDA "Base BDA 1.3.txt"
+#define BaseBDA "Base BDA 2.0.txt"
 Source: {#BaseBDA}; DestDir: {#LandisPlugInDir}
 
 [Run]
