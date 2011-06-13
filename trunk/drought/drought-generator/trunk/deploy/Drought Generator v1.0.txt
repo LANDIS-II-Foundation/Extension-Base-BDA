@@ -1,0 +1,8 @@
+LandisData  Extension
+
+Name        "Drought Generator"
+Version     1.0
+Type        disturbance:drought
+Assembly    Landis.Extension.DroughtGenerator
+Class       Landis.Extension.DroughtGenerator.PlugIn
+Description  "Generates number of Drought Years per 100 years"

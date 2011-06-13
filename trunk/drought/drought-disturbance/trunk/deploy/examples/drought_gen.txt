@@ -1,0 +1,10 @@
+LandisData "Drought Generator"
+
+Timestep  10
+
+Mu  1.0
+Sigma 0.6
+
+MapName  "drought/DY-{timestep}.img"
+
+LogFile  "drought/droughtgen-log.csv"
