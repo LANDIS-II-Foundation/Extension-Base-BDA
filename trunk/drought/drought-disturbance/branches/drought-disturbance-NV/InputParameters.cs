@@ -13,14 +13,10 @@ namespace Landis.Extension.DroughtDisturbance
     public interface IInputParameters
     {
         int Timestep { get; set; }
-        double MinDroughtYears { get; set; }
+        //double MinDroughtYears { get; set; }
         string MapNamesTemplate { get; set; }
         string LogFileName { get; set; }
-        Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_Y { get; }
-        Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_YSE { get; }
-        Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_B { get; }
-        Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_BSE { get; }
-        Landis.Extension.Succession.Biomass.Species.AuxParm<int> Drought_Sens { get; }
+        Landis.Extension.Succession.Biomass.Species.AuxParm<List<AgeClass>> MortalityTable { get; }
         
     }
 
@@ -28,14 +24,9 @@ namespace Landis.Extension.DroughtDisturbance
         : IInputParameters
     {
         private int timestep;
-        private double minDroughtYears;
         private string mapNamesTemplate;
         private string logFileName;
-        private Landis.Extension.Succession.Biomass.Species.AuxParm<double> drought_Y;
-        private Landis.Extension.Succession.Biomass.Species.AuxParm<double> drought_YSE;
-        private Landis.Extension.Succession.Biomass.Species.AuxParm<double> drought_B;
-        private Landis.Extension.Succession.Biomass.Species.AuxParm<double> drought_BSE;
-        private Landis.Extension.Succession.Biomass.Species.AuxParm<int> drought_Sens;
+        private Landis.Extension.Succession.Biomass.Species.AuxParm<List<AgeClass>> mortalityTable;
         //---------------------------------------------------------------------
         /// <summary>
         /// Timestep (years)
@@ -56,7 +47,7 @@ namespace Landis.Extension.DroughtDisturbance
         }
 
         //---------------------------------------------------------------------
-        public double MinDroughtYears
+/*        public double MinDroughtYears
         {
             get
             {
@@ -66,7 +57,7 @@ namespace Landis.Extension.DroughtDisturbance
             {
                 minDroughtYears = value;
             }
-        }
+        }*/
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -103,97 +94,26 @@ namespace Landis.Extension.DroughtDisturbance
         }
 
         //---------------------------------------------------------------------
-        public Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_Y
+        public Landis.Extension.Succession.Biomass.Species.AuxParm<List<AgeClass>> MortalityTable
         {
             get
             {
-                return drought_Y;
-            }
-        }
-
-        //---------------------------------------------------------------------
-        public Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_YSE
-        {
-            get
-            {
-                return drought_YSE;
-            }
-        }
-
-        //---------------------------------------------------------------------
-        public Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_B
-        {
-            get
-            {
-                return drought_B;
-            }
-        }
-
-        //---------------------------------------------------------------------
-        public Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_BSE
-        {
-            get
-            {
-                return drought_BSE;
-            }
-        }
-
-        //---------------------------------------------------------------------
-        public Landis.Extension.Succession.Biomass.Species.AuxParm<int> Drought_Sens
-        {
-            get
-            {
-                return drought_Sens;
+                return mortalityTable;
             }
         }
         
-        //---------------------------------------------------------------------
-        public void SetDrought_Y(ISpecies species,
-                                     InputValue<double> newValue)
-        {
-            Debug.Assert(species != null);
-            drought_Y[species] = Util.CheckBiomassParm(newValue, -100.0, 100.0);
-        }
 
         //---------------------------------------------------------------------
-        public void SetDrought_YSE(ISpecies species,
-                                     InputValue<double> newValue)
+        public void SetMortalityTable(ISpecies species,
+                                     List<AgeClass> newValue)
         {
             Debug.Assert(species != null);
-            drought_YSE[species] = Util.CheckBiomassParm(newValue, -100.0, 100.0);
-        }
-
-        //---------------------------------------------------------------------
-        public void SetDrought_B(ISpecies species,
-                                     InputValue<double> newValue)
-        {
-            Debug.Assert(species != null);
-            drought_B[species] = Util.CheckBiomassParm(newValue, -100.0, 100.0);
-        }
-
-        //---------------------------------------------------------------------
-        public void SetDrought_BSE(ISpecies species,
-                                     InputValue<double> newValue)
-        {
-            Debug.Assert(species != null);
-            drought_BSE[species] = Util.CheckBiomassParm(newValue, -100.0, 100.0);
-        }
-
-        //---------------------------------------------------------------------
-        public void SetDrought_Sens(ISpecies species,
-                                     InputValue<double> newValue)
-        {
-            Debug.Assert(species != null);
-            drought_Sens[species] = (int)Util.CheckBiomassParm(newValue, 1, 3);
+            mortalityTable[species] = newValue;
         }
         //---------------------------------------------------------------------
         public InputParameters()
         {
-            drought_Y = new Landis.Extension.Succession.Biomass.Species.AuxParm<double>(PlugIn.ModelCore.Species);
-            drought_YSE = new Landis.Extension.Succession.Biomass.Species.AuxParm<double>(PlugIn.ModelCore.Species);
-            drought_B = new Landis.Extension.Succession.Biomass.Species.AuxParm<double>(PlugIn.ModelCore.Species);
-            drought_BSE = new Landis.Extension.Succession.Biomass.Species.AuxParm<double>(PlugIn.ModelCore.Species);
-            drought_Sens = new Landis.Extension.Succession.Biomass.Species.AuxParm<int>(PlugIn.ModelCore.Species);
+            mortalityTable = new Landis.Extension.Succession.Biomass.Species.AuxParm<List<AgeClass>>(PlugIn.ModelCore.Species);
         }
     }
 }

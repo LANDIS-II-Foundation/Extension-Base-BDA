@@ -12,11 +12,11 @@ namespace Landis.Extension.DroughtDisturbance
     public class PlugIn
         :ExtensionMain
     {
-        private static readonly bool isDebugEnabled = false;
+        //private static readonly bool isDebugEnabled = false;
         public static readonly ExtensionType Type = new ExtensionType("disturbance:drought");
         public static readonly string ExtensionName = "Drought Disturbance";
 
-        private double dy_min;
+        private double dy_min = 2;  // TEMORARY VALUE!!
         private string mapNameTemplate;
         private StreamWriter log;
         private static IInputParameters parameters;
@@ -50,7 +50,7 @@ namespace Landis.Extension.DroughtDisturbance
         {
 
             Timestep = parameters.Timestep;
-            dy_min = parameters.MinDroughtYears;
+            //dy_min = parameters.MinDroughtYears;
             mapNameTemplate = parameters.MapNamesTemplate;
 
             SiteVars.Initialize();
@@ -98,6 +98,18 @@ namespace Landis.Extension.DroughtDisturbance
             double dy_sum = 0;
             int siteCount = 0;
 
+            // HOW TO USE DATA STRUCTURE FOR AGE CLASSES
+
+            foreach(ISpecies species in modelCore.Species)
+                foreach(AgeClass ageclass in SpeciesData.MortalityTable[species])
+                {
+                    ushort lwr_age = ageclass.LwrAge;
+                    ushort upr_age = ageclass.UprAge;
+                    double mortality_fraction = ageclass.MortalityFraction;
+                }
+
+
+
             double[] removedSpp = new double[PlugIn.ModelCore.Species.Count];
             int[] killedSpp = new int[PlugIn.ModelCore.Species.Count];
             double[] extraRemovedSpp = new double[PlugIn.ModelCore.Species.Count];
@@ -135,15 +147,15 @@ namespace Landis.Extension.DroughtDisturbance
                         int cohortKilledSpp = killedSpp[species.Index];
                         double extraBioRemovedSpp = extraRemovedSpp[species.Index];
                         // Calculate 95% CI of intercept and slope
-                        double int_max = parameters.Drought_Y[species] + (1.96 * parameters.Drought_YSE[species]);
-                        double int_min = parameters.Drought_Y[species] - (1.96 * parameters.Drought_YSE[species]);
-                        double slope_max = parameters.Drought_B[species] + (1.96 * parameters.Drought_BSE[species]);
-                        double slope_min = parameters.Drought_B[species] - (1.96 * parameters.Drought_BSE[species]);
+                        //double int_max = parameters.Drought_Y[species] + (1.96 * parameters.Drought_YSE[species]);
+                        //double int_min = parameters.Drought_Y[species] - (1.96 * parameters.Drought_YSE[species]);
+                        //double slope_max = parameters.Drought_B[species] + (1.96 * parameters.Drought_BSE[species]);
+                        //double slope_min = parameters.Drought_B[species] - (1.96 * parameters.Drought_BSE[species]);
 
                         // Calculate upper and lower CI predicted values
-                        double maxPropMort = int_max + slope_max * dy;
-                        double minPropMort = int_min + slope_min * dy;
-                        double rangePropMort = maxPropMort - minPropMort;
+                        //double maxPropMort = int_max + slope_max * dy;
+                        //double minPropMort = int_min + slope_min * dy;
+                        //double rangePropMort = maxPropMort - minPropMort;
 
                         int bioRemoved = 0;
                         int cohortsKilled = 0;
@@ -151,7 +163,7 @@ namespace Landis.Extension.DroughtDisturbance
                         int woodyRemoved = 0;
                         int nonWoodyRemoved = 0;
 
-                        if (rangePropMort > 0)
+                        /*if (rangePropMort > 0)
                         {
                             double Tbiomass = 0;
                             double propLongev = 0;
@@ -186,21 +198,6 @@ namespace Landis.Extension.DroughtDisturbance
                                 // Calculate biomass removed
                                 bioRemoved = (int)Math.Round(Tbiomass * actualPropMort);
 
-                                /*
-                                // Drought kills oldest cohort 50% of time
-                                if (bioRemoved < oldestCohortBio)
-                                {
-                                    int oldBioDiff = oldestCohortBio - bioRemoved;
-                                    if (PlugIn.ModelCore.GenerateUniform() > 0.5)
-                                        bioRemoved += oldBioDiff;
-                                    else
-                                    {
-                                        bioRemoved -= oldBioDiff;
-                                        if (bioRemoved < 0)
-                                            bioRemoved = 0;
-                                    }
-                                }
-                                */
 
                                 int remainBioRem = bioRemoved;
 
@@ -250,7 +247,8 @@ namespace Landis.Extension.DroughtDisturbance
                                 }
                             }
                             //}
-                        }
+                        }*/
+
                         siteBioRemoved += bioRemoved;
                         bioRemovedSpp += bioRemoved;
                         ForestFloor.AddWoody(woodyRemoved, species, site);
@@ -308,6 +306,7 @@ namespace Landis.Extension.DroughtDisturbance
                 }
             }
             // Modify establishment
+            /*
             if (avg_dy >= dy_min)
             {
                 foreach (ISpecies species in PlugIn.ModelCore.Species)
@@ -329,7 +328,7 @@ namespace Landis.Extension.DroughtDisturbance
             else
             {
                 modelCore.Log.WriteLine("   Drought does not exceed threshold this timestep ...");
-            }
+            }*/
 
         }
     }

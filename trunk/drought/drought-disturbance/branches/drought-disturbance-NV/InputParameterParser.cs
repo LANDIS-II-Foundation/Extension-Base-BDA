@@ -39,28 +39,96 @@ namespace Landis.Extension.DroughtDisturbance
             ReadVar(timestep);
             parameters.Timestep = timestep.Value;
 
-            InputVar<double> minDroughtYears = new InputVar<double>("MinDroughtYears");
-            ReadVar(minDroughtYears);
-            parameters.MinDroughtYears = minDroughtYears.Value;
+            //InputVar<double> minDroughtYears = new InputVar<double>("MinDroughtYears");
+            //ReadVar(minDroughtYears);
+            //parameters.MinDroughtYears = minDroughtYears.Value;
 
             //-------------------------
-            //  SpeciesParameters table
+            //  Species Mortality table
 
-            ReadName("SpeciesParameters");
-            speciesLineNums.Clear();  //  If parser re-used (i.e., for testing purposes)
+            ReadName("SpeciesMortalityTable");
+            //speciesLineNums.Clear();  //  If parser re-used (i.e., for testing purposes)
 
-            InputVar<double> drought_Y = new InputVar<double>("Drought Y");
-            InputVar<double> drought_YSE = new InputVar<double>("Drought YSE");
-            InputVar<double> drought_B = new InputVar<double>("Drought B");
-            InputVar<double> drought_BSE = new InputVar<double>("Drought BSE");
-            InputVar<double> drought_Sens = new InputVar<double>("Drought Sens");
+            InputVar<string> speciesNameVar = new InputVar<string>("Species");
+            AgeClass ageClass = new AgeClass();
+           
+            //InputVar<double> mortTab = new InputVar<double>("Drought Sens");
 
             while (!AtEndOfInput && CurrentName != Names.MapName)
             {
                 StringReader currentLine = new StringReader(CurrentLine);
                 ISpecies species = ReadSpecies(currentLine);
 
-                ReadValue(drought_Y, currentLine);
+                //AgeClass ageClass = new AgeClass();
+                List<AgeClass> ageClasses = new List<AgeClass>();
+                string word = "";
+                bool success  = false;
+                //int lineNumber = 0;
+
+                //ageClasses.Add(species.Name, new List<AgeClass>());
+
+                Dictionary<string, int> lineNumbers = new Dictionary<string, int>();
+                lineNumbers[species.Name] = LineNumber;
+
+                if (currentLine.Peek() == -1)
+                    throw new InputVariableException(speciesNameVar, "No age classes were defined for species: {0}", species.Name);
+                while (currentLine.Peek() != -1)
+                {
+                    TextReader.SkipWhitespace(currentLine);
+                    word = TextReader.ReadWord(currentLine);
+                    if (word == "")
+                    {
+                        if (!success)
+                            throw new InputVariableException(speciesNameVar, "No age classes were defined for species: {0}", species.Name);
+                        else
+                            break;
+                    }
+                    ageClass = new AgeClass();
+                    success = ageClass.Parse(word);
+                    if (!success)
+                        throw new InputVariableException(speciesNameVar, "Entry is not a valid age class: {0}", word);
+                    ageClasses.Add(ageClass);
+                }
+                GetNextLine();
+                success = false;
+
+                /*while (!AtEndOfInput)
+                {
+                    currentLine = new StringReader(CurrentLine);
+                    TextReader.SkipWhitespace(currentLine);
+                    word = TextReader.ReadWord(currentLine);
+
+                    species = GetSpecies(word);
+                    if (lineNumbers.TryGetValue(species.Name, out lineNumber))
+                        throw new InputValueException(word,
+                                                      "The species {0} was previously used on line {1}",
+                                                      word, lineNumber);
+                    lineNumbers[species.Name] = LineNumber;
+
+                    selectedSpecies.Add(species);
+                    //CheckNoDataAfter("the species name", currentLine);
+                    ageClasses.Add(species.Name, new List<AgeClass>());
+                    while (currentLine.Peek() != -1)
+                    {
+                        TextReader.SkipWhitespace(currentLine);
+                        word = TextReader.ReadWord(currentLine);
+                        if (word == "")
+                        {
+                            if (!success)
+                                throw new InputVariableException(speciesNameVar, "No age classes were defined for species: {0}", species.Name);
+                            else
+                                break;
+                        }
+                        ageClass = new AgeClass();
+                        success = ageClass.Parse(word);
+                        if (!success)
+                            throw new InputVariableException(speciesNameVar, "Entry is not a valid age class: {0}", word);
+                        ageClasses[species.Name].Add(ageClass);
+                    }
+                    GetNextLine();*/
+
+
+                /*ReadValue(drought_Y, currentLine);
                 parameters.SetDrought_Y(species, drought_Y.Value);
                 ReadValue(drought_YSE, currentLine);
                 parameters.SetDrought_YSE(species, drought_YSE.Value);
@@ -69,9 +137,11 @@ namespace Landis.Extension.DroughtDisturbance
                 ReadValue(drought_BSE, currentLine);
                 parameters.SetDrought_BSE(species, drought_BSE.Value);
                 ReadValue(drought_Sens, currentLine);
-                parameters.SetDrought_Sens(species, drought_Sens.Value);
+                parameters.SetDrought_Sens(species, drought_Sens.Value);*/
 
-                CheckNoDataAfter(drought_Sens.Name, currentLine);
+                parameters.SetMortalityTable(species, ageClasses);
+
+                //CheckNoDataAfter(drought_Sens.Name, currentLine);
                 GetNextLine();
             }
             
