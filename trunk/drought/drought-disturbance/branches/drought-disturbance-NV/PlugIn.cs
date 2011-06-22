@@ -95,8 +95,6 @@ namespace Landis.Extension.DroughtDisturbance
 
             double totalRemoved = 0;
             int totalKilled = 0;
-            double dy_sum = 0;
-            int siteCount = 0;
 
             //-------------------------------------------------------------------
             // HOW TO USE DATA STRUCTURE FOR AGE CLASSES
@@ -107,17 +105,6 @@ namespace Landis.Extension.DroughtDisturbance
                     ushort lwr_age = ageclass.LwrAge;
                     ushort upr_age = ageclass.UprAge;
                     double mortality_fraction = ageclass.MortalityFraction;
-                }
-            //-------------------------------------------------------------------
-            // HOW TO USE DATA STRUCTURE FOR ONSET YEARS
-
-            foreach(IEcoregion eco in modelCore.Ecoregions)
-                foreach (ISpecies species in modelCore.Species)
-                {
-                    if (SpeciesData.IsOnsetYear(modelCore.CurrentTime, species, eco))
-                    {
-                        double doStuff = 0.1968;
-                    }
                 }
             //-------------------------------------------------------------------
 
@@ -131,26 +118,57 @@ namespace Landis.Extension.DroughtDisturbance
                 killedSpp[species.Index] = 0;
                 extraRemovedSpp[species.Index] = 0;
             }
-            
+
+            //-------------------------------------------------------------------
+            //-------------------------------------------------------------------
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
             {
+                IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
+
+                //-------------------------------------------------------------------
+                foreach (ISpecies species in modelCore.Species)
+                {
+                        if (SpeciesData.IsOnsetYear(modelCore.CurrentTime, species, eco))
+                        {
+                            //double doStuff = goto function here;
+                            doStuff(site);
+
+                        }
+                }
+            }
+        }
+             
+        private void doStuff(ActiveSite site)
+        {
+            double dy_sum = 0;
+            int siteCount = 0;
+
                 double siteBioRemoved = 0;
-                double dy = (double)SiteVars.DroughtYears[site] / 100;
-                dy_sum += dy;
-                siteCount += 1;
+                //double dy = (double)SiteVars.DroughtYears[site] / 100;
+                //dy_sum += dy;
+                //siteCount += 1;
                 if (dy > dy_min)
                 {
                     
                     // Sort Cohorts be decreasing age
-                    List<ICohort> cohortList = new List<ICohort>();
+                   // List<ICohort> cohortList = new List<ICohort>();
                     foreach (ISpeciesCohorts speciesCohorts in SiteVars.Cohorts[site])
                     {
                         foreach (ICohort cohort in speciesCohorts)
                         {
-                            cohortList.Add(cohort);
+                        
+                            //foreach(AgeClass ageclass in SpeciesData.MortalityTable[speciesCohorts.Species])
+                        //{
+                        //ushort lwr_age = ageclass.LwrAge;
+                        //ushort upr_age = ageclass.UprAge;
+                        //double mortality_fraction = ageclass.MortalityFraction;
+
+                             //if(cohort.Age >= lwr_age && cohort.Age < upr_age)
+                            // then remove partial biomass (see below)
+                            //cohortList.Add(cohort);
                         }
                     }
-                    cohortList = cohortList.OrderByDescending(x => x.Age).ToList();
+                    //cohortList = cohortList.OrderByDescending(x => x.Age).ToList();
                     
 
                     foreach (ISpecies species in PlugIn.ModelCore.Species)

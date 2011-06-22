@@ -10,11 +10,6 @@ namespace Landis.Extension.DroughtDisturbance
 {
     public class SpeciesData
     {
-        //public static Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_Y;
-        //public static Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_YSE;
-        //public static Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_B;
-        //public static Landis.Extension.Succession.Biomass.Species.AuxParm<double> Drought_BSE;
-        //public static Landis.Extension.Succession.Biomass.Species.AuxParm<int> Drought_Sens;
 
         public static Landis.Extension.Succession.Biomass.Species.AuxParm<List<AgeClass>> MortalityTable;
 
