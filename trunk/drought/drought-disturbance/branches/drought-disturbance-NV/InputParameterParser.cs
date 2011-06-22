@@ -45,8 +45,54 @@ namespace Landis.Extension.DroughtDisturbance
 
             //-------------------------
             //  Species Mortality table
+            ReadName("DroughtOnsetTable");
+            Dictionary<int, List<IDynamicInputRecord>> allData = new Dictionary<int, List<IDynamicInputRecord>>();
 
-            ReadName("SpeciesMortalityTable");
+            //---------------------------------------------------------------------
+            //Read in onset table data:
+            InputVar<int> year = new InputVar<int>("Time step for updating values");
+            InputVar<string> ecoregionName = new InputVar<string>("Ecoregion Name");
+            InputVar<string> speciesName = new InputVar<string>("Species Name");
+
+            while (!AtEndOfInput && CurrentName != "PartialMortalityTable")
+            {
+                StringReader currentLine = new StringReader(CurrentLine);
+
+                ReadValue(year, currentLine);
+                int yr = year.Value.Actual;
+
+                
+                if (!allData.ContainsKey(yr))
+                {
+                    //inputTable.Add(inputTable);
+                    List<IDynamicInputRecord> inputTable = new List<IDynamicInputRecord>();
+                    allData.Add(yr, inputTable);
+                    PlugIn.ModelCore.Log.WriteLine("  Dynamic Input Parser:  Add new year = {0}.", yr);
+                }
+
+                IDynamicInputRecord dynamicInputRecord = new DynamicInputRecord();
+                
+                ReadValue(ecoregionName, currentLine);
+                IEcoregion ecoregion = GetEcoregion(ecoregionName.Value);
+                dynamicInputRecord.OnsetEcoregion = ecoregion;
+
+                ReadValue(speciesName, currentLine);
+                ISpecies species = GetSpecies(speciesName.Value);
+                
+                dynamicInputRecord.OnsetSpecies = species;
+
+                allData[yr].Add(dynamicInputRecord);
+
+                //allData[yr] = dynamicInputRecord;
+
+                GetNextLine();
+
+            }
+
+            DynamicInputs.AllData = allData;
+
+
+            ReadName("PartialMortalityTable");
             //speciesLineNums.Clear();  //  If parser re-used (i.e., for testing purposes)
 
             InputVar<string> speciesNameVar = new InputVar<string>("Species");
@@ -144,7 +190,9 @@ namespace Landis.Extension.DroughtDisturbance
                 //CheckNoDataAfter(drought_Sens.Name, currentLine);
                 GetNextLine();
             }
+
             
+
             InputVar<string> mapNames = new InputVar<string>("MapName");
             ReadVar(mapNames);
             parameters.MapNamesTemplate = mapNames.Value;
@@ -177,6 +225,35 @@ namespace Landis.Extension.DroughtDisturbance
             return species;
         }
         //---------------------------------------------------------------------
+
+        private IEcoregion GetEcoregion(InputValue<string> ecoregionName)
+        {
+            IEcoregion ecoregion = PlugIn.ModelCore.Ecoregions[ecoregionName.Actual];
+            if (ecoregion == null)
+                throw new InputValueException(ecoregionName.String,
+                                              "{0} is not an ecoregion name.",
+                                              ecoregionName.String);
+            if (!ecoregion.Active)
+                throw new InputValueException(ecoregionName.String,
+                                              "{0} is not an active ecoregion.",
+                                              ecoregionName.String);
+
+            return ecoregion;
+        }
+
+        //---------------------------------------------------------------------
+
+        private ISpecies GetSpecies(InputValue<string> speciesName)
+        {
+            ISpecies species = PlugIn.ModelCore.Species[speciesName.Actual];
+            if (species == null)
+                throw new InputValueException(speciesName.String,
+                                              "{0} is not a recognized species name.",
+                                              speciesName.String);
+
+            return species;
+        }
+
 
     }
 }

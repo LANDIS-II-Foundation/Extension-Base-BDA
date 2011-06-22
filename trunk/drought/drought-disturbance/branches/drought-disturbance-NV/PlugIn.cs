@@ -98,6 +98,7 @@ namespace Landis.Extension.DroughtDisturbance
             double dy_sum = 0;
             int siteCount = 0;
 
+            //-------------------------------------------------------------------
             // HOW TO USE DATA STRUCTURE FOR AGE CLASSES
 
             foreach(ISpecies species in modelCore.Species)
@@ -107,7 +108,18 @@ namespace Landis.Extension.DroughtDisturbance
                     ushort upr_age = ageclass.UprAge;
                     double mortality_fraction = ageclass.MortalityFraction;
                 }
+            //-------------------------------------------------------------------
+            // HOW TO USE DATA STRUCTURE FOR ONSET YEARS
 
+            foreach(IEcoregion eco in modelCore.Ecoregions)
+                foreach (ISpecies species in modelCore.Species)
+                {
+                    if (SpeciesData.IsOnsetYear(modelCore.CurrentTime, species, eco))
+                    {
+                        double doStuff = 0.1968;
+                    }
+                }
+            //-------------------------------------------------------------------
 
 
             double[] removedSpp = new double[PlugIn.ModelCore.Species.Count];
@@ -331,5 +343,7 @@ namespace Landis.Extension.DroughtDisturbance
             }*/
 
         }
+
+    
     }
 }

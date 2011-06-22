@@ -21,14 +21,26 @@ namespace Landis.Extension.DroughtDisturbance
         //---------------------------------------------------------------------
         public static void Initialize(IInputParameters parameters)
         {
-            //ChangeParameters(parameters);
-            //Drought_Y = parameters.Drought_Y;
-            //Drought_YSE = parameters.Drought_YSE;
-            //Drought_B = parameters.Drought_B;
-            //Drought_BSE = parameters.Drought_BSE;
-            //Drought_Sens = parameters.Drought_Sens;
 
             MortalityTable = parameters.MortalityTable;
         }
+
+        public static bool IsOnsetYear(int year, ISpecies species, IEcoregion ecoregion)
+        {
+
+            if (DynamicInputs.AllData.ContainsKey(year))
+            {
+
+               DynamicInputs.TimestepData = DynamicInputs.AllData[year];
+               foreach (IDynamicInputRecord dynrec in DynamicInputs.TimestepData)
+                   if (dynrec.OnsetEcoregion == ecoregion && dynrec.OnsetSpecies == species)
+                       return true;
+
+            }
+
+            return false;
+
+        }
+    
     }
 }

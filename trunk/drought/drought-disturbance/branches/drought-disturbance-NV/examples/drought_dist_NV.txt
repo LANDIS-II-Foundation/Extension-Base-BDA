@@ -3,7 +3,7 @@ LandisData "Drought Disturbance NV"
 Timestep 1
 
 
-DroughtOnset
+DroughtOnsetTable
 >>year landtype  species
 >> -------- -------------
 2      eco1       abiebals
@@ -22,7 +22,7 @@ DroughtOnset
 23     eco2       poputrem
 
 
-PartialMortality
+PartialMortalityTable
 >> species MortalityRate(Agegroup)  
 abiebals  0.37(1-50) 0.2(>50)
 poputrem  0.37(1-40) 0.5(40-80)  0.63(>80)
