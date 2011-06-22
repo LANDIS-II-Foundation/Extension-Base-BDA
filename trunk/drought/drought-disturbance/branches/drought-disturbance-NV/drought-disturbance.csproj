@@ -66,9 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgeClass.cs" />
-    <Compile Include="DynamicInputRecord.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="DynamicInputRecord.cs" />
     <Compile Include="DynamicInputs.cs" />
     <Compile Include="InputParameterParser.cs" />
     <Compile Include="InputParameters.cs" />
