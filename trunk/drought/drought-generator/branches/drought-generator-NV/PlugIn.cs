@@ -81,7 +81,7 @@ namespace Landis.Extension.DroughtGenerator
         ///</summary>
         public override void Run()
         {
-            modelCore.Log.WriteLine("   Processing Drought Generator ...");
+            modelCore.Log.WriteLine("   Processing Drought Generator ... ");
             SiteVars.DroughtYears.ActiveSiteValues = 0;
             PlugIn.ModelCore.LognormalDistribution.Mu = mu;
             PlugIn.ModelCore.LognormalDistribution.Sigma = sigma;
