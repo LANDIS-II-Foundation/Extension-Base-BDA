@@ -156,13 +156,13 @@ namespace Landis.Extension.BaseBDA
                         //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
                         //using (map) {
                         //    SeverityPixel pixel = new SeverityPixel();
-                        using (IOutputRaster<UShortPixel> outputRaster = modelCore.CreateRaster<UShortPixel>(path, modelCore.Landscape.Dimensions))
+                        using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
                         {
-                            UShortPixel pixel = outputRaster.BufferPixel;
+                            ShortPixel pixel = outputRaster.BufferPixel;
                             foreach (Site site in PlugIn.ModelCore.Landscape.AllSites) {
                                 if (site.IsActive) {
                                     if (SiteVars.Disturbed[site])
-                                        pixel.MapCode.Value = (byte) (activeAgent.Severity[site] + 1);
+                                        pixel.MapCode.Value = (short) (activeAgent.Severity[site] + 1);
                                     else
                                         pixel.MapCode.Value = 1;
                                 }
@@ -177,14 +177,14 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA SRD maps --------
                             string path2 = MapNames.ReplaceTemplateVars(srdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            using (IOutputRaster<UShortPixel> outputRaster = modelCore.CreateRaster<UShortPixel>(path2, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path2, modelCore.Landscape.Dimensions))
                             {
-                                UShortPixel pixel = outputRaster.BufferPixel;
+                                ShortPixel pixel = outputRaster.BufferPixel;
                                 foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
                                 {
                                     if (site.IsActive)
                                     {
-                                        pixel.MapCode.Value = (ushort) System.Math.Round(SiteVars.SiteResourceDom[site] * 100.00);
+                                        pixel.MapCode.Value = (short) System.Math.Round(SiteVars.SiteResourceDom[site] * 100.00);
                                     }
                                     else
                                     {
@@ -199,14 +199,14 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA NRD maps --------
                             string path3 = MapNames.ReplaceTemplateVars(nrdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            using (IOutputRaster<UShortPixel> outputRaster = modelCore.CreateRaster<UShortPixel>(path3, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path3, modelCore.Landscape.Dimensions))
                             {
-                                UShortPixel pixel = outputRaster.BufferPixel;
+                                ShortPixel pixel = outputRaster.BufferPixel;
                                 foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
                                 {
                                     if (site.IsActive)
                                     {
-                                        pixel.MapCode.Value = (ushort)System.Math.Round(SiteVars.NeighborResourceDom[site] * 100.00);
+                                        pixel.MapCode.Value = (short)System.Math.Round(SiteVars.NeighborResourceDom[site] * 100.00);
                                     }
                                     else
                                     {
@@ -241,25 +241,25 @@ namespace Landis.Extension.BaseBDA
         }
 
         //---------------------------------------------------------------------
-        /*private IOutputRaster<UShortPixel> CreateMap(int currentTime, string agentName)
+        /*private IOutputRaster<ShortPixel> CreateMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(mapNameTemplate, agentName, currentTime);
             PlugIn.ModelCore.Log.WriteLine("   Writing BDA severity map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<UShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
+            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
 
-        /*private IOutputRaster<UShortPixel> CreateSRDMap(int currentTime, string agentName)
+        /*private IOutputRaster<ShortPixel> CreateSRDMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(srdMapNames, agentName, currentTime);
             PlugIn.ModelCore.Log.WriteLine("   Writing BDA SRD map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<UShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
+            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
 
-        /*private IOutputRaster<UShortPixel> CreateNRDMap(int currentTime, string agentName)
+        /*private IOutputRaster<ShortPixel> CreateNRDMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(nrdMapNames, agentName, currentTime);
             PlugIn.ModelCore.Log.WriteLine("   Writing BDA NRD map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<UShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
+            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
         //---------------------------------------------------------------------
         private static int TimeToNext(IAgent activeAgent, int Timestep)

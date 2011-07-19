@@ -63,7 +63,7 @@
   <ItemGroup>
     <Compile Include="Agent.cs" />
     <Compile Include="AgentParameterParser.cs" />
-    <Compile Include="UShortPixel.cs" />
+    <Compile Include="ShortPixel.cs" />
     <Compile Include="DistParameters.cs" />
     <Compile Include="EcoParameters.cs" />
     <Compile Include="Epicenters.cs" />

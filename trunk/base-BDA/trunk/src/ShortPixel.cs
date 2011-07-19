@@ -5,11 +5,11 @@ using Landis.SpatialModeling;
 
 namespace Landis.Extension.BaseBDA
 {
-    public class UShortPixel : Pixel
+    public class ShortPixel : Pixel
     {
-        public Band<ushort> MapCode  = "The numeric code for each raster cell";
+        public Band<short> MapCode  = "The numeric code for each raster cell";
 
-        public UShortPixel()
+        public ShortPixel()
         {
             SetBands(MapCode);
         }
