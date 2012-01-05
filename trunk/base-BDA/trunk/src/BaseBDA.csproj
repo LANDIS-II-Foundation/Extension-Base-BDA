@@ -32,10 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Edu.Wisc.Forest.Flel.Util">
-      <HintPath>$(Landis-II)\Edu.Wisc.Forest.Flel.Util.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Edu.Wisc.Forest.Flel.Util.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Core">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Landis.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Landis.Core.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.AgeOnlyCohorts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Troschuetz.Random, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Troschuetz.Random.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\LANDIS-II\6.0\bin\Troschuetz.Random.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,8 +78,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy $(TargetName).* "C:\Program Files\LANDIS-II\6.0\bin"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

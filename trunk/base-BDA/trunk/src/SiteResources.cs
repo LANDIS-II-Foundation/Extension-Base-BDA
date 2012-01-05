@@ -267,7 +267,7 @@ namespace Landis.Extension.BaseBDA
                             }
                         }
 
-                        PlugIn.ModelCore.shuffle(neighborhood);
+                        neighborhood = PlugIn.ModelCore.shuffle(neighborhood);
                         foreach(RelativeLocationWeighted neighbor in neighborhood)
                         {
                             //Do NOT subsample if there are too few neighbors

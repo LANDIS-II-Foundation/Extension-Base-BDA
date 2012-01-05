@@ -202,6 +202,7 @@ namespace Landis.Extension.BaseBDA
                             using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path3, modelCore.Landscape.Dimensions))
                             {
                                 ShortPixel pixel = outputRaster.BufferPixel;
+
                                 foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
                                 {
                                     if (site.IsActive)
