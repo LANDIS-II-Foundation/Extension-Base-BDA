@@ -24,7 +24,7 @@ Source: C:\Program Files\LANDIS-II\6.0\bin\Landis.Extension.BaseBDA.dll; DestDir
 Source: docs\LANDIS-II Biological Disturbance Agent v2.0 User Guide.pdf; DestDir: {app}\docs
 Source: examples\*; DestDir: {app}\examples\base-BDA
 
-#define BaseBDA "Base BDA 2.0.txt"
+#define BaseBDA "Base BDA 2.0.1.txt"
 Source: {#BaseBDA}; DestDir: {#LandisPlugInDir}
 
 [Run]
