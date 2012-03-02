@@ -1,0 +1,16 @@
+LandisData "Budworm BDA"
+
+Timestep	1
+
+MapNames	bda/{agentName}-{timestep}.gis
+
+SRDMapNames	bda/{agentName}-SRD-{timestep}.gis
+
+NRDMapNames	bda/{agentName}-NRD-{timestep}.gis
+
+VulnMapNames    bda/{agentName}-Vuln-{timestep}.gis
+
+LogFile		bda-test-log.csv
+
+BDAInputFiles	spruce_budworm.txt	
+

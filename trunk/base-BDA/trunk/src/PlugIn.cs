@@ -269,11 +269,8 @@ namespace Landis.Extension.BaseBDA
             if (activeAgent.RandFunc == RandomFunction.RFuniform){
                 int MaxI = (int) Math.Round(activeAgent.RandomParameter1);
                 int MinI = (int) Math.Round(activeAgent.RandomParameter2);
-                timeToNext =
-                   (MinI - activeAgent.TimeSinceLastEpidemic) +
-                   (int) (PlugIn.ModelCore.GenerateUniform() * (MaxI - MinI));
-
-
+                double randNum = PlugIn.ModelCore.GenerateUniform();
+                timeToNext = (MinI) + (int)(randNum * (MaxI - MinI));
             }
             else if (activeAgent.RandFunc == RandomFunction.RFnormal){
 
@@ -282,8 +279,7 @@ namespace Landis.Extension.BaseBDA
 
                 int randNum = (int) PlugIn.ModelCore.NormalDistribution.NextDouble();
 
-                timeToNext = randNum - activeAgent.TimeSinceLastEpidemic;
-
+                timeToNext = randNum;
 
                 // Interval times are always rounded up to the next time step increment.
                 // This bias can be removed by reducing times by half the time step.
