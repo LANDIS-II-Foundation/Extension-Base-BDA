@@ -1,8 +1,0 @@
-LandisData  Extension
-
-Name        "Drought Disturbance"
-Version     1.0
-Type        disturbance:drought
-Assembly    Landis.Extension.DroughtDisturbance
-Class       Landis.Extension.DroughtDisturbance.PlugIn
-Description  "Removes biomass/cohorts due to drought"
