@@ -1,6 +1,0 @@
-C:\Program Files\LANDIS-II\6.0\bin\Landis.Console-Debug.exe.config
-C:\Brian\Visual Studio\Projects\Landis-ii\Version6\trunk\Debug_Console\obj\Debug\ResolveAssemblyReference.cache
-C:\Program Files\LANDIS-II\6.0\bin\Landis.Console-Debug.exe
-C:\Program Files\LANDIS-II\6.0\bin\Landis.Console-Debug.pdb
-C:\Brian\Visual Studio\Projects\Landis-ii\Version6\trunk\Debug_Console\obj\Debug\Landis.Console-Debug.exe
-C:\Brian\Visual Studio\Projects\Landis-ii\Version6\trunk\Debug_Console\obj\Debug\Landis.Console-Debug.pdb
