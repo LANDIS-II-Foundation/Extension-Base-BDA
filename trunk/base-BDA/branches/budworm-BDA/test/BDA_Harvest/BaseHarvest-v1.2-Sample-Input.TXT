@@ -1,0 +1,83 @@
+LandisData  "Base Harvest"
+
+
+Timestep    10
+
+ManagementAreas "./management.gis"
+
+Stands      "./stand.gis"
+
+>> -----------------------------------------
+>> PRESCRIPTIONS
+
+Prescription MaxAgeClearcut
+    StandRanking 	MaxCohortAge
+    SiteSelection 	Complete
+    CohortsRemoved 	ClearCut
+
+Prescription    AspenClearcut
+    StandRanking    Economic
+    >> Species Economic Rank Minimum Age
+    >> ------- ------------- -----------
+    poputrem   100           40    
+    
+    MinimumAge  	35
+    SiteSelection   CompleteStandSpread 1 40
+    CohortsRemoved	ClearCut
+    
+Prescription SelectiveNorthernHardwood
+    StandRanking    Economic
+    >> Species EconomicRank Minimum Age
+    >> ------- ------------ -----------
+    acerrubr   60 	     	45
+    acersacc   100          50
+    betualle   100	     	50
+    fraxamer   60	     	40
+
+    SiteSelection PatchCutting 10%  1  << ha
+    CohortsRemoved SpeciesList
+	>> Species Selection
+	>> ------- ---------
+	acerrubr   1/2
+	acersacc   1/4
+	betualle   1/5
+	fraxamer   1/2
+
+Prescription    OakPatchCutting
+    StandRanking	MaxCohortAge
+    MinimumAge  	60
+    StandAdjacency	10
+    AdjacencyType 	StandAge
+    AdjacencyNeighborSetAside   10
+    ForestTypeTable
+     >> InclusionRule   ageRange    %Cells	species
+     >>--------------------------------------------------------
+	Forbidden			1-131	    60     	tsugcana
+	Required    	    100-450     20     	querrubr 
+	
+    SiteSelection	PatchCutting	75%	50
+    CohortsRemoved	SpeciesList
+	>> Species Selection
+	>> ------- ---------
+	abiebals All
+	querrubr AllExceptOldest
+	pinubank All
+
+>>-----------------------------------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+
+    HarvestImplementations
+>>  Mgmt Area   Prescription    Harvest Area    Begin Time  End Time
+>>  ---------   ------------    ------------    ----------  --------
+	1	MaxAgeClearcut	5%	    	0		25
+	1	MaxAgeClearcut	10%		30		50
+	1	AspenClearcut	5%
+	2	SelectiveNorthernHardwood	10%	10	25
+	2	AspenClearcut	10%
+	
+>>-----------------------------------------------------------------
+>> OUTPUTS
+
+PrescriptionMaps    harvest/prescripts-{timestep}.img
+EventLog            harvest-event-test-log.csv
+SummaryLog	    harvest/summary-log.csv
