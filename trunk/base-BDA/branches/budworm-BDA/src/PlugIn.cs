@@ -335,6 +335,8 @@ namespace Landis.Extension.BudwormBDA
 
                 activeAgent.TimeSinceLastEpidemic = 0;
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
+                int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
+                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 //calculate ROS
                 if (activeAgent.TempType == TemporalType.pulse)

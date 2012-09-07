@@ -2,7 +2,7 @@
 #define PackageNameLong  "Budworm BDA Extension"
 #define Version          "1.0"
 #define ReleaseType      "beta"
-#define ReleaseNumber    "3"
+#define ReleaseNumber    "4"
 
 #define CoreVersion      "6.0"
 #define CoreReleaseAbbr  ""

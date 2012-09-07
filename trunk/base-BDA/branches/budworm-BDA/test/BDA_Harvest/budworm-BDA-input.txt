@@ -10,7 +10,7 @@ NRDMapNames	bda/{agentName}-NRD-{timestep}.gis
 
 VulnMapNames    bda/{agentName}-Vuln-{timestep}.gis
 
-LogFile		bda-test-log.csv
+LogFile		bda/bda-event-log.csv
 
 BDAInputFiles	spruce_budworm.txt	
 

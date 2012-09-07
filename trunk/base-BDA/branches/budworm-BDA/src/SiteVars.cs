@@ -38,6 +38,7 @@ namespace Landis.Extension.BudwormBDA
             vulnerability = modelCore.Landscape.NewSiteVar<double>();
             disturbed = modelCore.Landscape.NewSiteVar<bool>();
             numberCFSconifersKilled = modelCore.Landscape.NewSiteVar<Dictionary<int, int>>();
+            timeOfNext = modelCore.Landscape.NewSiteVar<int>();
 
             SiteVars.TimeOfLastEvent.ActiveSiteValues = -10000;
             SiteVars.NeighborResourceDom.ActiveSiteValues = 0.0;
