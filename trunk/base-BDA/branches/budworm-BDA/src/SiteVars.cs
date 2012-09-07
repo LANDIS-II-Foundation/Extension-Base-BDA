@@ -25,6 +25,7 @@ namespace Landis.Extension.BudwormBDA
         private static ISiteVar<bool> disturbed;
         private static ISiteVar<Dictionary<int,int>> numberCFSconifersKilled;
         private static ISiteVar<ISiteCohorts> cohorts;
+        private static ISiteVar<int> timeOfNext;
 
         //---------------------------------------------------------------------
 
@@ -43,6 +44,7 @@ namespace Landis.Extension.BudwormBDA
             SiteVars.SiteResourceDomMod.ActiveSiteValues = 0.0;
             SiteVars.SiteResourceDom.ActiveSiteValues = 0.0;
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
+            SiteVars.TimeOfNext.ActiveSiteValues = 9999;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
 
@@ -52,6 +54,8 @@ namespace Landis.Extension.BudwormBDA
             // Added for v1.1 to enable interactions with CFS fuels extension.
             modelCore.RegisterSiteVar(SiteVars.NumberCFSconifersKilled, "BDA.NumCFSConifers");
             modelCore.RegisterSiteVar(SiteVars.TimeOfLastEvent, "BDA.TimeOfLastEvent");
+            // Added to enable interactions with other extensions (Presalvage harvest)
+            modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
 
         }
 
@@ -143,6 +147,14 @@ namespace Landis.Extension.BudwormBDA
             get
             {
                 return cohorts;
+            }
+
+        }
+        public static ISiteVar<int> TimeOfNext
+        {
+            get
+            {
+                return timeOfNext;
             }
 
         }

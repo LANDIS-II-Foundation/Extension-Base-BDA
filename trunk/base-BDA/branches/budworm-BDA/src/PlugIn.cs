@@ -88,6 +88,10 @@ namespace Landis.Extension.BudwormBDA
                 if(activeAgent == null)
                     PlugIn.ModelCore.Log.WriteLine("Agent Parameters NOT loading correctly.");
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep);
+                int timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
+                if (timeOfNext < Timestep)
+                    timeOfNext = Timestep;
+                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 int i=0;
 
