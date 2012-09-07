@@ -25,34 +25,44 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<bool> disturbed;
         private static ISiteVar<Dictionary<int,int>> numberCFSconifersKilled;
         private static ISiteVar<ISiteCohorts> cohorts;
+        private static ISiteVar<int> timeOfNext;
 
         //---------------------------------------------------------------------
 
         public static void Initialize(ICore modelCore)
         {
-            timeOfLastBDA  = modelCore.Landscape.NewSiteVar<int>();
+            timeOfLastBDA = modelCore.Landscape.NewSiteVar<int>();
             neighborResourceDom = modelCore.Landscape.NewSiteVar<double>();
             siteResourceDomMod = modelCore.Landscape.NewSiteVar<double>();
             siteResourceDom = modelCore.Landscape.NewSiteVar<double>();
             vulnerability = modelCore.Landscape.NewSiteVar<double>();
             disturbed = modelCore.Landscape.NewSiteVar<bool>();
             numberCFSconifersKilled = modelCore.Landscape.NewSiteVar<Dictionary<int, int>>();
+            timeOfNext = modelCore.Landscape.NewSiteVar<int>();
 
             SiteVars.TimeOfLastEvent.ActiveSiteValues = -10000;
             SiteVars.NeighborResourceDom.ActiveSiteValues = 0.0;
             SiteVars.SiteResourceDomMod.ActiveSiteValues = 0.0;
             SiteVars.SiteResourceDom.ActiveSiteValues = 0.0;
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
+            SiteVars.TimeOfNext.ActiveSiteValues = 9999;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
+            
 
-            foreach(ActiveSite site in modelCore.Landscape)
+            foreach (ActiveSite site in modelCore.Landscape)
                 SiteVars.NumberCFSconifersKilled[site] = new Dictionary<int, int>();
 
             // Added for v1.1 to enable interactions with CFS fuels extension.
             modelCore.RegisterSiteVar(SiteVars.NumberCFSconifersKilled, "BDA.NumCFSConifers");
             modelCore.RegisterSiteVar(SiteVars.TimeOfLastEvent, "BDA.TimeOfLastEvent");
 
+            //foreach (IAgent activeAgent in manyAgentParameters)
+            //{
+            //    string varName = activeAgent.AgentName + ".TimeToNext";
+            //    modelCore.RegisterSiteVar(SiteVars.TimeToNext, varName);
+            //}
+            modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
         }
 
         //---------------------------------------------------------------------
@@ -143,6 +153,14 @@ namespace Landis.Extension.BaseBDA
             get
             {
                 return cohorts;
+            }
+
+        }
+        public static ISiteVar<int> TimeOfNext
+        {
+            get
+            {
+                return timeOfNext;
             }
 
         }

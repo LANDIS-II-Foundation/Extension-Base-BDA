@@ -74,17 +74,23 @@ namespace Landis.Extension.BaseBDA
             mapNameTemplate = parameters.MapNamesTemplate;
             srdMapNames = parameters.SRDMapNames;
             nrdMapNames = parameters.NRDMapNames;
+            
+            manyAgentParameters = parameters.ManyAgentParameters;
 
             SiteVars.Initialize(modelCore);
 
-            manyAgentParameters = parameters.ManyAgentParameters;
+           
             foreach(IAgent activeAgent in manyAgentParameters)
             {
 
-
+                
                 if(activeAgent == null)
                     PlugIn.ModelCore.Log.WriteLine("Agent Parameters NOT loading correctly.");
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep);
+                int timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
+                if (timeOfNext < Timestep)
+                    timeOfNext = Timestep;
+                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 int i=0;
 
@@ -304,6 +310,8 @@ namespace Landis.Extension.BaseBDA
 
                 activeAgent.TimeSinceLastEpidemic = 0;
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
+                int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
+                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 //calculate ROS
                 if (activeAgent.TempType == TemporalType.pulse)
