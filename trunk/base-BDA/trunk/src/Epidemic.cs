@@ -77,7 +77,7 @@ namespace Landis.Extension.BaseBDA
         ExtensionType IDisturbance.Type
         {
             get {
-                return PlugIn.Type;
+                return PlugIn.type;
             }
         }
 

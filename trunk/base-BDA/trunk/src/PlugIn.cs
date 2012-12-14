@@ -21,7 +21,7 @@ namespace Landis.Extension.BaseBDA
     public class PlugIn
         : ExtensionMain
     {
-        public static readonly ExtensionType Type = new ExtensionType("disturbance:bda");
+        public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Base BDA";
 
         private string mapNameTemplate;
@@ -35,7 +35,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
 
         public PlugIn()
-            : base(ExtensionName, Type)
+            : base(ExtensionName, type)
         {
         }
 
