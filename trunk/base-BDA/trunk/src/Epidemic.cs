@@ -107,7 +107,7 @@ namespace Landis.Extension.BaseBDA
 
         public static void Initialize(IAgent agent)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Initializing agent {0}.", agent.AgentName);
+            PlugIn.ModelCore.UI.WriteLine("   Initializing agent {0}.", agent.AgentName);
 
             ecoregions = PlugIn.ModelCore.Ecoregions;
 
@@ -141,7 +141,7 @@ namespace Landis.Extension.BaseBDA
 
 
             Epidemic CurrentEpidemic = new Epidemic(agent);
-            PlugIn.ModelCore.Log.WriteLine("   New BDA Epidemic Activated.");
+            PlugIn.ModelCore.UI.WriteLine("   New BDA Epidemic Activated.");
 
             //SiteResources.SiteResourceDominance(agent, ROS, SiteVars.Cohorts);
             SiteResources.SiteResourceDominance(agent, ROS);
@@ -190,7 +190,7 @@ namespace Landis.Extension.BaseBDA
             this.meanSeverity = 0.0;
             this.totalSitesDamaged = 0;
 
-            //PlugIn.ModelCore.Log.WriteLine("New Agent event");
+            //PlugIn.ModelCore.UI.WriteLine("New Agent event");
         }
 
         //---------------------------------------------------------------------
@@ -210,8 +210,8 @@ namespace Landis.Extension.BaseBDA
                 if(agent.OutbreakZone[site] == Zone.Newzone
                     && SiteVars.Vulnerability[site] > PlugIn.ModelCore.GenerateUniform())
                 {
-                    //PlugIn.ModelCore.Log.WriteLine("Zone={0}, agent.OutbreakZone={1}", Zone.Newzone.ToString(), agent.OutbreakZone[site]);
-                    //PlugIn.ModelCore.Log.WriteLine("Vulnerability={0}, Randnum={1}", SiteVars.Vulnerability[site], PlugIn.ModelCore.GenerateUniform());
+                    //PlugIn.ModelCore.UI.WriteLine("Zone={0}, agent.OutbreakZone={1}", Zone.Newzone.ToString(), agent.OutbreakZone[site]);
+                    //PlugIn.ModelCore.UI.WriteLine("Vulnerability={0}, Randnum={1}", SiteVars.Vulnerability[site], PlugIn.ModelCore.GenerateUniform());
                     double vulnerability = SiteVars.Vulnerability[site];
 
                     if(vulnerability >= 0) this.siteSeverity= 1;
@@ -272,7 +272,7 @@ namespace Landis.Extension.BaseBDA
         // be killed.
         bool ICohortDisturbance.MarkCohortForDeath(ICohort cohort)
         {
-            //PlugIn.ModelCore.Log.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
+            //PlugIn.ModelCore.UI.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
             
             bool killCohort = false;
             

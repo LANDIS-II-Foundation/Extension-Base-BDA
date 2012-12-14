@@ -47,7 +47,7 @@ namespace Landis.Extension.BaseBDA
             modelCore = mCore;
             InputParameterParser.EcoregionsDataset = modelCore.Ecoregions;
             InputParameterParser parser = new InputParameterParser();
-            parameters = modelCore.Load<IInputParameters>(dataFile, parser);
+            parameters = Landis.Data.Load<IInputParameters>(dataFile, parser);
         }
 
         //---------------------------------------------------------------------
@@ -74,23 +74,17 @@ namespace Landis.Extension.BaseBDA
             mapNameTemplate = parameters.MapNamesTemplate;
             srdMapNames = parameters.SRDMapNames;
             nrdMapNames = parameters.NRDMapNames;
-            
-            manyAgentParameters = parameters.ManyAgentParameters;
 
             SiteVars.Initialize(modelCore);
 
-           
+            manyAgentParameters = parameters.ManyAgentParameters;
             foreach(IAgent activeAgent in manyAgentParameters)
             {
 
-                
+
                 if(activeAgent == null)
-                    PlugIn.ModelCore.Log.WriteLine("Agent Parameters NOT loading correctly.");
+                    PlugIn.ModelCore.UI.WriteLine("Agent Parameters NOT loading correctly.");
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep);
-                int timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
-                if (timeOfNext < Timestep)
-                    timeOfNext = Timestep;
-                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 int i=0;
 
@@ -99,7 +93,7 @@ namespace Landis.Extension.BaseBDA
                 if(activeAgent.DispersalNeighbors != null)
                 {
                     foreach (RelativeLocation reloc in activeAgent.DispersalNeighbors) i++;
-                    PlugIn.ModelCore.Log.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
+                    PlugIn.ModelCore.UI.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
                 }
 
                 i=0;
@@ -107,13 +101,13 @@ namespace Landis.Extension.BaseBDA
                 if(activeAgent.ResourceNeighbors != null)
                 {
                     foreach (RelativeLocationWeighted reloc in activeAgent.ResourceNeighbors) i++;
-                    PlugIn.ModelCore.Log.WriteLine("Resource Neighborhood = {0} neighbors.", i);
+                    PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
             }
 
             string logFileName = parameters.LogFileName;
-            PlugIn.ModelCore.Log.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
-            log = PlugIn.ModelCore.CreateTextFile(logFileName);
+            PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
+            log = Landis.Data.CreateTextFile(logFileName);
             log.AutoFlush = true;
             log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
             log.WriteLine("");
@@ -131,7 +125,7 @@ namespace Landis.Extension.BaseBDA
         ///</summary>
         public override void Run()
         {
-            PlugIn.ModelCore.Log.WriteLine("   Processing landscape for BDA events ...");
+            PlugIn.ModelCore.UI.WriteLine("   Processing landscape for BDA events ...");
 
             //SiteVars.Epidemic.SiteValues = null;
 
@@ -251,21 +245,21 @@ namespace Landis.Extension.BaseBDA
         /*private IOutputRaster<ShortPixel> CreateMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(mapNameTemplate, agentName, currentTime);
-            PlugIn.ModelCore.Log.WriteLine("   Writing BDA severity map to {0} ...", path);
+            PlugIn.ModelCore.UI.WriteLine("   Writing BDA severity map to {0} ...", path);
             return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
 
         /*private IOutputRaster<ShortPixel> CreateSRDMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(srdMapNames, agentName, currentTime);
-            PlugIn.ModelCore.Log.WriteLine("   Writing BDA SRD map to {0} ...", path);
+            PlugIn.ModelCore.UI.WriteLine("   Writing BDA SRD map to {0} ...", path);
             return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
 
         /*private IOutputRaster<ShortPixel> CreateNRDMap(int currentTime, string agentName)
         {
             string path = MapNames.ReplaceTemplateVars(nrdMapNames, agentName, currentTime);
-            PlugIn.ModelCore.Log.WriteLine("   Writing BDA NRD map to {0} ...", path);
+            PlugIn.ModelCore.UI.WriteLine("   Writing BDA NRD map to {0} ...", path);
             return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
         }*/
         //---------------------------------------------------------------------
@@ -310,8 +304,6 @@ namespace Landis.Extension.BaseBDA
 
                 activeAgent.TimeSinceLastEpidemic = 0;
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
-                int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
-                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
                 //calculate ROS
                 if (activeAgent.TempType == TemporalType.pulse)
@@ -348,10 +340,10 @@ namespace Landis.Extension.BaseBDA
         private static IEnumerable<RelativeLocationWeighted> GetResourceNeighborhood(IAgent agent)
         {
             float CellLength = PlugIn.ModelCore.CellLength;
-            PlugIn.ModelCore.Log.WriteLine("Creating Neighborhood List.");
+            PlugIn.ModelCore.UI.WriteLine("Creating Neighborhood List.");
             int neighborRadius = agent.NeighborRadius;
             int numCellRadius = (int) ((double) neighborRadius / CellLength) ;
-            PlugIn.ModelCore.Log.WriteLine("NeighborRadius={0}, CellLength={1}, numCellRadius={2}",
+            PlugIn.ModelCore.UI.WriteLine("NeighborRadius={0}, CellLength={1}, numCellRadius={2}",
                         neighborRadius, CellLength, numCellRadius);
 
             double centroidDistance = 0;
@@ -366,7 +358,7 @@ namespace Landis.Extension.BaseBDA
                 {
                     neighborWeight = 0;
                     centroidDistance = DistanceFromCenter(row ,col);
-                    //PlugIn.ModelCore.Log.WriteLine("Centroid Distance = {0}.", centroidDistance);
+                    //PlugIn.ModelCore.UI.WriteLine("Centroid Distance = {0}.", centroidDistance);
                     if(centroidDistance  <= neighborRadius && centroidDistance > 0)
                     {
 
@@ -404,7 +396,7 @@ namespace Landis.Extension.BaseBDA
         private static IEnumerable<RelativeLocation> GetDispersalNeighborhood(IAgent agent, int timestep)
         {
             double CellLength = PlugIn.ModelCore.CellLength;
-            PlugIn.ModelCore.Log.WriteLine("Creating Dispersal Neighborhood List.");
+            PlugIn.ModelCore.UI.WriteLine("Creating Dispersal Neighborhood List.");
 
             List<RelativeLocation> neighborhood = new List<RelativeLocation>();
 
@@ -424,7 +416,7 @@ namespace Landis.Extension.BaseBDA
             {
                 int neighborRadius = agent.DispersalRate * timestep;
                 int numCellRadius = (int) (neighborRadius / CellLength);
-                PlugIn.ModelCore.Log.WriteLine("NeighborRadius={0}, CellLength={1}, numCellRadius={2}",
+                PlugIn.ModelCore.UI.WriteLine("NeighborRadius={0}, CellLength={1}, numCellRadius={2}",
                         neighborRadius, CellLength, numCellRadius);
                 double centroidDistance = 0;
                 double cellLength = CellLength;
@@ -435,7 +427,7 @@ namespace Landis.Extension.BaseBDA
                     {
                         centroidDistance = DistanceFromCenter(row, col);
 
-                        //PlugIn.ModelCore.Log.WriteLine("Centroid Distance = {0}.", centroidDistance);
+                        //PlugIn.ModelCore.UI.WriteLine("Centroid Distance = {0}.", centroidDistance);
                         if(centroidDistance  <= neighborRadius)
                         {
                             neighborhood.Add(new RelativeLocation(row,  col));

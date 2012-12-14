@@ -14,7 +14,7 @@ namespace Landis.Extension.BaseBDA
     /// A parser that reads the extension parameters from text input.
     /// </summary>
     public class AgentParameterParser
-        : TextParser<IAgent>
+        : Landis.TextParser<IAgent>
     {
 
         public static IEcoregionDataset EcoregionsDataset = PlugIn.ModelCore.Ecoregions;
@@ -22,12 +22,12 @@ namespace Landis.Extension.BaseBDA
 
         //---------------------------------------------------------------------
 
-        /*public override string LandisDataValue
+        public override string LandisDataValue
         {
             get {
                 return "A Single BDA Agent";
             }
-        }*/
+        }
 
         //---------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ namespace Landis.Extension.BaseBDA
 
         protected override IAgent Parse()
         {
-            //PlugIn.ModelCore.Log.WriteLine("Parsing 1; sppCnt={0}", Model.Species.Count);
+            //PlugIn.ModelCore.UI.WriteLine("Parsing 1; sppCnt={0}", Model.Species.Count);
             Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count, (int) DisturbanceType.Null);  //The last disturb Type is Null
 
             InputVar<string> agentName = new InputVar<string>("BDAAgentName");
@@ -136,7 +136,7 @@ namespace Landis.Extension.BaseBDA
             agentParameters.NeighborWeight = nw.Value;
 
             //--------- Read In Ecoreigon Table ---------------------------------------
-            PlugIn.ModelCore.Log.WriteLine("Begin parsing ECOREGION table.");
+            PlugIn.ModelCore.UI.WriteLine("Begin parsing ECOREGION table.");
 
             InputVar<string> ecoName = new InputVar<string>("Ecoregion Name");
             InputVar<double> ecoModifier = new InputVar<double>("Ecoregion Modifier");
@@ -173,7 +173,7 @@ namespace Landis.Extension.BaseBDA
             }
 
             //--------- Read In Disturbance Modifier Table -------------------------------
-            PlugIn.ModelCore.Log.WriteLine("Begin parsing DISTURBANCE table.");
+            PlugIn.ModelCore.UI.WriteLine("Begin parsing DISTURBANCE table.");
 
             ReadName(DistParms);
 
@@ -204,7 +204,7 @@ namespace Landis.Extension.BaseBDA
                 GetNextLine();
             }
             //--------- Read In Species Table ---------------------------------------
-            PlugIn.ModelCore.Log.WriteLine("Begin parsing SPECIES table.");
+            PlugIn.ModelCore.UI.WriteLine("Begin parsing SPECIES table.");
 
             ReadName(SppParms);
 
@@ -288,7 +288,7 @@ namespace Landis.Extension.BaseBDA
                                                       negSppName.Value.String);
                     int lineNumber;
                     if (lineNumbers.TryGetValue(species.Name, out lineNumber))
-                        PlugIn.ModelCore.Log.WriteLine("WARNING: The species {0} was previously used on line {1}.  Being listed in the IgnoredSpecies list will override any settings in the Host table.", negSppName.Value.String, lineNumber);
+                        PlugIn.ModelCore.UI.WriteLine("WARNING: The species {0} was previously used on line {1}.  Being listed in the IgnoredSpecies list will override any settings in the Host table.", negSppName.Value.String, lineNumber);
                     else
                         lineNumbers[species.Name] = LineNumber;
 

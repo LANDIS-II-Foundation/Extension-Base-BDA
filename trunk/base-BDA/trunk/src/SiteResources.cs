@@ -23,7 +23,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void SiteResourceDominance(IAgent agent, int ROS)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Site Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Site Resource Dominance.");
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
@@ -88,7 +88,7 @@ namespace Landis.Extension.BaseBDA
         public static void SiteResourceDominanceModifier(IAgent agent)
         {
 
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
                 if (SiteVars.SiteResourceDom[site] > 0.0)
@@ -103,7 +103,7 @@ namespace Landis.Extension.BaseBDA
                     if(SiteVars.TimeOfLastFire != null &&
                         agent.DistParameters[(int) DisturbanceType.Fire].Duration > 0)
                     {
-                        PlugIn.ModelCore.Log.WriteLine("   Calculating effect of Fire.");
+                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Fire.");
                         lastDisturb = SiteVars.TimeOfLastFire[site];
                         duration = agent.DistParameters[(int) DisturbanceType.Fire].Duration;
 
@@ -119,7 +119,7 @@ namespace Landis.Extension.BaseBDA
                     if(SiteVars.TimeOfLastWind != null &&
                         agent.DistParameters[(int) DisturbanceType.Wind].Duration > 0)
                     {
-                        PlugIn.ModelCore.Log.WriteLine("   Calculating effect of Wind.");
+                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Wind.");
                         lastDisturb = SiteVars.TimeOfLastWind[site];
                         duration = agent.DistParameters[(int) DisturbanceType.Wind].Duration;
 
@@ -135,7 +135,7 @@ namespace Landis.Extension.BaseBDA
                     if(SiteVars.TimeOfLastHarvest != null &&
                         agent.DistParameters[(int) DisturbanceType.Harvest].Duration > 0)
                     {
-                        PlugIn.ModelCore.Log.WriteLine("   Calculating effect of Harvesting.");
+                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Harvesting.");
                         lastDisturb = SiteVars.TimeOfLastHarvest[site];
                         duration = agent.DistParameters[(int) DisturbanceType.Harvest].Duration;
 
@@ -148,7 +148,7 @@ namespace Landis.Extension.BaseBDA
 
                     }
 
-                    //PlugIn.ModelCore.Log.WriteLine("   Summation of Disturbance Modifiers = {0}.", sumMods);
+                    //PlugIn.ModelCore.UI.WriteLine("   Summation of Disturbance Modifiers = {0}.", sumMods);
                     //---- APPLY ECOREGION MODIFIERS --------
                     IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
 
@@ -181,7 +181,7 @@ namespace Landis.Extension.BaseBDA
             double   SRD, SRDMod, NRD;
             double   CaliROS3 = ((double) ROS / 3) * agent.BDPCalibrator;
 
-            //PlugIn.ModelCore.Log.WriteLine("   Calculating BDA SiteVulnerability.");
+            //PlugIn.ModelCore.UI.WriteLine("   Calculating BDA SiteVulnerability.");
 
             if (considerNeighbor)      //take neigborhood into consideration
             {
@@ -202,10 +202,10 @@ namespace Landis.Extension.BaseBDA
                         tempSV = SRDMod + (NRD * agent.NeighborWeight);
                         tempSV = tempSV / (1 + agent.NeighborWeight);
                         double vulnerable = (double)(CaliROS3 * tempSV);
-                        //PlugIn.ModelCore.Log.WriteLine("tempSV={0}, SRDMod={1}, NRD={2}, neighborWeight={3}.", tempSV, SRDMod,NRD,agent.NeighborWeight);
+                        //PlugIn.ModelCore.UI.WriteLine("tempSV={0}, SRDMod={1}, NRD={2}, neighborWeight={3}.", tempSV, SRDMod,NRD,agent.NeighborWeight);
 
                         SiteVars.Vulnerability[site] = System.Math.Max(0.0, vulnerable);
-                        //PlugIn.ModelCore.Log.WriteLine("Site Vulnerability = {0}, CaliROS3={1}, tempSV={2}.", SiteVars.Vulnerability[site], CaliROS3, tempSV);
+                        //PlugIn.ModelCore.UI.WriteLine("Site Vulnerability = {0}, CaliROS3={1}, tempSV={2}.", SiteVars.Vulnerability[site], CaliROS3, tempSV);
                     }
                     else
                         SiteVars.Vulnerability[site] = 0.0;
@@ -237,7 +237,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void NeighborResourceDominance(IAgent agent)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
 
             double totalNeighborWeight = 0.0;
             double maxNeighborWeight = 0.0;
