@@ -1,0 +1,5 @@
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\bin\Debug\Landis.Extension.BaseBDA.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\bin\Debug\Landis.Extension.BaseBDA.pdb
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\ResolveAssemblyReference.cache
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.pdb
