@@ -64,23 +64,6 @@ namespace Landis.Extension.BaseBDA
             else
                 agentParameters.EndYear = PlugIn.ModelCore.EndTime;
 
-
-            InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
-            ReadVar(tSLE);
-            agentParameters.TimeSinceLastEpidemic = tSLE.Value;
-
-            InputVar<TemporalType> tt = new InputVar<TemporalType>("TemporalType");
-            ReadVar(tt);
-            agentParameters.TempType = tt.Value;
-            
-            InputVar<int> minROS = new InputVar<int>("MinROS");
-            ReadVar(minROS);
-            agentParameters.MinROS = minROS.Value;
-
-            InputVar<int> maxROS = new InputVar<int>("MaxROS");
-            ReadVar(maxROS);
-            agentParameters.MaxROS = maxROS.Value;
-
             InputVar<OutbreakPattern> rf = new InputVar<OutbreakPattern>("OutbreakPattern");
             ReadVar(rf);
             agentParameters.RandFunc = rf.Value;
@@ -114,6 +97,23 @@ namespace Landis.Extension.BaseBDA
                 agentParameters.MaxInterval = 0;
                 agentParameters.MinInterval = 0;
             }
+
+            InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
+            ReadVar(tSLE);
+            agentParameters.TimeSinceLastEpidemic = tSLE.Value;
+
+            InputVar<TemporalType> tt = new InputVar<TemporalType>("TemporalType");
+            ReadVar(tt);
+            agentParameters.TempType = tt.Value;
+            
+            InputVar<int> minROS = new InputVar<int>("MinROS");
+            ReadVar(minROS);
+            agentParameters.MinROS = minROS.Value;
+
+            InputVar<int> maxROS = new InputVar<int>("MaxROS");
+            ReadVar(maxROS);
+            agentParameters.MaxROS = maxROS.Value;
+
 
             InputVar<bool> d = new InputVar<bool>("Dispersal");
             ReadVar(d);

@@ -5,13 +5,14 @@ SRDMode			mean
 >>EndYear   100
 
 >>-------- Regional Outbreak Inputs -------------
+OutbreakPattern		CyclicNormal	<<CyclicNormal or CyclicUniform
+Mean			33.5
+StDev			10.6
 TimeSinceLastEpidemic	10		<<years
 TemporalType 		variablepulse	<<pulse or variablepulse
 MinROS			0
 MaxROS			3
-OutbreakPattern		CyclicNormal	<<CyclicNormal or CyclicUniform
-Mean			33.5
-StDev			10.6
+
 
 >>-------- Dispersal Inputs ----------------------
 Dispersal		no		<<yes or no
