@@ -40,7 +40,6 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public EcoParameters()
         {
-          
         }
 /*        //---------------------------------------------------------------------
         public EcoParameters(double ecoModifier)

@@ -23,7 +23,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void SiteResourceDominance(IAgent agent, int ROS)
         {
-            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Site Resource Dominance.");
+            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Site Resource Dominance.");
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
@@ -53,13 +53,16 @@ namespace Landis.Extension.BaseBDA
                         speciesHostValue = 0.0;
 
                         if (ageOldestCohort >= sppParms.MinorHostAge)
-                            speciesHostValue = 0.33;
+                            //speciesHostValue = 0.33;
+                            speciesHostValue = sppParms.MinorHostSRD;
 
                         if (ageOldestCohort >= sppParms.SecondaryHostAge)
-                            speciesHostValue = 0.66;
+                            //speciesHostValue = 0.66;
+                            speciesHostValue = sppParms.SecondaryHostSRD;
 
                         if (ageOldestCohort >= sppParms.PrimaryHostAge)
-                            speciesHostValue = 1.0;
+                            //speciesHostValue = 1.0;
+                            speciesHostValue = sppParms.PrimaryHostSRD;
 
 
                         sumValue += speciesHostValue;
@@ -88,7 +91,7 @@ namespace Landis.Extension.BaseBDA
         public static void SiteResourceDominanceModifier(IAgent agent)
         {
 
-            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
+            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
                 if (SiteVars.SiteResourceDom[site] > 0.0)
@@ -99,56 +102,85 @@ namespace Landis.Extension.BaseBDA
                     double  sumDisturbMods = 0.0;
                     double  SRDM = 0.0;
 
-                    //---- FIRE -------------------------
-                    if(SiteVars.TimeOfLastFire != null &&
-                        agent.DistParameters[(int) DisturbanceType.Fire].Duration > 0)
+                    // Next check the disturbance types.  This will provide the disturbance modifier
+                    // Check for harvest effects on SRD
+                    IEnumerable<IDisturbanceType> disturbanceTypes = agent.DisturbanceTypes;
+                    foreach (DisturbanceType disturbance in disturbanceTypes)
                     {
-                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Fire.");
-                        lastDisturb = SiteVars.TimeOfLastFire[site];
-                        duration = agent.DistParameters[(int) DisturbanceType.Fire].Duration;
-
-                        if (lastDisturb < duration)
+                        if (SiteVars.HarvestCohortsKilled != null && SiteVars.HarvestCohortsKilled[site] > 0)
                         {
-                            disturbMod = agent.DistParameters[(int) DisturbanceType.Fire].DistModifier *
-                                (double)(duration - lastDisturb) / duration;
-                            sumDisturbMods += disturbMod;
+                            lastDisturb = SiteVars.TimeOfLastHarvest[site];
+                            duration = disturbance.MaxAge;
+
+                            if (SiteVars.TimeOfLastHarvest != null && (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration))
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if ((SiteVars.HarvestPrescriptionName != null && SiteVars.HarvestPrescriptionName[site].Trim() == pName.Trim()) || (pName.Trim() == "Harvest"))
+                                    {
+                                        disturbMod = disturbance.SRDModifier *(double)(duration - lastDisturb) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
+                        }
+                        //Check for fire severity effects of fuel type
+                        if (SiteVars.FireSeverity != null && SiteVars.FireSeverity[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastFire[site];
+                            duration = disturbance.MaxAge;
+
+                            if (SiteVars.TimeOfLastFire != null && (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration))
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if (pName.StartsWith("FireSeverity"))
+                                    {
+                                        if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.FireSeverity[site].ToString())
+                                        {
+                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            sumDisturbMods += disturbMod;
+                                        }
+                                    }
+                                    else if (pName.Trim() == "Fire") // Generic for all fire
+                                    {
+                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
+                        }
+                        //Check for wind severity effects of fuel type
+                        if (SiteVars.WindSeverity != null && SiteVars.WindSeverity[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastWind[site];
+                            duration = disturbance.MaxAge;
+
+                            if (SiteVars.TimeOfLastWind != null &&
+                                (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration))
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if (pName.StartsWith("WindSeverity"))
+                                    {
+                                        if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.WindSeverity[site].ToString())
+                                        {
+                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            sumDisturbMods += disturbMod;
+                                        }
+                                    }
+                                    else if (pName.Trim() == "Wind") // Generic for all wind
+                                    {
+                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    //---- WIND -------------------------
-                    if(SiteVars.TimeOfLastWind != null &&
-                        agent.DistParameters[(int) DisturbanceType.Wind].Duration > 0)
-                    {
-                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Wind.");
-                        lastDisturb = SiteVars.TimeOfLastWind[site];
-                        duration = agent.DistParameters[(int) DisturbanceType.Wind].Duration;
 
-                        if (lastDisturb < duration)
-                        {
-                            disturbMod = agent.DistParameters[(int) DisturbanceType.Wind].DistModifier *
-                                (double)(duration - lastDisturb) / duration;
-                            sumDisturbMods += disturbMod;
-                        }
-                    }
-
-                    //---- HARVEST -------------------------
-                    if(SiteVars.TimeOfLastHarvest != null &&
-                        agent.DistParameters[(int) DisturbanceType.Harvest].Duration > 0)
-                    {
-                        PlugIn.ModelCore.UI.WriteLine("   Calculating effect of Harvesting.");
-                        lastDisturb = SiteVars.TimeOfLastHarvest[site];
-                        duration = agent.DistParameters[(int) DisturbanceType.Harvest].Duration;
-
-                        if (lastDisturb < duration)
-                        {
-                            disturbMod = agent.DistParameters[(int) DisturbanceType.Harvest].DistModifier *
-                                (double)(duration - lastDisturb) / duration;
-                            sumDisturbMods += disturbMod;
-                        }
-
-                    }
-
-                    //PlugIn.ModelCore.UI.WriteLine("   Summation of Disturbance Modifiers = {0}.", sumMods);
+                    //PlugIn.ModelCore.Log.WriteLine("   Summation of Disturbance Modifiers = {0}.", sumMods);
                     //---- APPLY ECOREGION MODIFIERS --------
                     IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
 
@@ -181,7 +213,7 @@ namespace Landis.Extension.BaseBDA
             double   SRD, SRDMod, NRD;
             double   CaliROS3 = ((double) ROS / 3) * agent.BDPCalibrator;
 
-            //PlugIn.ModelCore.UI.WriteLine("   Calculating BDA SiteVulnerability.");
+            //PlugIn.ModelCore.Log.WriteLine("   Calculating BDA SiteVulnerability.");
 
             if (considerNeighbor)      //take neigborhood into consideration
             {
@@ -202,10 +234,10 @@ namespace Landis.Extension.BaseBDA
                         tempSV = SRDMod + (NRD * agent.NeighborWeight);
                         tempSV = tempSV / (1 + agent.NeighborWeight);
                         double vulnerable = (double)(CaliROS3 * tempSV);
-                        //PlugIn.ModelCore.UI.WriteLine("tempSV={0}, SRDMod={1}, NRD={2}, neighborWeight={3}.", tempSV, SRDMod,NRD,agent.NeighborWeight);
+                        //PlugIn.ModelCore.Log.WriteLine("tempSV={0}, SRDMod={1}, NRD={2}, neighborWeight={3}.", tempSV, SRDMod,NRD,agent.NeighborWeight);
 
                         SiteVars.Vulnerability[site] = System.Math.Max(0.0, vulnerable);
-                        //PlugIn.ModelCore.UI.WriteLine("Site Vulnerability = {0}, CaliROS3={1}, tempSV={2}.", SiteVars.Vulnerability[site], CaliROS3, tempSV);
+                        //PlugIn.ModelCore.Log.WriteLine("Site Vulnerability = {0}, CaliROS3={1}, tempSV={2}.", SiteVars.Vulnerability[site], CaliROS3, tempSV);
                     }
                     else
                         SiteVars.Vulnerability[site] = 0.0;
@@ -237,7 +269,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void NeighborResourceDominance(IAgent agent)
         {
-            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
+            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
 
             double totalNeighborWeight = 0.0;
             double maxNeighborWeight = 0.0;
@@ -271,7 +303,7 @@ namespace Landis.Extension.BaseBDA
                         foreach(RelativeLocationWeighted neighbor in neighborhood)
                         {
                             //Do NOT subsample if there are too few neighbors
-                            //i.e., <= subsample size.
+                            //i.e., <= subsample size.D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\InputParameterParser.cs
                             if(neighborhood.Count <= speedUpFraction ||
                                 neighborCnt%speedUpFraction == 0)
                             {

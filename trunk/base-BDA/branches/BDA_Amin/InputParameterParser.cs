@@ -12,20 +12,14 @@ namespace Landis.Extension.BaseBDA
     /// A parser that reads the extension parameters from text input.
     /// </summary>
     public class InputParameterParser
-        : Landis.TextParser<IInputParameters>
+        : TextParser<IInputParameters>
     {
         public static IEcoregionDataset EcoregionsDataset = null;
 
 
         //---------------------------------------------------------------------
-        public override string LandisDataValue
-        //public InputParameterParser()
+        public InputParameterParser()
         {
-            get
-            {
-                return "Base BDA";
-            }
-
         }
 
         //---------------------------------------------------------------------
@@ -74,7 +68,21 @@ namespace Landis.Extension.BaseBDA
             }
             catch (LineReaderException errString)
             {
-                if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"NRDMapNames\"")))
+                if (!(errString.MultiLineMessage[1].Contains("Found the name \"VulnMapNames\" but expected \"NRDMapNames\"")))
+                {
+                    throw errString;
+                }
+
+            }
+            InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
+            try
+            {
+                ReadVar(bdpMapNames);
+                parameters.BDPMapNames = bdpMapNames.Value;
+            }
+            catch (LineReaderException errString)
+            {
+                if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"VulnMapNames\"")))
                 {
                     throw errString;
                 }
@@ -95,7 +103,7 @@ namespace Landis.Extension.BaseBDA
             List<IAgent> agentParameterList = new List<IAgent>();
             AgentParameterParser agentParser = new AgentParameterParser();
 
-            IAgent agentParameters = Landis.Data.Load<IAgent>(agentFileName.Value, agentParser);
+            IAgent agentParameters = PlugIn.ModelCore.Load<IAgent>(agentFileName.Value, agentParser);
             agentParameterList.Add(agentParameters);
 
             while (!AtEndOfInput) {
@@ -103,7 +111,7 @@ namespace Landis.Extension.BaseBDA
 
                 ReadValue(agentFileName, currentLine);
 
-                agentParameters = Landis.Data.Load<IAgent>(agentFileName.Value, agentParser);
+                agentParameters = PlugIn.ModelCore.Load<IAgent>(agentFileName.Value, agentParser);
 
                 agentParameterList.Add(agentParameters);
 
@@ -114,15 +122,20 @@ namespace Landis.Extension.BaseBDA
             foreach(IAgent activeAgent in agentParameterList)
             {
                 if(agentParameters == null)
-                    PlugIn.ModelCore.UI.WriteLine("PARSE:  Agent Parameters NOT loading correctly.");
+                    PlugIn.ModelCore.Log.WriteLine("PARSE:  Agent Parameters NOT loading correctly.");
                 else
-                    PlugIn.ModelCore.UI.WriteLine("Name of Agent = {0}", agentParameters.AgentName);
+                    PlugIn.ModelCore.Log.WriteLine("Name of Agent = {0}", agentParameters.AgentName);
 
             }
             parameters.ManyAgentParameters = agentParameterList;
 
             return parameters; //.GetComplete();
 
+        }
+
+        public override string LandisDataValue
+        {
+            get { return "Base BDA"; }
         }
     }
 }

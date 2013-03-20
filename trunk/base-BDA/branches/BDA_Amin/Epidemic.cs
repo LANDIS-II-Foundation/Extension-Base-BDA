@@ -19,6 +19,9 @@ namespace Landis.Extension.BaseBDA
         private int totalCohortsKilled;
         private double meanSeverity;
         private int siteSeverity;
+        private double random;
+        private double siteVulnerability;
+        //private int advRegenAgeCutoff;
         private int siteCohortsKilled;
         private int siteCFSconifersKilled;
         private int[] sitesInEvent;
@@ -77,7 +80,7 @@ namespace Landis.Extension.BaseBDA
         ExtensionType IDisturbance.Type
         {
             get {
-                return PlugIn.type;
+                return PlugIn.Type;
             }
         }
 
@@ -107,7 +110,7 @@ namespace Landis.Extension.BaseBDA
 
         public static void Initialize(IAgent agent)
         {
-            PlugIn.ModelCore.UI.WriteLine("   Initializing agent {0}.", agent.AgentName);
+            PlugIn.ModelCore.Log.WriteLine("   Initializing agent {0}.", agent.AgentName);
 
             ecoregions = PlugIn.ModelCore.Ecoregions;
 
@@ -141,7 +144,7 @@ namespace Landis.Extension.BaseBDA
 
 
             Epidemic CurrentEpidemic = new Epidemic(agent);
-            PlugIn.ModelCore.UI.WriteLine("   New BDA Epidemic Activated.");
+            PlugIn.ModelCore.Log.WriteLine("   New BDA Epidemic Activated.");
 
             //SiteResources.SiteResourceDominance(agent, ROS, SiteVars.Cohorts);
             SiteResources.SiteResourceDominance(agent, ROS);
@@ -190,7 +193,7 @@ namespace Landis.Extension.BaseBDA
             this.meanSeverity = 0.0;
             this.totalSitesDamaged = 0;
 
-            //PlugIn.ModelCore.UI.WriteLine("New Agent event");
+            //PlugIn.ModelCore.Log.WriteLine("New Agent event");
         }
 
         //---------------------------------------------------------------------
@@ -201,33 +204,46 @@ namespace Landis.Extension.BaseBDA
             int totalSiteSeverity = 0;
             int siteCohortsKilled = 0;
             int[] cohortsKilled = new int[2];
+            //this.advRegenAgeCutoff = agent.AdvRegenAgeCutoff;
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
             {
                 siteCohortsKilled = 0;
                 this.siteSeverity = 0;
+                this.random = 0;
+
+                double myRand = PlugIn.ModelCore.GenerateUniform();
 
                 if(agent.OutbreakZone[site] == Zone.Newzone
-                    && SiteVars.Vulnerability[site] > PlugIn.ModelCore.GenerateUniform())
+                    && SiteVars.Vulnerability[site] > myRand)
                 {
-                    //PlugIn.ModelCore.UI.WriteLine("Zone={0}, agent.OutbreakZone={1}", Zone.Newzone.ToString(), agent.OutbreakZone[site]);
-                    //PlugIn.ModelCore.UI.WriteLine("Vulnerability={0}, Randnum={1}", SiteVars.Vulnerability[site], PlugIn.ModelCore.GenerateUniform());
+                    //PlugIn.ModelCore.Log.WriteLine("Zone={0}, agent.OutbreakZone={1}", Zone.Newzone.ToString(), agent.OutbreakZone[site]);
+                    //PlugIn.ModelCore.Log.WriteLine("Vulnerability={0}, Randnum={1}", SiteVars.Vulnerability[site], PlugIn.ModelCore.GenerateUniform());
                     double vulnerability = SiteVars.Vulnerability[site];
 
                     if(vulnerability >= 0) this.siteSeverity= 1;
 
-                    if(vulnerability >= 0.33) this.siteSeverity= 2;
+                    if(vulnerability >= agent.Class2_SV) this.siteSeverity= 2;
 
-                    if(vulnerability >= 0.66) this.siteSeverity= 3;
+                    if(vulnerability >= agent.Class3_SV) this.siteSeverity= 3;
 
-
+                    this.random = myRand;
+                    this.siteVulnerability = SiteVars.Vulnerability[site];
 
                     if(this.siteSeverity > 0)
                         cohortsKilled = KillSiteCohorts(site);
 
                     siteCohortsKilled = cohortsKilled[0];
 
-                    SiteVars.NumberCFSconifersKilled[site].Add(PlugIn.ModelCore.CurrentTime, cohortsKilled[1]);
+                    if (SiteVars.NumberCFSconifersKilled[site].ContainsKey(PlugIn.ModelCore.CurrentTime))
+                    {
+                        int prevKilled = SiteVars.NumberCFSconifersKilled[site][PlugIn.ModelCore.CurrentTime];
+                        SiteVars.NumberCFSconifersKilled[site][PlugIn.ModelCore.CurrentTime] = prevKilled + cohortsKilled[1];
+                    }
+                    else
+                    {
+                        SiteVars.NumberCFSconifersKilled[site].Add(PlugIn.ModelCore.CurrentTime, cohortsKilled[1]);
+                    }
 
                     if (siteCohortsKilled > 0)
                     {
@@ -272,21 +288,56 @@ namespace Landis.Extension.BaseBDA
         // be killed.
         bool ICohortDisturbance.MarkCohortForDeath(ICohort cohort)
         {
-            //PlugIn.ModelCore.UI.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
+            //PlugIn.ModelCore.Log.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
             
             bool killCohort = false;
-            
+           // bool advRegenSpp = false;
+
             ISppParameters sppParms = epidemicParms.SppParameters[cohort.Species.Index];
 
-            if(this.siteSeverity == 1)
-                if(cohort.Age >= sppParms.VulnerableHostAge)
-                    killCohort = true;
-            if(this.siteSeverity == 2)
-                if(cohort.Age >= sppParms.TolerantHostAge)
-                    killCohort = true;
-            if(this.siteSeverity == 3)
-                if(cohort.Age >= sppParms.ResistantHostAge)
-                    killCohort = true;
+            //foreach (ISpecies mySpecies in epidemicParms.AdvRegenSppList)
+            //{
+            //   if (cohort.Species == mySpecies)
+            //   {
+            //        advRegenSpp = true;
+            //        break;
+            //    }
+
+            //}
+
+            if (cohort.Age >= sppParms.ResistantHostAge)
+            {
+                if (this.random <= this.siteVulnerability * sppParms.ResistantHostVuln)
+                {
+                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
+                    //    killCohort = false;
+                    //else
+                        killCohort = true;
+                }
+            }
+
+            if (cohort.Age >= sppParms.TolerantHostAge)
+            {
+                if (this.random <= this.siteVulnerability * sppParms.TolerantHostVuln)
+                {
+                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
+                     //   killCohort = false;
+                    //else
+                        killCohort = true;
+                }
+            }
+
+            if (cohort.Age >= sppParms.VulnerableHostAge)
+            {
+                if (this.random <= this.siteVulnerability * sppParms.VulnerableHostVuln)
+                {
+                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
+                     //   killCohort = false;
+                    //else
+                        killCohort = true;
+                }
+            }
+            
 
             if (killCohort)
             {
