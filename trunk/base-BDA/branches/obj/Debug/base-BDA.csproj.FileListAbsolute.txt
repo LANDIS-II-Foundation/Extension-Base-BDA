@@ -1,0 +1,16 @@
+D:\PSU\Landis_II\Alec\Base_BDA_Climate\obj\Debug\ResolveAssemblyReference.cache
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\obj\Debug\ResolveAssemblyReference.cache
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Extension.BaseBDA.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Extension.BaseBDA.pdb
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.AgeOnlyCohorts.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.Cohorts.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.SpatialModeling.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\obj\Debug\Landis.Extension.BaseBDA.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\obj\Debug\Landis.Extension.BaseBDA.pdb
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.Climate.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Extension.Succession.Century.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.LeafBiomassCohorts.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.Succession.dll
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Library.Climate.pdb
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\Landis.Extension.Succession.Century.pdb
+D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\bin\Debug\log4net.dll
