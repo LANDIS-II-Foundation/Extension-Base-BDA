@@ -13,7 +13,13 @@ namespace Landis.Extension.BaseBDA
         
         public static ExtensionMetadata Extension {get; set;}
 
-        public static void InitializeMetadata(int Timestep, string severityMapFileName, string srdMapFileName, string nrdMapFileName, string logFileName, ICore mCore)
+        public static void InitializeMetadata(int Timestep, 
+            string severityMapFileName, 
+            string srdMapFileName, 
+            string nrdMapFileName, 
+            string logFileName, 
+            IEnumerable<IAgent> manyAgentParameters, 
+            ICore mCore)
         {
             ScenarioReplicationMetadata scenRep = new ScenarioReplicationMetadata() {
                 //String outputFolder = OutputPath.ReplaceTemplateVars("", FINISH ME LATER);
@@ -51,40 +57,47 @@ namespace Landis.Extension.BaseBDA
             //          map outputs:         
             //---------------------------------------
 
-            OutputMetadata mapOut_Severity = new OutputMetadata()
+            foreach (IAgent activeAgent in manyAgentParameters)
             {
-                Type = OutputType.Map,
-                Name = "Outbreak Severity",
-                FilePath = @severityMapFileName,
-                Map_DataType = MapDataType.Nominal,
-                Map_Unit = "categorical",
-            };
-            Extension.OutputMetadatas.Add(mapOut_Severity);
+                string mapTypePath = MapNames.ReplaceTemplateVarsMetadata(severityMapFileName, activeAgent.AgentName);
 
-            if (srdMapFileName != null)
-            {
-                OutputMetadata mapOut_SRD = new OutputMetadata()
+                OutputMetadata mapOut_Severity = new OutputMetadata()
                 {
                     Type = OutputType.Map,
-                    Name = "Site Resource Dominance",
-                    FilePath = @srdMapFileName,
+                    Name = "Outbreak Severity",
+                    FilePath = @mapTypePath,
                     Map_DataType = MapDataType.Nominal,
                     Map_Unit = "categorical",
                 };
-                Extension.OutputMetadatas.Add(mapOut_SRD);
-            }
+                Extension.OutputMetadatas.Add(mapOut_Severity);
 
-            if (nrdMapFileName != null)
-            {
-                OutputMetadata mapOut_NRD = new OutputMetadata()
+                if (srdMapFileName != null)
                 {
-                    Type = OutputType.Map,
-                    Name = "Neighborhood Resource Dominance",
-                    FilePath = @nrdMapFileName,
-                    Map_DataType = MapDataType.Nominal,
-                    Map_Unit = "categorical",
-                };
-                Extension.OutputMetadatas.Add(mapOut_NRD);
+                    mapTypePath = MapNames.ReplaceTemplateVarsMetadata(srdMapFileName, activeAgent.AgentName);
+                    OutputMetadata mapOut_SRD = new OutputMetadata()
+                    {
+                        Type = OutputType.Map,
+                        Name = "Site Resource Dominance",
+                        FilePath = @mapTypePath,
+                        Map_DataType = MapDataType.Nominal,
+                        Map_Unit = "categorical",
+                    };
+                    Extension.OutputMetadatas.Add(mapOut_SRD);
+                }
+
+                if (nrdMapFileName != null)
+                {
+                    mapTypePath = MapNames.ReplaceTemplateVarsMetadata(nrdMapFileName, activeAgent.AgentName);
+                    OutputMetadata mapOut_NRD = new OutputMetadata()
+                    {
+                        Type = OutputType.Map,
+                        Name = "Neighborhood Resource Dominance",
+                        FilePath = @mapTypePath,
+                        Map_DataType = MapDataType.Nominal,
+                        Map_Unit = "categorical",
+                    };
+                    Extension.OutputMetadatas.Add(mapOut_NRD);
+                }
             }
             //---------------------------------------
             MetadataProvider mp = new MetadataProvider(Extension);

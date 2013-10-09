@@ -17,8 +17,8 @@ Source: ..\src\bin\debug\Landis.Extension.BaseBDA.dll; DestDir: {#ExtDir}; Flags
 Source: ..\src\bin\debug\Landis.Library.Metadata.dll; DestDir: {#ExtDir}; Flags: replacesameversion
 
 ; Base BDA
-Source: docs\LANDIS-II Biological Disturbance Agent v2.1 User Guide.pdf; DestDir: {app}\docs
-Source: examples\*; DestDir: {app}\examples\base-BDA
+Source: docs\LANDIS-II Biological Disturbance Agent v2.1 User Guide.pdf; DestDir: {#AppDir}\docs
+Source: examples\*; DestDir: {#AppDir}\examples\base-BDA
 
 #define BaseBDA "Base BDA 2.1.txt"
 Source: {#BaseBDA}; DestDir: {#LandisPlugInDir}

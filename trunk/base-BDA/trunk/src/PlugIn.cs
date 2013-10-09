@@ -72,7 +72,8 @@ namespace Landis.Extension.BaseBDA
                 parameters.MapNamesTemplate, 
                 parameters.SRDMapNames, 
                 parameters.NRDMapNames, 
-                parameters.LogFileName, 
+                parameters.LogFileName,
+                parameters.ManyAgentParameters,
                 ModelCore);
 
             Timestep = parameters.Timestep;
