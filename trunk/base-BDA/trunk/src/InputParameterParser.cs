@@ -19,11 +19,10 @@ namespace Landis.Extension.BaseBDA
 
         //---------------------------------------------------------------------
         public override string LandisDataValue
-        //public InputParameterParser()
         {
             get
             {
-                return "Base BDA";
+                return PlugIn.ExtensionName;
             }
 
         }
@@ -33,10 +32,12 @@ namespace Landis.Extension.BaseBDA
         protected override IInputParameters Parse()
         {
 
-            InputVar<string> landisData = new InputVar<string>("LandisData");
-            ReadVar(landisData);
-            if (landisData.Value.Actual != PlugIn.ExtensionName)
-                throw new InputValueException(landisData.Value.String, "The value is not \"{0}\"", PlugIn.ExtensionName);
+            ReadLandisDataVar();
+
+            //InputVar<string> landisData = new InputVar<string>("LandisData");
+            //ReadVar(landisData);
+            //if (landisData.Value.Actual != PlugIn.ExtensionName)
+            //    throw new InputValueException(landisData.Value.String, "The value is not \"{0}\"", PlugIn.ExtensionName);
 
             InputParameters parameters = new InputParameters();
 
@@ -52,34 +53,38 @@ namespace Landis.Extension.BaseBDA
             parameters.MapNamesTemplate = mapNames.Value;
 
             InputVar<string> srdMapNames = new InputVar<string>("SRDMapNames");
-            try
-            {
-                ReadVar(srdMapNames);
-                parameters.SRDMapNames = srdMapNames.Value;
-            }
-            catch (LineReaderException errString)
-            {
-                if (!((errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"SRDMapNames\"")) || (errString.MultiLineMessage[1].Contains("Found the name \"NRDMapNames\" but expected \"SRDMapNames\""))))
-                {
-                    throw errString;
-                }
+            ReadOptionalVar(srdMapNames);
+            parameters.SRDMapNames = srdMapNames.Value;
+            //try
+            //{
+            //    ReadVar(srdMapNames);
+            //    parameters.SRDMapNames = srdMapNames.Value;
+            //}
+            //catch (LineReaderException errString)
+            //{
+            //    if (!((errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"SRDMapNames\"")) || (errString.MultiLineMessage[1].Contains("Found the name \"NRDMapNames\" but expected \"SRDMapNames\""))))
+            //    {
+            //        throw errString;
+            //    }
 
-            }
+            //}
 
             InputVar<string> nrdMapNames = new InputVar<string>("NRDMapNames");
-            try
-            {
-                ReadVar(nrdMapNames);
-                parameters.NRDMapNames = nrdMapNames.Value;
-            }
-            catch (LineReaderException errString)
-            {
-                if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"NRDMapNames\"")))
-                {
-                    throw errString;
-                }
+            ReadOptionalVar(nrdMapNames);
+            parameters.NRDMapNames = nrdMapNames.Value;
+            //try
+            //{
+            //    ReadVar(nrdMapNames);
+            //    parameters.NRDMapNames = nrdMapNames.Value;
+            //}
+            //catch (LineReaderException errString)
+            //{
+            //    if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"NRDMapNames\"")))
+            //    {
+            //        throw errString;
+            //    }
 
-            }
+            //}
 
             InputVar<string> logFile = new InputVar<string>("LogFile");
             ReadVar(logFile);

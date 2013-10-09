@@ -1,30 +1,26 @@
 #define PackageName      "Base BDA"
 #define PackageNameLong  "Base BDA Extension"
-#define Version          "2.0"
+#define Version          "2.1"
 #define ReleaseType      "official"
 #define ReleaseNumber    "2"
 
 #define CoreVersion      "6.0"
 #define CoreReleaseAbbr  ""
 
-#include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Setup section) v6.0.iss"
-
-#if ReleaseType != "official"
-  #define Configuration  "debug"
-#else
-  #define Configuration  "release"
-#endif
-
+#include "J:\Scheller\LANDIS-II\deploy\package (Setup section) v6.0.iss"
+#define ExtDir "C:\Program Files\LANDIS-II\v6\bin\extensions"
+#define AppDir "C:\Program Files\LANDIS-II\v6\"
 
 [Files]
 
-Source: C:\Program Files\LANDIS-II\6.0\bin\Landis.Extension.BaseBDA.dll; DestDir: {app}\bin; Flags: replacesameversion
+Source: ..\src\bin\debug\Landis.Extension.BaseBDA.dll; DestDir: {#ExtDir}; Flags: replacesameversion
+Source: ..\src\bin\debug\Landis.Library.Metadata.dll; DestDir: {#ExtDir}; Flags: replacesameversion
 
 ; Base BDA
-Source: docs\LANDIS-II Biological Disturbance Agent v2.0 User Guide.pdf; DestDir: {app}\docs
+Source: docs\LANDIS-II Biological Disturbance Agent v2.1 User Guide.pdf; DestDir: {app}\docs
 Source: examples\*; DestDir: {app}\examples\base-BDA
 
-#define BaseBDA "Base BDA 2.0.txt"
+#define BaseBDA "Base BDA 2.1.txt"
 Source: {#BaseBDA}; DestDir: {#LandisPlugInDir}
 
 [Run]
@@ -39,8 +35,6 @@ Filename: {#PlugInAdminTool}; Parameters: "add ""{#BaseBDA}"" "; WorkingDir: {#L
 { Check for other prerequisites during the setup initialization }
 
 #include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Code section) v3.iss"
-
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 

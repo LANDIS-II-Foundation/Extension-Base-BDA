@@ -3,8 +3,7 @@
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
 using Landis.Core;
-
-//using Landis.Cohorts;
+using Landis.Library.Metadata;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +22,12 @@ namespace Landis.Extension.BaseBDA
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Base BDA";
+        public static MetadataTable<EventsLog> eventLog;
 
         private string mapNameTemplate;
         private string srdMapNames;
         private string nrdMapNames;
-        private StreamWriter log;
+        //private StreamWriter log;
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private static ICore modelCore;
@@ -68,7 +68,12 @@ namespace Landis.Extension.BaseBDA
         /// </summary>
         public override void Initialize()
         {
-
+            MetadataHandler.InitializeMetadata(parameters.Timestep, 
+                parameters.MapNamesTemplate, 
+                parameters.SRDMapNames, 
+                parameters.NRDMapNames, 
+                parameters.LogFileName, 
+                ModelCore);
 
             Timestep = parameters.Timestep;
             mapNameTemplate = parameters.MapNamesTemplate;
@@ -105,12 +110,14 @@ namespace Landis.Extension.BaseBDA
                 }
             }
 
-            string logFileName = parameters.LogFileName;
-            PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
-            log = Landis.Data.CreateTextFile(logFileName);
-            log.AutoFlush = true;
-            log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
-            log.WriteLine("");
+
+
+            //string logFileName = parameters.LogFileName;
+            //PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
+            //log = Landis.Data.CreateTextFile(logFileName);
+            //log.AutoFlush = true;
+            //log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
+            //log.WriteLine("");
 
         }
 
@@ -153,9 +160,6 @@ namespace Landis.Extension.BaseBDA
 
                         //----- Write BDA severity maps --------
                         string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                        //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
-                        //using (map) {
-                        //    SeverityPixel pixel = new SeverityPixel();
                         using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
                         {
                             ShortPixel pixel = outputRaster.BufferPixel;
@@ -173,7 +177,7 @@ namespace Landis.Extension.BaseBDA
                                 outputRaster.WriteBufferPixel();
                             }
                         }
-                        if (!(srdMapNames == ""))
+                        if (srdMapNames != null)
                         {
                             //----- Write BDA SRD maps --------
                             string path2 = MapNames.ReplaceTemplateVars(srdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
@@ -195,7 +199,7 @@ namespace Landis.Extension.BaseBDA
                                 }
                             }
                         }
-                        if (!(nrdMapNames == ""))
+                        if (nrdMapNames != null)
                         {
                             //----- Write BDA NRD maps --------
                             string path3 = MapNames.ReplaceTemplateVars(nrdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
@@ -231,37 +235,28 @@ namespace Landis.Extension.BaseBDA
                               Epidemic CurrentEvent,
                               int ROS, IAgent agent)
         {
-            log.Write("{0},{1},{2},{3},{4},{5:0.0}",
-                      currentTime,
-                      ROS,
-                      agent.AgentName,
-                      CurrentEvent.CohortsKilled,
-                      CurrentEvent.TotalSitesDamaged,
-                      CurrentEvent.MeanSeverity);
-            log.WriteLine("");
+            eventLog.Clear();
+            EventsLog el = new EventsLog();
+            el.Time = currentTime;
+            el.ROS = ROS;
+            el.AgentName = agent.AgentName;
+            el.DamagedSites = CurrentEvent.TotalSitesDamaged;
+            el.CohortsKilled = CurrentEvent.CohortsKilled;
+            el.MeanSeverity = CurrentEvent.MeanSeverity;
+
+
+            eventLog.AddObject(el);
+            eventLog.WriteToFile();
+            //log.Write("{0},{1},{2},{3},{4},{5:0.0}",
+            //          currentTime,
+            //          ROS,
+            //          agent.AgentName,
+            //          CurrentEvent.CohortsKilled,
+            //          CurrentEvent.TotalSitesDamaged,
+            //          CurrentEvent.MeanSeverity);
+            //log.WriteLine("");
         }
 
-        //---------------------------------------------------------------------
-        /*private IOutputRaster<ShortPixel> CreateMap(int currentTime, string agentName)
-        {
-            string path = MapNames.ReplaceTemplateVars(mapNameTemplate, agentName, currentTime);
-            PlugIn.ModelCore.UI.WriteLine("   Writing BDA severity map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
-        }*/
-
-        /*private IOutputRaster<ShortPixel> CreateSRDMap(int currentTime, string agentName)
-        {
-            string path = MapNames.ReplaceTemplateVars(srdMapNames, agentName, currentTime);
-            PlugIn.ModelCore.UI.WriteLine("   Writing BDA SRD map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
-        }*/
-
-        /*private IOutputRaster<ShortPixel> CreateNRDMap(int currentTime, string agentName)
-        {
-            string path = MapNames.ReplaceTemplateVars(nrdMapNames, agentName, currentTime);
-            PlugIn.ModelCore.UI.WriteLine("   Writing BDA NRD map to {0} ...", path);
-            return PlugIn.modelCore.CreateRaster<ShortPixel>(path, PlugIn.modelCore.Landscape.Dimensions);
-        }*/
         //---------------------------------------------------------------------
         private static int TimeToNext(IAgent activeAgent, int Timestep)
         {
@@ -311,10 +306,6 @@ namespace Landis.Extension.BaseBDA
                 else if (activeAgent.TempType == TemporalType.variablepulse)
                 {
                     //randomly select an ROS netween ROSmin and ROSmax
-                    //ROS = (int) (Landis.Util.Random.GenerateUniform() *
-                    //      (double) (activeAgent.MaxROS - activeAgent.MinROS + 1)) +
-                    //      activeAgent.MinROS;
-
                     // Correction suggested by Brian Miranda, March 2008
                     ROS = (int) (PlugIn.ModelCore.GenerateUniform() *
                           (double) (activeAgent.MaxROS - activeAgent.MinROS)) + 1 +
@@ -323,7 +314,6 @@ namespace Landis.Extension.BaseBDA
                 }
 
             } else  {
-                //activeAgent.TimeSinceLastEpidemic += BDAtimestep;
                 ROS = activeAgent.MinROS;
             }
             return ROS;
