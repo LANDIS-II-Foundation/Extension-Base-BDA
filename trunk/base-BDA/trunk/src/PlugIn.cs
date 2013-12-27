@@ -145,11 +145,12 @@ namespace Landis.Extension.BaseBDA
                 activeAgent.TimeSinceLastEpidemic += Timestep;
 
                 int ROS = RegionalOutbreakStatus(activeAgent, Timestep);
+                Epidemic currentEpic = null;
 
-                if(ROS > 0)
+                if (ROS > 0)
                 {
                     Epidemic.Initialize(activeAgent);
-                    Epidemic currentEpic = Epidemic.Simulate(activeAgent,
+                    currentEpic = Epidemic.Simulate(activeAgent,
                         PlugIn.ModelCore.CurrentTime,
                         Timestep,
                         ROS);
@@ -158,11 +159,22 @@ namespace Landis.Extension.BaseBDA
                     if (currentEpic != null)
                     {
                         LogEvent(PlugIn.ModelCore.CurrentTime, currentEpic, ROS, activeAgent);
+                        eventCount++;
+                    }
+                }
 
-                        //----- Write BDA severity maps --------
-                        string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                        using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
-                        {
+                if (currentEpic == null) 
+                {
+                    activeAgent.Severity.ActiveSiteValues = 0;
+                    SiteVars.SiteResourceDom.ActiveSiteValues = 0;
+                    SiteVars.NeighborResourceDom.ActiveSiteValues = 0;
+                }
+                //{
+
+               //----- Write BDA severity maps --------
+               string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
+               using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
+               {
                             ShortPixel pixel = outputRaster.BufferPixel;
                             foreach (Site site in PlugIn.ModelCore.Landscape.AllSites) {
                                 if (site.IsActive) {
@@ -177,9 +189,9 @@ namespace Landis.Extension.BaseBDA
                                 }
                                 outputRaster.WriteBufferPixel();
                             }
-                        }
-                        if (srdMapNames != null)
-                        {
+                 }
+                 if (srdMapNames != null)
+                 {
                             //----- Write BDA SRD maps --------
                             string path2 = MapNames.ReplaceTemplateVars(srdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
                             using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path2, modelCore.Landscape.Dimensions))
@@ -199,9 +211,9 @@ namespace Landis.Extension.BaseBDA
                                     outputRaster.WriteBufferPixel();
                                 }
                             }
-                        }
-                        if (nrdMapNames != null)
-                        {
+                 }
+                 if (nrdMapNames != null)
+                 {
                             //----- Write BDA NRD maps --------
                             string path3 = MapNames.ReplaceTemplateVars(nrdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
                             using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path3, modelCore.Landscape.Dimensions))
@@ -221,11 +233,6 @@ namespace Landis.Extension.BaseBDA
                                     }
                                     outputRaster.WriteBufferPixel();
                                 }
-                            }
-                        }
-
-
-                        eventCount++;
                     }
                 }
             }

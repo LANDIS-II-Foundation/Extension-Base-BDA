@@ -23,11 +23,11 @@ namespace Landis.Extension.BaseBDA
         {
             ScenarioReplicationMetadata scenRep = new ScenarioReplicationMetadata() {
                 //String outputFolder = OutputPath.ReplaceTemplateVars("", FINISH ME LATER);
-                FolderName = System.IO.Directory.GetCurrentDirectory().Split("\\".ToCharArray()).Last(),
+                //FolderName = System.IO.Directory.GetCurrentDirectory().Split("\\".ToCharArray()).Last(),
                 RasterOutCellArea = PlugIn.ModelCore.CellArea,
                 TimeMin = PlugIn.ModelCore.StartTime,
                 TimeMax = PlugIn.ModelCore.EndTime,
-                ProjectionFilePath = "Projection.?" //How do we get projections???
+                //ProjectionFilePath = "Projection.?" //How do we get projections???
             };
 
             Extension = new ExtensionMetadata(mCore){
@@ -66,8 +66,8 @@ namespace Landis.Extension.BaseBDA
                     Type = OutputType.Map,
                     Name = "Outbreak Severity",
                     FilePath = @mapTypePath,
-                    Map_DataType = MapDataType.Nominal,
-                    Map_Unit = "categorical",
+                    Map_DataType = MapDataType.Ordinal,
+                    //Map_Unit = "categorical",
                 };
                 Extension.OutputMetadatas.Add(mapOut_Severity);
 
@@ -79,8 +79,8 @@ namespace Landis.Extension.BaseBDA
                         Type = OutputType.Map,
                         Name = "Site Resource Dominance",
                         FilePath = @mapTypePath,
-                        Map_DataType = MapDataType.Nominal,
-                        Map_Unit = "categorical",
+                        Map_DataType = MapDataType.Continuous,
+                        Map_Unit = FiledUnits.Percentage,
                     };
                     Extension.OutputMetadatas.Add(mapOut_SRD);
                 }
@@ -93,8 +93,8 @@ namespace Landis.Extension.BaseBDA
                         Type = OutputType.Map,
                         Name = "Neighborhood Resource Dominance",
                         FilePath = @mapTypePath,
-                        Map_DataType = MapDataType.Nominal,
-                        Map_Unit = "categorical",
+                        Map_DataType = MapDataType.Continuous,
+                        Map_Unit = FiledUnits.Percentage,
                     };
                     Extension.OutputMetadatas.Add(mapOut_NRD);
                 }
