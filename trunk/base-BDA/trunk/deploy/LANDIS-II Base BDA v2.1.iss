@@ -19,7 +19,8 @@ Source: ..\src\bin\debug\Landis.Library.Metadata.dll; DestDir: {#ExtDir}; Flags:
 ; Base BDA
 Source: docs\LANDIS-II Biological Disturbance Agent v2.1 User Guide.pdf; DestDir: {#AppDir}\docs
 Source: examples\*.txt; DestDir: {#AppDir}\examples\base-BDA
-Source: examples\*.gis; DestDir: {#AppDir}\examples\base-BDA
+Source: examples\ecoregions.gis; DestDir: {#AppDir}\examples\base-BDA
+Source: examples\initial-communities.gis; DestDir: {#AppDir}\examples\base-BDA
 Source: examples\*.bat; DestDir: {#AppDir}\examples\base-BDA
 
 #define BaseBDA "Base BDA 2.1.txt"
