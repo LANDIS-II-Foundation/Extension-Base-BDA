@@ -194,10 +194,10 @@ namespace Landis.Extension.BaseBDA
             //
             // Update TimeOfNext as above 
 
-            Console.Write("Landscape_PDSI: " + Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] + "\n");
+            Console.Write("Landscape_PDSI: " + Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] + "\n");
             //Console.Read();
 
-            if (Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] > this.threshold_Lowerbound && Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] < this.threshold_Upperbound)
+            if (Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] > this.threshold_Lowerbound && Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] < this.threshold_Upperbound)
             {
                 // List of TimeofNext
                 OutbreakList.AddLast(PlugIn.ModelCore.CurrentTime + this.outbreakLag);
