@@ -194,10 +194,10 @@ namespace Landis.Extension.BaseBDA
             //
             // Update TimeOfNext as above 
 
-            Console.Write("Landscape_PDSI: " + Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] + "\n");
+            Console.Write("Landscape_PDSI: " + Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] + "\n");
             //Console.Read();
 
-            if (Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] > this.threshold_Lowerbound && Climate.LandscapAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] < this.threshold_Upperbound)
+            if (Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] > this.threshold_Lowerbound && Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] < this.threshold_Upperbound)
             {
                 // List of TimeofNext
                 OutbreakList.AddLast(PlugIn.ModelCore.CurrentTime + this.outbreakLag);
@@ -239,7 +239,7 @@ namespace Landis.Extension.BaseBDA
             ////    //numberOfEcoregions = ecos.Max();
             ////    numberOfEcoregions = Climate.AnnualPDSI.AsEnumerable().Select(a2 => a2.Field<int>("Ecorigion")).Distinct().ToList().Max();
 
-            ////    Climate.LandscapAnnualPDSI = new double[numberOftimeStaps];
+            ////    Climate.LandscapeAnnualPDSI = new double[numberOftimeStaps];
 
             ////    for (int timeStep = 1; timeStep <= numberOftimeStaps; timeStep++)
             ////    {
