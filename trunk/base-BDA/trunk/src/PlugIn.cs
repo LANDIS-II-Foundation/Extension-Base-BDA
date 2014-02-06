@@ -22,7 +22,8 @@ namespace Landis.Extension.BaseBDA
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Base BDA";
-        public static MetadataTable<EventsLog> eventLog;
+        public static MetadataTable<EventsLog> EventLog;
+        public static MetadataTable<PDSI_Log> PDSILog;
 
         private string mapNameTemplate;
         private string srdMapNames;
@@ -86,29 +87,69 @@ namespace Landis.Extension.BaseBDA
             manyAgentParameters = parameters.ManyAgentParameters;
             foreach(IAgent activeAgent in manyAgentParameters)
             {
+                int timeOfNext = 0;
 
-
-                if(activeAgent == null)
+                if (activeAgent == null)
                     PlugIn.ModelCore.UI.WriteLine("Agent Parameters NOT loading correctly.");
-                activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep);
+                if (activeAgent.RandFunc.ToString().ToLower() != "climate")
+                {
+                    activeAgent.TimeToNextEpidemic = activeAgent.TimeToNext(Timestep) + activeAgent.StartYear;
+                    timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
 
-                int i=0;
+                }
+                else if (activeAgent.RandFunc.ToString().ToLower() == "climate")
+                {
+                    activeAgent.TimeToNextEpidemic = ((Agent_Climate)activeAgent).OutbreakLag - ((Agent_Climate)activeAgent).TimeSinceLastClimate;
+                    timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic; //- activeAgent.TimeSinceLastEpidemic;
+                }
+
+
+                if (timeOfNext < Timestep)
+                    timeOfNext = Timestep;
+                if (timeOfNext < activeAgent.StartYear)
+                    timeOfNext = activeAgent.StartYear;
+                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
+
+                int i = 0;
 
                 activeAgent.DispersalNeighbors
                     = GetDispersalNeighborhood(activeAgent, Timestep);
-                if(activeAgent.DispersalNeighbors != null)
+                if (activeAgent.DispersalNeighbors != null)
                 {
                     foreach (RelativeLocation reloc in activeAgent.DispersalNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
                 }
 
-                i=0;
+                i = 0;
                 activeAgent.ResourceNeighbors = GetResourceNeighborhood(activeAgent);
-                if(activeAgent.ResourceNeighbors != null)
+                if (activeAgent.ResourceNeighbors != null)
                 {
                     foreach (RelativeLocationWeighted reloc in activeAgent.ResourceNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
+
+
+                //if(activeAgent == null)
+                //    PlugIn.ModelCore.UI.WriteLine("Agent Parameters NOT loading correctly.");
+                //activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep);
+
+                //int i=0;
+
+                //activeAgent.DispersalNeighbors
+                //    = GetDispersalNeighborhood(activeAgent, Timestep);
+                //if(activeAgent.DispersalNeighbors != null)
+                //{
+                //    foreach (RelativeLocation reloc in activeAgent.DispersalNeighbors) i++;
+                //    PlugIn.ModelCore.UI.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
+                //}
+
+                //i=0;
+                //activeAgent.ResourceNeighbors = GetResourceNeighborhood(activeAgent);
+                //if(activeAgent.ResourceNeighbors != null)
+                //{
+                //    foreach (RelativeLocationWeighted reloc in activeAgent.ResourceNeighbors) i++;
+                //    PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
+                //}
             }
 
 
@@ -144,7 +185,7 @@ namespace Landis.Extension.BaseBDA
 
                 activeAgent.TimeSinceLastEpidemic += Timestep;
 
-                int ROS = RegionalOutbreakStatus(activeAgent, Timestep);
+                int ROS = activeAgent.RegionalOutbreakStatus(Timestep);
                 Epidemic currentEpic = null;
 
                 if (ROS > 0)
@@ -243,7 +284,7 @@ namespace Landis.Extension.BaseBDA
                               Epidemic CurrentEvent,
                               int ROS, IAgent agent)
         {
-            eventLog.Clear();
+            EventLog.Clear();
             EventsLog el = new EventsLog();
             el.Time = currentTime;
             el.ROS = ROS;
@@ -253,80 +294,72 @@ namespace Landis.Extension.BaseBDA
             el.MeanSeverity = CurrentEvent.MeanSeverity;
 
 
-            eventLog.AddObject(el);
-            eventLog.WriteToFile();
-            //log.Write("{0},{1},{2},{3},{4},{5:0.0}",
-            //          currentTime,
-            //          ROS,
-            //          agent.AgentName,
-            //          CurrentEvent.CohortsKilled,
-            //          CurrentEvent.TotalSitesDamaged,
-            //          CurrentEvent.MeanSeverity);
-            //log.WriteLine("");
+            EventLog.AddObject(el);
+            EventLog.WriteToFile();
         }
 
         //---------------------------------------------------------------------
-        private static int TimeToNext(IAgent activeAgent, int Timestep)
-        {
-            int timeToNext = 0;
-            if (activeAgent.RandFunc == RandomFunction.RFuniform){
-                int MaxI = (int) Math.Round(activeAgent.RandomParameter1);
-                int MinI = (int) Math.Round(activeAgent.RandomParameter2);
-                double randNum = PlugIn.ModelCore.GenerateUniform();
-                timeToNext = (MinI) + (int)(randNum * (MaxI - MinI));
-            }
-            else if (activeAgent.RandFunc == RandomFunction.RFnormal){
+        //private static int TimeToNext(IAgent activeAgent, int Timestep)
+        //{
+        //    int timeToNext = 0;
+        //    if (activeAgent.RandFunc == RandomFunction.RFuniform){
+        //        int MaxI = (int) Math.Round(activeAgent.RandomParameter1);
+        //        int MinI = (int) Math.Round(activeAgent.RandomParameter2);
+        //        double randNum = PlugIn.ModelCore.GenerateUniform();
+        //        timeToNext = (MinI) + (int)(randNum * (MaxI - MinI));
+        //    }
+        //    else if (activeAgent.RandFunc == RandomFunction.RFnormal){
 
-                PlugIn.ModelCore.NormalDistribution.Mu = activeAgent.RandomParameter1;
-                PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.RandomParameter2;
+        //        PlugIn.ModelCore.NormalDistribution.Mu = activeAgent.RandomParameter1;
+        //        PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.RandomParameter2;
 
-                int randNum = (int) PlugIn.ModelCore.NormalDistribution.NextDouble();
+        //        int randNum = (int) PlugIn.ModelCore.NormalDistribution.NextDouble();
 
-                timeToNext = randNum;
+        //        timeToNext = randNum;
 
-                // Interval times are always rounded up to the next time step increment.
-                // This bias can be removed by reducing times by half the time step.
-                timeToNext = timeToNext - (Timestep / 2);
+        //        // Interval times are always rounded up to the next time step increment.
+        //        // This bias can be removed by reducing times by half the time step.
+        //        timeToNext = timeToNext - (Timestep / 2);
 
-                if (timeToNext < 0) timeToNext = 0;
-            }
-            return timeToNext;
-        }
+        //        if (timeToNext < 0) timeToNext = 0;
+        //    }
+        //    return timeToNext;
+        //}
 
         //---------------------------------------------------------------------
         //Calculate the Regional Outbreak Status (ROS) - the landscape scale intensity
         //of an outbreak or epidemic.
         //Units are from 0 (no outbreak) to 3 (most intense outbreak)
 
-        private static int RegionalOutbreakStatus(IAgent activeAgent, int BDAtimestep)
-        {
-            int ROS = 0;
+        //private static int RegionalOutbreakStatus(IAgent activeAgent, int BDAtimestep)
+        //{
+        //    int ROS = 0;
 
-            if(activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic)
-            {
+        //    if(activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic)
+        //    {
 
-                activeAgent.TimeSinceLastEpidemic = 0;
-                activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
+        //        activeAgent.TimeSinceLastEpidemic = 0;
+        //        activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
 
-                //calculate ROS
-                if (activeAgent.TempType == TemporalType.pulse)
-                    ROS = activeAgent.MaxROS;
-                else if (activeAgent.TempType == TemporalType.variablepulse)
-                {
-                    //randomly select an ROS netween ROSmin and ROSmax
-                    // Correction suggested by Brian Miranda, March 2008
-                    ROS = (int) (PlugIn.ModelCore.GenerateUniform() *
-                          (double) (activeAgent.MaxROS - activeAgent.MinROS)) + 1 +
-                          activeAgent.MinROS;
+        //        //calculate ROS
+        //        if (activeAgent.TempType == TemporalType.pulse)
+        //            ROS = activeAgent.MaxROS;
+        //        else if (activeAgent.TempType == TemporalType.variablepulse)
+        //        {
+        //            //randomly select an ROS netween ROSmin and ROSmax
+        //            // Correction suggested by Brian Miranda, March 2008
+        //            ROS = (int) (PlugIn.ModelCore.GenerateUniform() *
+        //                  (double) (activeAgent.MaxROS - activeAgent.MinROS)) + 1 +
+        //                  activeAgent.MinROS;
 
-                }
+        //        }
 
-            } else  {
-                ROS = activeAgent.MinROS;
-            }
-            return ROS;
+        //    } else  {
+        //        ROS = activeAgent.MinROS;
+        //    }
+        //    return ROS;
 
-        }
+        //}
 
         //---------------------------------------------------------------------
         //Generate a Relative Location array (with WEIGHTS) of neighbors.

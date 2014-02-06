@@ -40,17 +40,27 @@ namespace Landis.Extension.BaseBDA
             //          table outputs:   
             //---------------------------------------
 
-             PlugIn.eventLog = new MetadataTable<EventsLog>(logFileName);
+             PlugIn.EventLog = new MetadataTable<EventsLog>(logFileName);
 
             OutputMetadata tblOut_events = new OutputMetadata()
             {
                 Type = OutputType.Table,
                 Name = "EventLog",
-                FilePath = PlugIn.eventLog.FilePath//,
-                //MetadataFilePath = @"Base-Wind\EventLog.xml"
+                FilePath = PlugIn.EventLog.FilePath
             };
             tblOut_events.RetriveFields(typeof(EventsLog));
             Extension.OutputMetadatas.Add(tblOut_events);
+
+            PlugIn.PDSILog = new MetadataTable<PDSI_Log>("PDSI_log.csv");
+
+            OutputMetadata tblOut_PDSI = new OutputMetadata()
+            {
+                Type = OutputType.Table,
+                Name = "PDSILog",
+                FilePath = PlugIn.PDSILog.FilePath
+            };
+            tblOut_events.RetriveFields(typeof(PDSI_Log));
+            Extension.OutputMetadatas.Add(tblOut_PDSI);
 
 
             //---------------------------------------            

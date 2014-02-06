@@ -5,7 +5,7 @@ using Edu.Wisc.Forest.Flel.Util;
 
 namespace Landis.Extension.BaseBDA
 {
-    public enum DisturbanceType {Wind, Fire, Harvest, Null};
+    //public enum DisturbanceType {Wind, Fire, Harvest, Null};
 
     /// <summary>
     /// Extra Dist Paramaters

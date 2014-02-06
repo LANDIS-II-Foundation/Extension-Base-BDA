@@ -41,6 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\LANDIS-II\v6\bin\extensions\Landis.Library.AgeOnlyCohorts.dll</HintPath>
     </Reference>
+    <Reference Include="Landis.Library.Climate">
+      <HintPath>C:\Program Files\LANDIS-II\v6\bin\extensions\Landis.Library.Climate.dll</HintPath>
+    </Reference>
     <Reference Include="Landis.Library.Cohorts, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files\LANDIS-II\v6\bin\extensions\Landis.Library.Cohorts.dll</HintPath>
@@ -66,8 +69,15 @@
   <ItemGroup>
     <Compile Include="Agent.cs" />
     <Compile Include="AgentParameterParser.cs" />
-    <Compile Include="EventsLog.cs" />
+    <Compile Include="Agent_Climate.cs" />
+    <Compile Include="Agent_CyclicNormal.cs" />
+    <Compile Include="Agent_CyclicUniform.cs" />
+    <Compile Include="DisturbanceType.cs" />
+    <Compile Include="EventsLog.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MetadataHandler.cs" />
+    <Compile Include="PDSI_log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortPixel.cs" />
     <Compile Include="DistParameters.cs" />

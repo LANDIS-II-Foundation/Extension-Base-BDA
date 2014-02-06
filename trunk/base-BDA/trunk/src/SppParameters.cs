@@ -13,12 +13,18 @@ namespace Landis.Extension.BaseBDA
     {
         /// <summary>
         /// </summary>
-        int MinorHostAge{get;set;}
-        int SecondaryHostAge{get;set;}
-        int PrimaryHostAge{get;set;}
-        int ResistantHostAge{get;set;}
-        int TolerantHostAge{get;set;}
-        int VulnerableHostAge{get;set;}
+        int MinorHostAge { get; set; }
+        double MinorHostSRD { get; set; }
+        int SecondaryHostAge { get; set; }
+        double SecondaryHostSRD { get; set; }
+        int PrimaryHostAge { get; set; }
+        double PrimaryHostSRD { get; set; }
+        int ResistantHostAge { get; set; }
+        double ResistantHostVuln { get; set; }
+        int TolerantHostAge { get; set; }
+        double TolerantHostVuln { get; set; }
+        int VulnerableHostAge { get; set; }
+        double VulnerableHostVuln { get; set; }
         bool CFSConifer{get;set;}
     }
 }
@@ -30,11 +36,17 @@ namespace Landis.Extension.BaseBDA
         : ISppParameters
     {
         private int minorHostAge     ;
-        private int secondaryHostAge ;
-        private int primaryHostAge   ;
-        private int resistantHostAge ;
-        private int tolerantHostAge  ;
+        private double minorHostSRD;
+        private int secondaryHostAge;
+        private double secondaryHostSRD;
+        private int primaryHostAge;
+        private double primaryHostSRD;
+        private int resistantHostAge;
+        private double resistantHostVuln;
+        private int tolerantHostAge;
+        private double tolerantHostVuln;
         private int vulnerableHostAge;
+        private double vulnerableHostVuln;
         private bool cfsConifer;
 
         //---------------------------------------------------------------------
@@ -56,6 +68,23 @@ namespace Landis.Extension.BaseBDA
                 minorHostAge = value;
             }
         }
+        public double MinorHostSRD
+        {
+            get
+            {
+                return minorHostSRD;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                minorHostSRD = value;
+            }
+        }
         public int SecondaryHostAge
         {
             get {
@@ -69,6 +98,23 @@ namespace Landis.Extension.BaseBDA
                         throw new InputValueException(value.ToString(),
                             "Value must be = or < 999.");
                 secondaryHostAge = value;
+            }
+        }
+        public double SecondaryHostSRD
+        {
+            get
+            {
+                return secondaryHostSRD;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                secondaryHostSRD = value;
             }
         }
         public int PrimaryHostAge
@@ -86,6 +132,23 @@ namespace Landis.Extension.BaseBDA
                 primaryHostAge = value;
             }
         }
+        public double PrimaryHostSRD
+        {
+            get
+            {
+                return primaryHostSRD;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                primaryHostSRD = value;
+            }
+        }
         public int ResistantHostAge
         {
             get {
@@ -99,6 +162,23 @@ namespace Landis.Extension.BaseBDA
                         throw new InputValueException(value.ToString(),
                             "Value must be = or < 999.");
                 resistantHostAge = value;
+            }
+        }
+        public double ResistantHostVuln
+        {
+            get
+            {
+                return resistantHostVuln;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                resistantHostVuln = value;
             }
         }
         public int TolerantHostAge
@@ -116,6 +196,23 @@ namespace Landis.Extension.BaseBDA
                 tolerantHostAge = value;
             }
         }
+        public double TolerantHostVuln
+        {
+            get
+            {
+                return tolerantHostVuln;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                tolerantHostVuln = value;
+            }
+        }
         public int VulnerableHostAge
         {
             get {
@@ -129,6 +226,23 @@ namespace Landis.Extension.BaseBDA
                         throw new InputValueException(value.ToString(),
                             "Value must be = or < 999.");
                 vulnerableHostAge = value;
+            }
+        }
+        public double VulnerableHostVuln
+        {
+            get
+            {
+                return vulnerableHostVuln;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or > 0.");
+                if (value > 1)
+                    throw new InputValueException(value.ToString(),
+                        "Value must be = or < 1.");
+                vulnerableHostVuln = value;
             }
         }
         public bool CFSConifer
@@ -146,42 +260,19 @@ namespace Landis.Extension.BaseBDA
         public SppParameters()
         {
             this.minorHostAge = 999;
+            this.minorHostSRD = 0;
             this.secondaryHostAge = 999;
+            this.secondaryHostSRD = 0;
             this.primaryHostAge = 999;
+            this.primaryHostSRD = 0;
             this.resistantHostAge = 999;
+            this.resistantHostVuln = 0;
             this.tolerantHostAge = 999;
+            this.tolerantHostVuln = 0;
             this.vulnerableHostAge = 999;
+            this.vulnerableHostVuln = 0;
             this.cfsConifer = false;
         }
-        //---------------------------------------------------------------------
-        /*public SppParameters(int minorHostAge,
-                             int secondaryHostAge,
-                                 int primaryHostAge,
-                                 int resistantHostAge,
-                                 int tolerantHostAge,
-                                 int vulnerableHostAge,
-                                 bool cfsConifer)
-        {
-            this.minorHostAge     = minorHostAge;
-            this.secondaryHostAge = secondaryHostAge     ;
-            this.primaryHostAge   = primaryHostAge       ;
-            this.resistantHostAge = resistantHostAge     ;
-            this.tolerantHostAge  = tolerantHostAge      ;
-            this.vulnerableHostAge= vulnerableHostAge;
-            this.cfsConifer = cfsConifer;
-        }
-
-        //---------------------------------------------------------------------
-
-        public SppParameters()
-        {
-            this.minorHostAge       = 999;
-            this.secondaryHostAge   = 999;
-            this.primaryHostAge     = 999;
-            this.resistantHostAge   = 999;
-            this.tolerantHostAge    = 999;
-            this.vulnerableHostAge  = 999;
-            this.cfsConifer = false;
-        }*/
+ 
     }
 }

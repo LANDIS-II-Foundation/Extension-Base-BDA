@@ -15,9 +15,13 @@ namespace Landis.Extension.BaseBDA
     public static class SiteVars
     {
         private static ISiteVar<int> timeOfLastBDA;
-        private static ISiteVar<int> timeOfLastFire;
-        private static ISiteVar<int> timeOfLastWind;
+        private static ISiteVar<string> harvestPrescriptionName;
         private static ISiteVar<int> timeOfLastHarvest;
+        private static ISiteVar<int> harvestCohortsKilled;
+        private static ISiteVar<int> timeOfLastFire;
+        private static ISiteVar<byte> fireSeverity;
+        private static ISiteVar<int> timeOfLastWind;
+        private static ISiteVar<byte> windSeverity; 
         private static ISiteVar<double> neighborResourceDom;
         private static ISiteVar<double> siteResourceDomMod;
         private static ISiteVar<double> siteResourceDom;
@@ -31,7 +35,7 @@ namespace Landis.Extension.BaseBDA
 
         public static void Initialize(ICore modelCore)
         {
-            timeOfLastBDA = modelCore.Landscape.NewSiteVar<int>();
+            timeOfLastBDA  = modelCore.Landscape.NewSiteVar<int>();
             neighborResourceDom = modelCore.Landscape.NewSiteVar<double>();
             siteResourceDomMod = modelCore.Landscape.NewSiteVar<double>();
             siteResourceDom = modelCore.Landscape.NewSiteVar<double>();
@@ -48,30 +52,29 @@ namespace Landis.Extension.BaseBDA
             SiteVars.TimeOfNext.ActiveSiteValues = 9999;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
-            
 
-            foreach (ActiveSite site in modelCore.Landscape)
+            foreach(ActiveSite site in modelCore.Landscape)
                 SiteVars.NumberCFSconifersKilled[site] = new Dictionary<int, int>();
 
             // Added for v1.1 to enable interactions with CFS fuels extension.
             modelCore.RegisterSiteVar(SiteVars.NumberCFSconifersKilled, "BDA.NumCFSConifers");
             modelCore.RegisterSiteVar(SiteVars.TimeOfLastEvent, "BDA.TimeOfLastEvent");
-
-            //foreach (IAgent activeAgent in manyAgentParameters)
-            //{
-            //    string varName = activeAgent.AgentName + ".TimeToNext";
-            //    modelCore.RegisterSiteVar(SiteVars.TimeToNext, varName);
-            //}
+            // Added to enable interactions with other extensions (Presalvage harvest)
             modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
+
         }
 
         //---------------------------------------------------------------------
 
         public static void InitializeTimeOfLastDisturbances()
         {
-            timeOfLastWind  = PlugIn.ModelCore.GetSiteVar<int>("Wind.TimeOfLastEvent");
-            timeOfLastFire  = PlugIn.ModelCore.GetSiteVar<int>("Fire.TimeOfLastEvent");
-            timeOfLastHarvest  = PlugIn.ModelCore.GetSiteVar<int>("Harvest.TimeOfLastEvent");
+            harvestPrescriptionName = PlugIn.ModelCore.GetSiteVar<string>("Harvest.PrescriptionName");
+            timeOfLastHarvest = PlugIn.ModelCore.GetSiteVar<int>("Harvest.TimeOfLastEvent");
+            harvestCohortsKilled = PlugIn.ModelCore.GetSiteVar<int>("Harvest.CohortsKilled");
+            timeOfLastFire = PlugIn.ModelCore.GetSiteVar<int>("Fire.TimeOfLastEvent");
+            fireSeverity = PlugIn.ModelCore.GetSiteVar<byte>("Fire.Severity");
+            timeOfLastWind = PlugIn.ModelCore.GetSiteVar<int>("Wind.TimeOfLastEvent");
+            windSeverity = PlugIn.ModelCore.GetSiteVar<byte>("Wind.Severity");
 
         }
         //---------------------------------------------------------------------
@@ -82,23 +85,65 @@ namespace Landis.Extension.BaseBDA
             }
         }
 
+        //---------------------------------------------------------------------
+
+        public static ISiteVar<string> HarvestPrescriptionName
+        {
+            get
+            {
+                return harvestPrescriptionName;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        public static ISiteVar<int> TimeOfLastHarvest
+        {
+            get
+            {
+                return timeOfLastHarvest;
+            }
+        }
+        //---------------------------------------------------------------------
+
+        public static ISiteVar<int> HarvestCohortsKilled
+        {
+            get
+            {
+                return harvestCohortsKilled;
+            }
+        }
+        //---------------------------------------------------------------------
         public static ISiteVar<int> TimeOfLastFire
         {
-            get {
+            get
+            {
                 return timeOfLastFire;
             }
         }
+        //---------------------------------------------------------------------
 
+        public static ISiteVar<byte> FireSeverity
+        {
+            get
+            {
+                return fireSeverity;
+            }
+        }
+        //---------------------------------------------------------------------
         public static ISiteVar<int> TimeOfLastWind
         {
-            get {
+            get
+            {
                 return timeOfLastWind;
             }
         }
-        public static ISiteVar<int> TimeOfLastHarvest
+        //---------------------------------------------------------------------
+
+        public static ISiteVar<byte> WindSeverity
         {
-            get {
-                return timeOfLastHarvest;
+            get
+            {
+                return windSeverity;
             }
         }
         //---------------------------------------------------------------------
