@@ -1,7 +1,11 @@
-﻿using System;
+﻿//  Copyright 2005-2014 Portland State University, University of Wisconsin, US Forest Service
+//  Authors:  Robert M. Scheller, Brian Miranda
+//  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+//using System.Linq;
+//using System.Text;
 using Landis.Library.Metadata;
 using Edu.Wisc.Forest.Flel.Util;
 using Landis.Core;

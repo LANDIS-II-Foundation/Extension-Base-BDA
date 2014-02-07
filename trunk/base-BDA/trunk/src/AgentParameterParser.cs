@@ -290,15 +290,13 @@ namespace Landis.Extension.BaseBDA
             ReadVar(nw);
             agentParameters.NeighborWeight = nw.Value;
 
-            //?????????????????
-            //commented beacuse this txt file does not have IntensityClass2_BDP, IntensityClass3_BDP
-            //InputVar<double> class2_SV = new InputVar<double>("IntensityClass2_BDP");
-            //ReadVar(class2_SV);
-            //agentParameters.Class2_SV = class2_SV.Value;
+            InputVar<double> class2_SV = new InputVar<double>("IntensityClass2_BDP");
+            ReadVar(class2_SV);
+            agentParameters.Class2_SV = class2_SV.Value;
 
-            //InputVar<double> class3_SV = new InputVar<double>("IntensityClass3_BDP");
-            //ReadVar(class3_SV);
-            //agentParameters.Class3_SV = class3_SV.Value;
+            InputVar<double> class3_SV = new InputVar<double>("IntensityClass3_BDP");
+            ReadVar(class3_SV);
+            agentParameters.Class3_SV = class3_SV.Value;
             
 
             //--------- Read In Ecoreigon Table ---------------------------------------
