@@ -1,6 +1,6 @@
 LandisData  Scenario
 
-Duration  50
+Duration  100
 
 Species   species.txt
 
@@ -21,7 +21,7 @@ CellLength  100 << meters, 100 x 100 m = 1 ha
 
 >> Disturbance Extensions   Initialization File
 >> ----------------------   -------------------
-   "Base BDA"		    base-BDA-input.txt
+   "Base BDA"	            budworm-BDA-input.txt
 
    DisturbancesRandomOrder  yes  << optional parameter; default = no
 

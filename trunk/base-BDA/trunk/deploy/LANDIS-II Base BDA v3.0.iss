@@ -18,8 +18,7 @@ Source: ..\src\bin\debug\Landis.Library.Metadata.dll; DestDir: {#ExtDir}; Flags:
 Source: ..\src\bin\debug\Landis.Library.Climate.dll; DestDir: {#ExtDir}; Flags: replacesameversion uninsneveruninstall
 
 ; Base BDA
-; UPDATE DOCUMENT NEXT!!!
-Source: docs\LANDIS-II Biological Disturbance Agent v2.1 User Guide.pdf; DestDir: {#AppDir}\docs
+Source: docs\LANDIS-II Biological Disturbance Agent v3.0 User Guide.pdf; DestDir: {#AppDir}\docs
 Source: examples\*.txt; DestDir: {#AppDir}\examples\base-BDA
 Source: examples\ecoregions.gis; DestDir: {#AppDir}\examples\base-BDA
 Source: examples\initial-communities.gis; DestDir: {#AppDir}\examples\base-BDA

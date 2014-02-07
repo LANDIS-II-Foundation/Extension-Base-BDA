@@ -8,9 +8,6 @@ SeedingAlgorithm  WardSeedDispersal
 InitialCommunities      "./initial-communities.txt"
 InitialCommunitiesMap   "./initial-communities.gis"
 
->>DynamicInputFile	age-only-succession-dynamic-inputs.txt
-
-
 EstablishProbabilities
 
 >> Species        Ecoregions
@@ -24,6 +21,7 @@ EstablishProbabilities
    betupapy       1.0     0.75
    fraxamer       0.18    0.1
    piceglau       0.58    0.5
+   picemari       0.58    0.5
    pinubank       1.0     0.8
    pinuresi       0.56    0.78
    pinustro       0.72    0.70
