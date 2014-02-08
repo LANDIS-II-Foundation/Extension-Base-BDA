@@ -37,9 +37,6 @@ namespace Landis.Extension.BaseBDA
             InputVar<string> agentName = new InputVar<string>("BDAAgentName");
             ReadVar(agentName);
 
-
-            
-
             InputVar<int> bdpc = new InputVar<int>("BDPCalibrator");
             ReadVar(bdpc);
 
@@ -51,22 +48,15 @@ namespace Landis.Extension.BaseBDA
             {
                 ReadVar(startYear);
             }
-            //else
-            //    agentParameters.StartYear = 0;
 
             InputVar<int> endYear = new InputVar<int>("EndYear");
             if (CurrentName == "EndYear")
             {
                 ReadVar(endYear);
             }
-            //else
-            //    agentParameters.EndYear = PlugIn.ModelCore.EndTime;
-           
-            
 
             InputVar<OutbreakPattern> rf = new InputVar<OutbreakPattern>("OutbreakPattern");
             ReadVar(rf);
-            //agentParameters.RandFunc = rf.Value;
 
              Agent agentParameters = null;
              if (rf.Value.ToString().ToLower() == "climate")
@@ -97,15 +87,15 @@ namespace Landis.Extension.BaseBDA
                  ((Agent_Climate)agentParameters).OutbreakLag = outbreakLag.Value;
 
                  InputVar<int> timeSinceLastClimate = new InputVar<int>("TimeSinceLastClimate");
-                 ReadVar(timeSinceLastClimate);//??????????
+                 ReadVar(timeSinceLastClimate);
                  ((Agent_Climate)agentParameters).TimeSinceLastClimate = timeSinceLastClimate.Value;
                  //agentParameters.tim= outbreakLag.Value;
 
 
              }
-             else
-             {
-             }
+             //else
+             //{
+             //}
             if ((rf.Value.ToString().ToLower()) == "cyclicnormal")
             {
 
@@ -208,32 +198,7 @@ namespace Landis.Extension.BaseBDA
             //    agentParameters.EndYear = PlugIn.ModelCore.EndTime;
 
             agentParameters.RandFunc = rf.Value;
-
-            
-            
-            //BDA-Climate
-            // if rf.value =="Climate"
-            // Read in additional parameters
-            // ClimateLibrary
-            // VariableName
-            // StartMonth
-            // EndMonth
-            // Function
-            // LogicalTest
-            // OutbreakLag
-            // TimeSinceLastClimate (optional)
-            // else (rf.value <> "Climate") set all values to Null/0
-            //BDA-Climate
-            
-
-            //BDA-Climate
-            // Only read in tSLE if OutbreakPattern <> Climate
-            //BDA-Climate
-           
-                //InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
-                //ReadVar(tSLE);
-                //agentParameters.TimeSinceLastEpidemic = tSLE.Value;
-            
+          
             //------------------------
 
             
@@ -348,6 +313,7 @@ namespace Landis.Extension.BaseBDA
                                  currentLine);
                 GetNextLine();
             }
+            ((Agent_Climate)agentParameters).SetPDSI(PlugIn.ModelCore.Ecoregions.Count);
 
             if (CurrentName == DistParms)
             {

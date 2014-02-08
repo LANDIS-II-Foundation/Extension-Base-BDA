@@ -26,17 +26,6 @@ namespace Landis.Extension.BaseBDA
         public Agent_Climate(int sppCount, int ecoCount)
             : base(sppCount, ecoCount)
         {
-            // GetPDSI(int startYear, int latitude, double fieldCapacity, double wiltingPoint, ClimatePhase climatePhase = ClimatePhase.Future_Climate);
-            double[] latitude = new double[ecoCount];
-            double[] fieldCapacity = new double[ecoCount];
-            double[] wiltingPoint = new double[ecoCount];
-            foreach (IEcoregion ecoregion in PlugIn.ModelCore.Ecoregions)
-            {
-                latitude[ecoregion.Index] = EcoParameters[ecoregion.Index].Latitude;
-                wiltingPoint[ecoregion.Index] = EcoParameters[ecoregion.Index].WiltingPoint;
-                fieldCapacity[ecoregion.Index] = EcoParameters[ecoregion.Index].FieldCapacity;
-            }
-            Climate.SetPDSI(1980, latitude, fieldCapacity, wiltingPoint);
         }
         //---------------------------------------------------------------------
         public IEnumerable<double> ClimateQueriedValuse
@@ -156,7 +145,7 @@ namespace Landis.Extension.BaseBDA
             //
             // Update TimeOfNext as above 
 
-            //Console.Write("Landscape_PDSI: " + Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] + "\n");
+            PlugIn.ModelCore.UI.WriteLine("Landscape PDSI= {0}.", Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1]);
 
             if (Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] > this.threshold_Lowerbound && Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1] < this.threshold_Upperbound)
             {
@@ -195,6 +184,21 @@ namespace Landis.Extension.BaseBDA
 
             PlugIn.PDSILog.AddObject(pl);
             PlugIn.PDSILog.WriteToFile();
+        }
+
+        public void SetPDSI(int ecoCount)
+        {
+            // GetPDSI(int startYear, int latitude, double fieldCapacity, double wiltingPoint, ClimatePhase climatePhase = ClimatePhase.Future_Climate);
+            double[] latitude = new double[ecoCount];
+            double[] fieldCapacity = new double[ecoCount];
+            double[] wiltingPoint = new double[ecoCount];
+            foreach (IEcoregion ecoregion in PlugIn.ModelCore.Ecoregions)
+            {
+                latitude[ecoregion.Index] = EcoParameters[ecoregion.Index].Latitude;
+                wiltingPoint[ecoregion.Index] = EcoParameters[ecoregion.Index].WiltingPoint;
+                fieldCapacity[ecoregion.Index] = EcoParameters[ecoregion.Index].FieldCapacity;
+            }
+            Climate.SetPDSI(0, latitude, fieldCapacity, wiltingPoint);
         }
 
     }
