@@ -23,7 +23,7 @@ namespace Landis.Extension.BaseBDA
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Base BDA";
         public static MetadataTable<EventsLog> EventLog;
-        public static MetadataTable<PDSI_Log> PDSILog;
+        //public static MetadataTable<PDSI_Log> PDSILog;
 
         private string mapNameTemplate;
         private string srdMapNames;

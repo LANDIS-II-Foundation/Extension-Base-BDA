@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-//using System.Linq;
+using System.Linq;
 //using System.Text;
 using Landis.Library.Metadata;
 using Edu.Wisc.Forest.Flel.Util;
@@ -50,21 +50,22 @@ namespace Landis.Extension.BaseBDA
             {
                 Type = OutputType.Table,
                 Name = "EventLog",
-                FilePath = PlugIn.EventLog.FilePath
+                FilePath = PlugIn.EventLog.FilePath,
+                Visualize = false,
             };
             tblOut_events.RetriveFields(typeof(EventsLog));
             Extension.OutputMetadatas.Add(tblOut_events);
 
-            PlugIn.PDSILog = new MetadataTable<PDSI_Log>("PDSI_log.csv");
+            //PlugIn.PDSILog = new MetadataTable<PDSI_Log>("PDSI_log.csv");
 
-            OutputMetadata tblOut_PDSI = new OutputMetadata()
-            {
-                Type = OutputType.Table,
-                Name = "PDSILog",
-                FilePath = PlugIn.PDSILog.FilePath
-            };
-            tblOut_events.RetriveFields(typeof(PDSI_Log));
-            Extension.OutputMetadatas.Add(tblOut_PDSI);
+            //OutputMetadata tblOut_PDSI = new OutputMetadata()
+            //{
+            //    Type = OutputType.Table,
+            //    Name = "PDSILog",
+            //    FilePath = PlugIn.PDSILog.FilePath
+            //};
+            //tblOut_events.RetriveFields(typeof(PDSI_Log));
+            //Extension.OutputMetadatas.Add(tblOut_PDSI);
 
 
             //---------------------------------------            
@@ -78,10 +79,11 @@ namespace Landis.Extension.BaseBDA
                 OutputMetadata mapOut_Severity = new OutputMetadata()
                 {
                     Type = OutputType.Map,
-                    Name = "Outbreak Severity",
+                    Name = System.String.Format(activeAgent.AgentName + " Outbreak Severity"),
                     FilePath = @mapTypePath,
                     Map_DataType = MapDataType.Ordinal,
-                    //Map_Unit = "categorical",
+                    Map_Unit = FieldUnits.Severity_Rank,
+                    Visualize = true,
                 };
                 Extension.OutputMetadatas.Add(mapOut_Severity);
 
@@ -94,7 +96,8 @@ namespace Landis.Extension.BaseBDA
                         Name = "Site Resource Dominance",
                         FilePath = @mapTypePath,
                         Map_DataType = MapDataType.Continuous,
-                        Map_Unit = FiledUnits.Percentage,
+                        Map_Unit = FieldUnits.Percentage,
+                        Visualize = false,
                     };
                     Extension.OutputMetadatas.Add(mapOut_SRD);
                 }
@@ -108,7 +111,8 @@ namespace Landis.Extension.BaseBDA
                         Name = "Neighborhood Resource Dominance",
                         FilePath = @mapTypePath,
                         Map_DataType = MapDataType.Continuous,
-                        Map_Unit = FiledUnits.Percentage,
+                        Map_Unit = FieldUnits.Percentage,
+                        Visualize = false,
                     };
                     Extension.OutputMetadatas.Add(mapOut_NRD);
                 }

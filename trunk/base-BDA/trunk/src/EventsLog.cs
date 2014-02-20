@@ -10,7 +10,7 @@ namespace Landis.Extension.BaseBDA
     {
         //log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
 
-        [DataFieldAttribute(Unit = FiledUnits.Year, Desc = "...")]
+        [DataFieldAttribute(Unit = FieldUnits.Year, Desc = "...")]
         public int Time {set; get;}
 
         [DataFieldAttribute(Desc = "Rate of Spread")]
@@ -22,10 +22,10 @@ namespace Landis.Extension.BaseBDA
         //[DataFieldAttribute(Unit = FiledUnits.None, Desc = "Total Number of Sites in Event")]
         //public int TotalSites { set; get; }
 
-        [DataFieldAttribute(Unit = FiledUnits.Count, Desc = "Number of Cohorts Killed")]
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Number of Cohorts Killed")]
         public int CohortsKilled { set; get; }
 
-        [DataFieldAttribute(Unit = FiledUnits.Count, Desc = "Number of Damaged Sites in Event")]
+        [DataFieldAttribute(Unit = FieldUnits.Count, Desc = "Number of Damaged Sites in Event")]
         public int DamagedSites { set; get; }
 
         [DataFieldAttribute(Desc = "Mean Severity (1-5)", Format="0.00")]

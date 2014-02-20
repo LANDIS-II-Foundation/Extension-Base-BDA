@@ -167,7 +167,7 @@ namespace Landis.Extension.BaseBDA
 
             }
 
-            LogPDSI(PlugIn.ModelCore.CurrentTime, Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1]);
+            //LogPDSI(PlugIn.ModelCore.CurrentTime, Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1]);
 
             return OutbreakList.First.Value - PlugIn.ModelCore.CurrentTime;
 
@@ -175,16 +175,16 @@ namespace Landis.Extension.BaseBDA
         }
 
         //---------------------------------------------------------------------
-        private void LogPDSI(int currentTime, double PDSI)
-        {
-            PlugIn.PDSILog.Clear();
-            PDSI_Log pl = new PDSI_Log();
-            pl.Time = currentTime;
-            pl.PDSI = PDSI;
+        //private void LogPDSI(int currentTime, double PDSI)
+        //{
+        //    PlugIn.PDSILog.Clear();
+        //    PDSI_Log pl = new PDSI_Log();
+        //    pl.Time = currentTime;
+        //    pl.PDSI = PDSI;
 
-            PlugIn.PDSILog.AddObject(pl);
-            PlugIn.PDSILog.WriteToFile();
-        }
+        //    PlugIn.PDSILog.AddObject(pl);
+        //    PlugIn.PDSILog.WriteToFile();
+        //}
 
         public void SetPDSI(int ecoCount)
         {

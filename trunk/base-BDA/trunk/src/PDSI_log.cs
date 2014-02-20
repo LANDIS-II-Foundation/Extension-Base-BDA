@@ -10,7 +10,7 @@ namespace Landis.Extension.BaseBDA
     {
         //log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
 
-        [DataFieldAttribute(Unit = FiledUnits.Year, Desc = "...")]
+        [DataFieldAttribute(Unit = FieldUnits.Year, Desc = "...")]
         public int Time {set; get;}
 
         [DataFieldAttribute(Desc = "Palmer Drought Severity Index")]
