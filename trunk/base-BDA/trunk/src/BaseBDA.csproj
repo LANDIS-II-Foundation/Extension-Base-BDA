@@ -77,7 +77,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MetadataHandler.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShortPixel.cs" />
     <Compile Include="DistParameters.cs" />
     <Compile Include="EcoParameters.cs" />
@@ -90,6 +89,9 @@
     <Compile Include="SiteResources.cs" />
     <Compile Include="SiteVars.cs" />
     <Compile Include="SppParameters.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -313,7 +313,7 @@ namespace Landis.Extension.BaseBDA
                                  currentLine);
                 GetNextLine();
             }
-            ((Agent_Climate)agentParameters).SetPDSI(PlugIn.ModelCore.Ecoregions.Count);
+            //((Agent_Climate)agentParameters).SetPDSI(PlugIn.ModelCore.Ecoregions.Count);
 
             if (CurrentName == DistParms)
             {
