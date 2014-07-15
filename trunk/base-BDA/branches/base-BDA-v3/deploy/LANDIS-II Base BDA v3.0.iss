@@ -1,58 +1,39 @@
-#define PackageName      "Base BDA"
-#define PackageNameLong  "Base BDA Extension"
-#define Version          "3.0"
-#define ReleaseType      "official"
-#define ReleaseNumber    "3"
+#include GetEnv("LANDIS_SDK") + '\packaging\initialize.iss'
 
-#define CoreVersion      "6.0"
-#define CoreReleaseAbbr  ""
+#define ExtInfoFile "Base BDA.txt"
 
-#include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Setup section) v6.0.iss"
+#include LandisSDK + '\packaging\read-ext-info.iss'
+#include LandisSDK + '\packaging\Landis-vars.iss'
 
-#if ReleaseType != "official"
-  #define Configuration  "debug"
-#else
-  #define Configuration  "release"
-#endif
-
+[Setup]
+#include LandisSDK + '\packaging\Setup-directives.iss'
+LicenseFile={#LandisSDK}\licenses\LANDIS-II_Binary_license.rtf
 
 [Files]
+Source: {#LandisExtDir}\{#ExtensionAssembly}.dll; DestDir: {app}\bin\extensions; Flags: replacesameversion
 
-Source: C:\Program Files\LANDIS-II\v6\bin\extensions\Landis.Extension.BaseBDA.dll; DestDir: {app}\bin; Flags: replacesameversion
+#define UserGuideSrc "LANDIS-II Biological Disturbance Agent" + " vX.Y User Guide.pdf"
+#define UserGuide    StringChange(UserGuideSrc, "X.Y", MajorMinor)
+Source: docs\{#UserGuide}; DestDir: {app}\docs; DestName: {#UserGuide}; Flags: replacesameversion
 
-; Base BDA
-Source: docs\LANDIS-II Biological Disturbance Agent v3.0 User Guide.pdf; DestDir: {app}\docs
-Source: examples\*; DestDir: {app}\examples\base-BDA
+Source: examples\*; DestDir: {app}\examples\{#ExtensionName}; Flags: recursesubdirs replacesameversion
 
-#define BaseBDA "Base BDA 3.0.txt"
-Source: {#BaseBDA}; DestDir: {#LandisPlugInDir}
+#define ExtensionInfo  ExtensionName + " " + MajorMinor + ".txt"
+Source: {#ExtInfoFile}; DestDir: {#LandisExtInfoDir}; DestName: {#ExtensionInfo}; Flags: replacesameversion
 
 [Run]
-;; Run plug-in admin tool to add the entry for the plug-in
-#define PlugInAdminTool  CoreBinDir + "\Landis.PlugIns.Admin.exe"
+Filename: {#ExtAdminTool}; Parameters: "remove ""{#ExtensionName}"" "; WorkingDir: {#LandisExtInfoDir}
+Filename: {#ExtAdminTool}; Parameters: "add ""{#ExtensionInfo}"" "; WorkingDir: {#LandisExtInfoDir}
 
-Filename: {#PlugInAdminTool}; Parameters: "remove ""Base BDA"" "; WorkingDir: {#LandisPlugInDir}
-Filename: {#PlugInAdminTool}; Parameters: "add ""{#BaseBDA}"" "; WorkingDir: {#LandisPlugInDir}
-
+[UninstallRun]
+Filename: {#ExtAdminTool}; Parameters: "remove ""{#ExtensionName}"" "; WorkingDir: {#LandisExtInfoDir}
 
 [Code]
-{ Check for other prerequisites during the setup initialization }
-
-#include AddBackslash(GetEnv("LANDIS_DEPLOY")) + "package (Code section) v3.iss"
-
-//-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
-
-function CurrentVersion_PostUninstall(currentVersion: TInstalledVersion): Integer;
-begin
-end;
-
+#include LandisSDK + '\packaging\Pascal-code.iss'
 
 //-----------------------------------------------------------------------------
 
 function InitializeSetup_FirstPhase(): Boolean;
 begin
-  CurrVers_PostUninstall := @CurrentVersion_PostUninstall
   Result := True
 end;
