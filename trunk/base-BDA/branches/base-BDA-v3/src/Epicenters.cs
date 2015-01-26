@@ -59,9 +59,9 @@ namespace Landis.Extension.BaseBDA
                 int totalInOut = 0;
                 foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
                 {
-                    if (SiteVars.Vulnerability[site] > agent.EpidemicThresh) //potential new epicenter
-                    {
-                        totalInOut++;
+                    //if (SiteVars.Vulnerability[site] > agent.EpidemicThresh) //potential new epicenter
+                    //{
+                    totalInOut++;
                         
                         if (agent.Severity[site] > 0)
                         {
@@ -72,7 +72,7 @@ namespace Landis.Extension.BaseBDA
                         }
                         if(agent.OutbreakZone[site] != Zone.Lastzone)
                             numOutside++;//potential new epicenter outside last OutbreakZone
-                    }
+                    //}
                 }
 
                 PlugIn.ModelCore.Log.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
@@ -82,7 +82,7 @@ namespace Landis.Extension.BaseBDA
                 //INSIDE the last epidemic outbreak area.
                 //This always occurs after the first iteration.
                 //PlugIn.ModelCore.Log.WriteLine("   Adding epicenters INSIDE last outbreak zone.");
-                PlugIn.ModelCore.shuffle(oldZoneSiteList);
+                oldZoneSiteList =  PlugIn.ModelCore.shuffle(oldZoneSiteList);
 
                 numInside = (int)((double) numInside *
                             System.Math.Exp(-1.0 * agent.OutbreakEpicenterCoeff * oldEpicenterNum));
