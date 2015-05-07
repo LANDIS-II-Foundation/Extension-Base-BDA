@@ -4,6 +4,7 @@
 //  Modified for budworm-BDA version by Brian Miranda, 2012
 
 using Landis.Core;
+using Landis.Library.Metadata;
 
 //using Landis.Cohorts;
 using Landis.SpatialModeling;
@@ -24,12 +25,13 @@ namespace Landis.Extension.BaseBDA
     {
         public static readonly ExtensionType Type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Base BDA";
+        public static MetadataTable<EventsLog> eventLog;
 
         private string mapNameTemplate;
         private string srdMapNames;
         private string nrdMapNames;
         private string vulnMapNames;
-        private StreamWriter log;
+        //private StreamWriter log;
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private static ICore modelCore;
@@ -70,7 +72,13 @@ namespace Landis.Extension.BaseBDA
         /// </summary>
         public override void Initialize()
         {
-
+            MetadataHandler.InitializeMetadata(parameters.Timestep,
+                parameters.MapNamesTemplate,
+                parameters.SRDMapNames,
+                parameters.NRDMapNames,
+                parameters.LogFileName,
+                parameters.ManyAgentParameters,
+                ModelCore);
 
             Timestep = parameters.Timestep;
             mapNameTemplate = parameters.MapNamesTemplate;
@@ -114,12 +122,12 @@ namespace Landis.Extension.BaseBDA
                 }
             }
 
-            string logFileName = parameters.LogFileName;
-            PlugIn.ModelCore.Log.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
-            log = PlugIn.ModelCore.CreateTextFile(logFileName);
-            log.AutoFlush = true;
-            log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
-            log.WriteLine("");
+            //string logFileName = parameters.LogFileName;
+            //PlugIn.ModelCore.Log.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
+            //log = PlugIn.ModelCore.CreateTextFile(logFileName);
+            //log.AutoFlush = true;
+            //log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
+            //log.WriteLine("");
 
         }
 
@@ -146,11 +154,12 @@ namespace Landis.Extension.BaseBDA
                 activeAgent.TimeSinceLastEpidemic += Timestep;
 
                 int ROS = RegionalOutbreakStatus(activeAgent, Timestep);
+                Epidemic currentEpic = null;
 
                 if(ROS > 0)
                 {
                     Epidemic.Initialize(activeAgent);
-                    Epidemic currentEpic = Epidemic.Simulate(activeAgent,
+                    currentEpic = Epidemic.Simulate(activeAgent,
                         PlugIn.ModelCore.CurrentTime,
                         Timestep,
                         ROS);
@@ -159,6 +168,17 @@ namespace Landis.Extension.BaseBDA
                     if (currentEpic != null)
                     {
                         LogEvent(PlugIn.ModelCore.CurrentTime, currentEpic, ROS, activeAgent);
+                        eventCount++;
+                    }
+                }
+                if (currentEpic == null) 
+                {
+                    activeAgent.Severity.ActiveSiteValues = 0;
+                    SiteVars.SiteResourceDom.ActiveSiteValues = 0;
+                    SiteVars.NeighborResourceDom.ActiveSiteValues = 0;
+                }
+            }
+
 
                         //----- Write BDA severity maps --------
                         string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
@@ -251,26 +271,39 @@ namespace Landis.Extension.BaseBDA
                             }
                         }
 
-                        eventCount++;
+                        //eventCount++;
                     }
                 }
             }
         }
 
         //---------------------------------------------------------------------
-        private void LogEvent(int   currentTime,
+        private void LogEvent(int currentTime,
                               Epidemic CurrentEvent,
                               int ROS, IAgent agent)
         {
-            log.Write("{0},{1},{2},{3},{4},{5:0.0}",
-                      currentTime,
-                      ROS,
-                      agent.AgentName,
-                      CurrentEvent.CohortsKilled,
-                      CurrentEvent.TotalSitesDamaged,
-                      CurrentEvent.MeanSeverity);
-            log.WriteLine("");
+
+            eventLog.Clear();
+            EventsLog el = new EventsLog();
+            el.Time = currentTime;
+            el.ROS = ROS;
+            el.AgentName = agent.AgentName;
+            el.DamagedSites = CurrentEvent.TotalSitesDamaged;
+            el.CohortsKilled = CurrentEvent.CohortsKilled;
+            el.MeanSeverity = CurrentEvent.MeanSeverity;
+            eventLog.AddObject(el);
+            eventLog.WriteToFile();
         }
+        //{
+        //    log.Write("{0},{1},{2},{3},{4},{5:0.0}",
+        //              currentTime,
+        //              ROS,
+        //              agent.AgentName,
+        //              CurrentEvent.CohortsKilled,
+        //              CurrentEvent.TotalSitesDamaged,
+        //              CurrentEvent.MeanSeverity);
+        //    log.WriteLine("");
+        //}
 
         //---------------------------------------------------------------------
         /*private IOutputRaster<ShortPixel> CreateMap(int currentTime, string agentName)

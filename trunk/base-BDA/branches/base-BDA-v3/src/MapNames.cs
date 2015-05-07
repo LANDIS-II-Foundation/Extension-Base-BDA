@@ -49,5 +49,13 @@ namespace Landis.Extension.BaseBDA
             varValues[AgentNameVar] = agentName;
             return OutputPath.ReplaceTemplateVars(template, varValues);
         }
+        
+        public static string ReplaceTemplateVarsMetadata(string template,
+                                                string agentName)
+        {
+            varValues[AgentNameVar] = agentName;
+            varValues[TimestepVar] = "{timestep}";
+            return OutputPath.ReplaceTemplateVars(template, varValues);
+        }
     }
 }

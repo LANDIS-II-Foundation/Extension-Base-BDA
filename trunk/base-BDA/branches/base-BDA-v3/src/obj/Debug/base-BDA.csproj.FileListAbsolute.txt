@@ -3,3 +3,6 @@ C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\
 C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\ResolveAssemblyReference.cache
 C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.dll
 C:\BRM\LANDIS_II\Code\landis-extensions\trunk\base-BDA\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.pdb
+C:\Users\lucash\Documents\LANDIS_Code\BDA_Code\branches\base-BDA-v3\src\obj\Debug\base-BDA.csprojResolveAssemblyReference.cache
+C:\Users\lucash\Documents\LANDIS_Code\BDA_Code\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.dll
+C:\Users\lucash\Documents\LANDIS_Code\BDA_Code\branches\base-BDA-v3\src\obj\Debug\Landis.Extension.BaseBDA.pdb
