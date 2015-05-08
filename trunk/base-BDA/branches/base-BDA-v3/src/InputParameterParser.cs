@@ -90,11 +90,11 @@ namespace Landis.Extension.BaseBDA
             //    }
 
             //}
-            InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
-             ReadOptionalVar(bdpMapNames);
-            parameters.BDPMapNames = bdpMapNames.Value;
-            //try
-            //{
+            //InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
+            //ReadOptionalVar(bdpMapNames);
+            //parameters.BDPMapNames = bdpMapNames.Value;
+            ////try
+            ////{
             //    ReadVar(bdpMapNames);
             //    parameters.BDPMapNames = bdpMapNames.Value;
             //}
