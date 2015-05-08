@@ -22,6 +22,7 @@ namespace Landis.Extension.BaseBDA
     /// Interface to the Parameters for the extension
     /// </summary>
     public interface IAgent
+        
     {
         string AgentName{get;set;}
         int BDPCalibrator{get;set;}
@@ -71,6 +72,9 @@ namespace Landis.Extension.BaseBDA
         List<IDisturbanceType> DisturbanceTypes { get;  }
         ISiteVar<byte> Severity { get; set; }
         ISiteVar<Zone> OutbreakZone { get; set; }
+
+        int RegionalOutbreakStatus( int BDAtimestep);
+        int TimeToNext(int Timestep);
     }
 }
 
@@ -100,7 +104,7 @@ namespace Landis.Extension.BaseBDA
         private double minInterval;
         private int minROS;
         private int maxROS;
-        
+
         //-- DISPERSAL -------------
         private bool dispersal;
         private int dispersalRate;
@@ -134,20 +138,24 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public string AgentName
         {
-            get {
+            get
+            {
                 return agentName;
             }
-            set {
+            set
+            {
                 agentName = value;
             }
         }
         //---------------------------------------------------------------------
         public int BDPCalibrator
         {
-            get {
+            get
+            {
                 return bdpCalibrator;
             }
-            set {
+            set
+            {
                 bdpCalibrator = value;
             }
         }
@@ -178,56 +186,66 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public int TimeSinceLastEpidemic
         {
-            get {
+            get
+            {
                 return timeSinceLastEpidemic;
             }
-            set {
+            set
+            {
                 if (value < 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must = or be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must = or be > 0.");
                 if (value > 10000)
-                        throw new InputValueException(value.ToString(),
-                            "Value must < 10000.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must < 10000.");
                 timeSinceLastEpidemic = value;
             }
         }
         //---------------------------------------------------------------------
         public int TimeToNextEpidemic
         {
-            get {
+            get
+            {
                 return timeToNextEpidemic;
             }
-            set {
+            set
+            {
                 timeToNextEpidemic = value;
             }
         }
         //---------------------------------------------------------------------
         public TemporalType TempType
         {
-            get {
+            get
+            {
                 return tempType;
             }
-            set {
+            set
+            {
                 tempType = value;
             }
         }
         //---------------------------------------------------------------------
         public OutbreakPattern RandFunc
         {
-            get {
+            get
+            {
                 return randFunc;
             }
-            set {
+            set
+            {
                 randFunc = value;
             }
         }
         //---------------------------------------------------------------------
         public SRDmode SRDmode
         {
-            get {
+            get
+            {
                 return srdMode;
             }
-            set {
+            set
+            {
                 srdMode = value;
             }
         }
@@ -258,36 +276,42 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public double MaxInterval
         {
-            get {
+            get
+            {
                 return maxInterval;
             }
-            set {
+            set
+            {
                 maxInterval = value;
             }
         }
         //---------------------------------------------------------------------
         public double MinInterval
         {
-            get {
+            get
+            {
                 return minInterval;
             }
-            set {
+            set
+            {
                 minInterval = value;
             }
         }
         //---------------------------------------------------------------------
         public int MinROS
         {
-            get {
+            get
+            {
                 return minROS;
             }
-            set {
+            set
+            {
                 if (value < 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must = or be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must = or be > 0.");
                 if (maxROS > 0 && value > maxROS)
-                        throw new InputValueException(value.ToString(),
-                            "Value must < or = MaxROS.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must < or = MaxROS.");
 
                 minROS = value;
             }
@@ -295,36 +319,42 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public int MaxROS
         {
-            get {
+            get
+            {
                 return maxROS;
             }
-            set {
+            set
+            {
                 if (value < 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must = or be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must = or be > 0.");
                 if (minROS > 0 && value < minROS)
-                        throw new InputValueException(value.ToString(),
-                            "Value must > or = MinROS.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must > or = MinROS.");
                 maxROS = value;
             }
         }
         //---------------------------------------------------------------------
         public ISppParameters[] SppParameters
         {
-            get {
+            get
+            {
                 return sppParameters;
             }
-            set {
+            set
+            {
                 sppParameters = value;
             }
         }
         //---------------------------------------------------------------------
         public IEcoParameters[] EcoParameters
         {
-            get {
+            get
+            {
                 return ecoParameters;
             }
-            set {
+            set
+            {
                 ecoParameters = value;
             }
         }
@@ -352,19 +382,23 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public ISiteVar<byte> Severity
         {
-            get {
+            get
+            {
                 return severity;
             }
-            set {
+            set
+            {
                 severity = value;
             }
         }
         public ISiteVar<Zone> OutbreakZone
         {
-            get {
+            get
+            {
                 return outbreakZone;
             }
-            set {
+            set
+            {
                 outbreakZone = value;
             }
         }
@@ -372,162 +406,192 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public bool Dispersal
         {
-            get {
+            get
+            {
                 return dispersal;
             }
-            set {
+            set
+            {
                 dispersal = value;
             }
         }
         //---------------------------------------------------------------------
         public int DispersalRate
         {
-            get {
+            get
+            {
                 return dispersalRate;
             }
-            set {
+            set
+            {
                 if (value <= 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must be > 0.");
                 dispersalRate = value;
             }
         }
         //---------------------------------------------------------------------
         public double EpidemicThresh
         {
-            get {
+            get
+            {
                 return epidemicThresh;
             }
-            set {
+            set
+            {
                 if (value < 0.0 || value > 1.0)
-                       throw new InputValueException(value.ToString(),
-                            "Value must be > or = 0 and < or = 1.");
+                    throw new InputValueException(value.ToString(),
+                         "Value must be > or = 0 and < or = 1.");
                 epidemicThresh = value;
             }
         }
         //---------------------------------------------------------------------
         public int EpicenterNum
         {
-            get {
+            get
+            {
                 return epicenterNum;
             }
-            set {
+            set
+            {
                 epicenterNum = value;
             }
         }
         //---------------------------------------------------------------------
         public bool SeedEpicenter
         {
-            get {
+            get
+            {
                 return seedEpicenter;
             }
-            set {
+            set
+            {
                 seedEpicenter = value;
             }
         }
         //---------------------------------------------------------------------
         public double OutbreakEpicenterCoeff
         {
-            get {
+            get
+            {
                 return outbreakEpicenterCoeff;
             }
-            set {
+            set
+            {
                 outbreakEpicenterCoeff = value;
             }
         }
         //---------------------------------------------------------------------
         public double SeedEpicenterCoeff
         {
-            get {
+            get
+            {
                 return seedEpicenterCoeff;
             }
-            set {
+            set
+            {
                 seedEpicenterCoeff = value;
             }
         }
         //---------------------------------------------------------------------
         public DispersalTemplate DispersalTemp
         {
-            get {
+            get
+            {
                 return dispersalTemp;
             }
-            set {
+            set
+            {
                 dispersalTemp = value;
             }
         }
         //---------------------------------------------------------------------
         public IEnumerable<RelativeLocation> DispersalNeighbors
         {
-            get {
+            get
+            {
                 return dispersalNeighbors;
             }
-            set {
+            set
+            {
                 dispersalNeighbors = value;
             }
         }
         //---------------------------------------------------------------------
         public bool NeighborFlag
         {
-            get {
+            get
+            {
                 return neighborFlag;
             }
-            set {
+            set
+            {
                 neighborFlag = value;
             }
         }
         //---------------------------------------------------------------------
         public NeighborSpeed NeighborSpeedUp
         {
-            get {
+            get
+            {
                 return neighborSpeedUp;
             }
-            set {
-                 neighborSpeedUp = value;
+            set
+            {
+                neighborSpeedUp = value;
             }
         }
         //---------------------------------------------------------------------
         public int NeighborRadius
         {
-            get {
+            get
+            {
                 return neighborRadius;
             }
-            set {
+            set
+            {
                 if (value <= 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must be > 0.");
                 neighborRadius = value;
             }
         }
         //---------------------------------------------------------------------
         public NeighborShape ShapeOfNeighbor
         {
-            get {
+            get
+            {
                 return shapeOfNeighbor;
             }
-            set {
+            set
+            {
                 shapeOfNeighbor = value;
             }
         }
         //---------------------------------------------------------------------
         public double NeighborWeight
         {
-            get {
+            get
+            {
                 return neighborWeight;
             }
-            set {
+            set
+            {
                 if (value < 0)
-                        throw new InputValueException(value.ToString(),
-                            "Value must = or be > 0.");
+                    throw new InputValueException(value.ToString(),
+                        "Value must = or be > 0.");
                 neighborWeight = value;
             }
         }
         //---------------------------------------------------------------------
         public IEnumerable<RelativeLocationWeighted> ResourceNeighbors
         {
-            get {
+            get
+            {
                 return resourceNeighbors;
             }
-            set {
+            set
+            {
                 resourceNeighbors = value;
             }
         }
@@ -605,8 +669,8 @@ namespace Landis.Extension.BaseBDA
             //advRegenSppList = new List<ISpecies>();
             dispersalNeighbors = new List<RelativeLocation>();
             resourceNeighbors = new List<RelativeLocationWeighted>();
-            severity       = PlugIn.ModelCore.Landscape.NewSiteVar<byte>();
-            outbreakZone   = PlugIn.ModelCore.Landscape.NewSiteVar<Zone>();
+            severity = PlugIn.ModelCore.Landscape.NewSiteVar<byte>();
+            outbreakZone = PlugIn.ModelCore.Landscape.NewSiteVar<Zone>();
 
             for (int i = 0; i < sppCount; i++)
                 SppParameters[i] = new SppParameters();
@@ -614,6 +678,20 @@ namespace Landis.Extension.BaseBDA
                 EcoParameters[i] = new EcoParameters();
             //for (int i = 0; i < distCount; i++)
             //   DistParameters[i] = new DistParameters();
+        }
+        public virtual int RegionalOutbreakStatus(int BDAtimestep)
+        {
+            int ROS = 0;
+            return ROS;
+
+        }
+
+        public virtual int TimeToNext(int Timestep)
+        {
+            int timeToNext = 0;
+
+            return timeToNext;
+
         }
 
     }
@@ -626,29 +704,40 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public RelativeLocation Location
         {
-            get {
+            get
+            {
                 return location;
             }
-            set {
+            set
+            {
                 location = value;
             }
         }
 
         public double Weight
         {
-            get {
+            get
+            {
                 return weight;
             }
-            set {
+            set
+            {
                 weight = value;
             }
         }
 
-        public RelativeLocationWeighted (RelativeLocation location, double weight)
+        public RelativeLocationWeighted(RelativeLocation location, double weight)
         {
             this.location = location;
             this.weight = weight;
         }
 
     }
-}
+        
+    }
+
+
+    
+
+
+

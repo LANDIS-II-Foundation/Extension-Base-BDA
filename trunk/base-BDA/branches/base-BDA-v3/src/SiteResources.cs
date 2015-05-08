@@ -23,7 +23,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void SiteResourceDominance(IAgent agent, int ROS)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Site Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Site Resource Dominance.");
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
@@ -91,7 +91,7 @@ namespace Landis.Extension.BaseBDA
         public static void SiteResourceDominanceModifier(IAgent agent)
         {
 
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
 
                 if (SiteVars.SiteResourceDom[site] > 0.0)
@@ -269,7 +269,7 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public static void NeighborResourceDominance(IAgent agent)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
+            PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Neighborhood Resource Dominance.");
 
             double totalNeighborWeight = 0.0;
             double maxNeighborWeight = 0.0;

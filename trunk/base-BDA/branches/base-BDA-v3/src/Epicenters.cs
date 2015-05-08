@@ -25,7 +25,7 @@ namespace Landis.Extension.BaseBDA
         public static void NewEpicenters(IAgent agent, int BDAtimestep)
         {
 
-            PlugIn.ModelCore.Log.WriteLine("   Creating New BDA Epicenters.");
+            PlugIn.ModelCore.UI.WriteLine("   Creating New BDA Epicenters.");
 
             int numRows = (int) PlugIn.ModelCore.Landscape.Rows;
             int numCols = (int) PlugIn.ModelCore.Landscape.Columns;
@@ -75,7 +75,7 @@ namespace Landis.Extension.BaseBDA
                     //}
                 }
 
-                PlugIn.ModelCore.Log.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
+                PlugIn.ModelCore.UI.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
 
                 //---------------------------------------------------------
                 //Calculate number of Epicenters that will occur
@@ -106,11 +106,11 @@ namespace Landis.Extension.BaseBDA
                 //OUTSIDE of previous outbreak zones.
                 if (agent.SeedEpicenter)
                 {
-                    PlugIn.ModelCore.Log.WriteLine("Adding epicenters OUTSIDE last outbreak zone.");
+                    PlugIn.ModelCore.UI.WriteLine("Adding epicenters OUTSIDE last outbreak zone.");
 
                     numOutside = (int)((double) numOutside *
                                     System.Math.Exp(-1.0 * (double) agent.SeedEpicenterCoeff * (double) oldEpicenterNum));
-                    PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.  SeedCoef = {1}.  OldEpiNum = {2}.", numOutside, agent.SeedEpicenterCoeff, oldEpicenterNum);
+                    PlugIn.ModelCore.UI.WriteLine("   Actual Number Outside = {0}.  SeedCoef = {1}.  OldEpiNum = {2}.", numOutside, agent.SeedEpicenterCoeff, oldEpicenterNum);
                     //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
 
                     while (numOutside > 0)
@@ -181,7 +181,7 @@ namespace Landis.Extension.BaseBDA
             //PlugIn.ModelCore.Log.WriteLine("Spreading to New Epicenters.  There are {0} initiation sites.", iSites.Count);
 
             if(iSites == null)
-                PlugIn.ModelCore.Log.WriteLine("ERROR:  The newSiteList is empty.");
+                PlugIn.ModelCore.UI.WriteLine("ERROR:  The newSiteList is empty.");
             int dispersalDistance = agent.DispersalRate * BDAtimestep;
 
             foreach(Location siteLocation in iSites)

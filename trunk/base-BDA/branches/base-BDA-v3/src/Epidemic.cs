@@ -80,7 +80,7 @@ namespace Landis.Extension.BaseBDA
         ExtensionType IDisturbance.Type
         {
             get {
-                return PlugIn.Type;
+                return PlugIn.type;
             }
         }
 
@@ -110,7 +110,7 @@ namespace Landis.Extension.BaseBDA
 
         public static void Initialize(IAgent agent)
         {
-            PlugIn.ModelCore.Log.WriteLine("   Initializing agent {0}.", agent.AgentName);
+            PlugIn.ModelCore.UI.WriteLine("   Initializing agent {0}.", agent.AgentName);
 
             ecoregions = PlugIn.ModelCore.Ecoregions;
 
@@ -144,7 +144,7 @@ namespace Landis.Extension.BaseBDA
 
 
             Epidemic CurrentEpidemic = new Epidemic(agent);
-            PlugIn.ModelCore.Log.WriteLine("   New BDA Epidemic Activated.");
+            PlugIn.ModelCore.UI.WriteLine("   New BDA Epidemic Activated.");
 
             //SiteResources.SiteResourceDominance(agent, ROS, SiteVars.Cohorts);
             SiteResources.SiteResourceDominance(agent, ROS);

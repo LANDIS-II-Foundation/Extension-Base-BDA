@@ -16,6 +16,15 @@ namespace Landis.Extension.BaseBDA
     {
         public static IEcoregionDataset EcoregionsDataset = null;
 
+        public override string LandisDataValue
+        {
+            get
+            {
+                return PlugIn.ExtensionName;
+            }
+
+        }
+
 
         //---------------------------------------------------------------------
         public InputParameterParser()
@@ -112,7 +121,7 @@ namespace Landis.Extension.BaseBDA
             List<IAgent> agentParameterList = new List<IAgent>();
             AgentParameterParser agentParser = new AgentParameterParser();
 
-            IAgent agentParameters = PlugIn.ModelCore.Load<IAgent>(agentFileName.Value, agentParser);
+            IAgent agentParameters = Landis.Data.Load<IAgent>(agentFileName.Value, agentParser);
             agentParameterList.Add(agentParameters);
 
             while (!AtEndOfInput) {
@@ -120,7 +129,7 @@ namespace Landis.Extension.BaseBDA
 
                 ReadValue(agentFileName, currentLine);
 
-                agentParameters = PlugIn.ModelCore.Load<IAgent>(agentFileName.Value, agentParser);
+                agentParameters = Landis.Data.Load<IAgent>(agentFileName.Value, agentParser);
 
                 agentParameterList.Add(agentParameters);
 
@@ -131,9 +140,9 @@ namespace Landis.Extension.BaseBDA
             foreach(IAgent activeAgent in agentParameterList)
             {
                 if(agentParameters == null)
-                    PlugIn.ModelCore.Log.WriteLine("PARSE:  Agent Parameters NOT loading correctly.");
+                    PlugIn.ModelCore.UI.WriteLine("PARSE:  Agent Parameters NOT loading correctly.");
                 else
-                    PlugIn.ModelCore.Log.WriteLine("Name of Agent = {0}", agentParameters.AgentName);
+                    PlugIn.ModelCore.UI.WriteLine("Name of Agent = {0}", agentParameters.AgentName);
 
             }
             parameters.ManyAgentParameters = agentParameterList;
