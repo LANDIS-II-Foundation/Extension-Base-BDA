@@ -16,6 +16,7 @@ namespace Landis.Extension.BaseBDA
     {
         public static IEcoregionDataset EcoregionsDataset = null;
 
+        //---------------------------------------------------------------------
         public override string LandisDataValue
         {
             get
@@ -24,7 +25,6 @@ namespace Landis.Extension.BaseBDA
             }
 
         }
-
 
         //---------------------------------------------------------------------
         public InputParameterParser()
@@ -55,57 +55,56 @@ namespace Landis.Extension.BaseBDA
             parameters.MapNamesTemplate = mapNames.Value;
 
             InputVar<string> srdMapNames = new InputVar<string>("SRDMapNames");
-            
-            ReadOptionalVar(srdMapNames);
-            parameters.SRDMapNames = srdMapNames.Value;
+            if(ReadOptionalVar(srdMapNames))
+                parameters.SRDMapNames = srdMapNames.Value;
+            /*try
+            {
+                ReadVar(srdMapNames);
+                parameters.SRDMapNames = srdMapNames.Value;
+            }
+            catch (LineReaderException errString)
+            {
+                if (!((errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"SRDMapNames\"")) || (errString.MultiLineMessage[1].Contains("Found the name \"NRDMapNames\" but expected \"SRDMapNames\""))))
+                {
+                    throw errString;
+                }
 
-            ////try
-            //{
-            //    ReadVar(srdMapNames);
-            //    parameters.SRDMapNames = srdMapNames.Value;
-            //}
-            //catch (LineReaderException errString)
-            //{
-            //    if (!((errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"SRDMapNames\"")) || (errString.MultiLineMessage[1].Contains("Found the name \"NRDMapNames\" but expected \"SRDMapNames\""))))
-            //    {
-            //        throw errString;
-            //    }
-
-            //}
-
+            }
+            */
             InputVar<string> nrdMapNames = new InputVar<string>("NRDMapNames");
-            ReadOptionalVar(nrdMapNames);
-            parameters.NRDMapNames = nrdMapNames.Value;
+            if(ReadOptionalVar(nrdMapNames))
+                parameters.NRDMapNames = nrdMapNames.Value;
+            /*try
+            {
+                ReadVar(nrdMapNames);
+                parameters.NRDMapNames = nrdMapNames.Value;
+            }
+            catch (LineReaderException errString)
+            {
+                if (!(errString.MultiLineMessage[1].Contains("Found the name \"VulnMapNames\" but expected \"NRDMapNames\"")))
+                {
+                    throw errString;
+                }
 
-            //try
-            //{
-            //    ReadVar(nrdMapNames);
-            //    parameters.NRDMapNames = nrdMapNames.Value;
-            //}
-            //catch (LineReaderException errString)
-            //{
-            //    if (!(errString.MultiLineMessage[1].Contains("Found the name \"VulnMapNames\" but expected \"NRDMapNames\"")))
-            //    {
-            //        throw errString;
-            //    }
+            }
+             * */
+            InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
+            if(ReadOptionalVar(bdpMapNames))
+                parameters.BDPMapNames = bdpMapNames.Value;
+            /*try
+            {
+                ReadVar(bdpMapNames);
+                parameters.BDPMapNames = bdpMapNames.Value;
+            }
+            catch (LineReaderException errString)
+            {
+                if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"VulnMapNames\"")))
+                {
+                    throw errString;
+                }
 
-            //}
-            //InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
-            //ReadOptionalVar(bdpMapNames);
-            //parameters.BDPMapNames = bdpMapNames.Value;
-            ////try
-            ////{
-            //    ReadVar(bdpMapNames);
-            //    parameters.BDPMapNames = bdpMapNames.Value;
-            //}
-            //catch (LineReaderException errString)
-            //{
-            //    if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"VulnMapNames\"")))
-            //    {
-            //        throw errString;
-            //    }
-
-            //}
+            }
+            */
 
             InputVar<string> logFile = new InputVar<string>("LogFile");
             ReadVar(logFile);

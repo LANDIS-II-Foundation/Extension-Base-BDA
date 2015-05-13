@@ -20,7 +20,12 @@ namespace Landis.Extension.BaseBDA
         public static ISpeciesDataset SpeciesDataset = PlugIn.ModelCore.Species; //null;
 
         //---------------------------------------------------------------------
+        public override string LandisDataValue
+        {
+            get { return "BDA Agent"; }
+        }
 
+        //---------------------------------------------------------------------
         public AgentParameterParser()
         {
             RegisterForInputValues();
@@ -32,6 +37,11 @@ namespace Landis.Extension.BaseBDA
         {
             //PlugIn.ModelCore.Log.WriteLine("Parsing 1; sppCnt={0}", Model.Species.Count);
             //Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count, (int) DisturbanceType.Null);  //The last disturb Type is Null
+            InputVar<string> landisData = new InputVar<string>("LandisData");
+            ReadVar(landisData);
+            if (landisData.Value.Actual != LandisDataValue)
+                throw new InputValueException(landisData.Value.String, "The value is not \"{0}\"", LandisDataValue);
+
             Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
 
             InputVar<string> agentName = new InputVar<string>("BDAAgentName");
@@ -135,6 +145,10 @@ namespace Landis.Extension.BaseBDA
             ReadVar(oec);
             agentParameters.OutbreakEpicenterCoeff = oec.Value;
 
+            InputVar<double> outEpiThresh = new InputVar<double>("OutbreakEpicenterThresh");
+            ReadVar(outEpiThresh);
+            agentParameters.OutbreakEpicenterThresh = outEpiThresh.Value;
+            
             InputVar<bool> se = new InputVar<bool>("SeedEpicenter");
             ReadVar(se);
             agentParameters.SeedEpicenter = se.Value;
@@ -536,10 +550,5 @@ namespace Landis.Extension.BaseBDA
             Type.SetDescription<NeighborSpeed>("Neighbor Speed");
             InputValues.Register<NeighborSpeed>(NSpeedParse);
         }
-        public override string LandisDataValue
-        {
-            get { return "A Single BDA Agent"; }
-        }
-
     }
 }

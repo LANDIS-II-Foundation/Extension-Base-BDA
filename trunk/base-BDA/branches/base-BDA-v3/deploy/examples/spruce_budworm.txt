@@ -1,3 +1,5 @@
+LandisData "BDA Agent"
+
 BDAAgentName		budworm
 BDPCalibrator		1
 SRDMode			mean
@@ -20,6 +22,7 @@ DispersalRate		4000		<<meters/year
 EpidemicThresh		0.5
 InitialEpicenterNum	0
 OutbreakEpicenterCoeff	0.01
+OutbreakEpicenterThresh 0.0
 SeedEpicenter		yes		<<yes or no
 SeedEpicenterCoeff	0.5
 DispersalTemplate	MaxRadius	<<MaxRadius, 4N,
@@ -54,12 +57,11 @@ BDASpeciesParameters
 >> ---------------------------------------------------------------------------------------------
 abiebals   0   0.25	20  0.5	     40  1.0	  11  1.0	20  1.0	     50  1.0		yes
 piceglau   0   0.25	20  0.5      40  1.0	  0   0		20  0.15     50  0.42		yes
-picemari   0   0.25	20  0.5	     40  1.0	  0   0		20  0	     50  0		yes
 
 IgnoredSpecies
-larilari
 pinubank
 pinuresi
 pinustro
 thujocci
+tsugcana
 
