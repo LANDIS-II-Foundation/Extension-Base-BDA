@@ -1,6 +1,6 @@
 #include GetEnv("LANDIS_SDK") + '\packaging\initialize.iss'
 
-#define ExtInfoFile "Base BDA 3.0.txt"
+#define ExtInfoFile "Base BDA.txt"
 
 #include LandisSDK + '\packaging\read-ext-info.iss'
 #include LandisSDK + '\packaging\Landis-vars.iss'
