@@ -1,0 +1,17 @@
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Extension.Output.BirdHabitat.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Extension.Output.BirdHabitat.pdb
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Edu.Wisc.Forest.Flel.Util.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Core.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.AgeOnlyCohorts.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.BiomassCohorts.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.Cohorts.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.SpatialModeling.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Troschuetz.Random.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.AgeOnlyCohorts.pdb
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.BiomassCohorts.pdb
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\obj\Debug\Landis.Extension.Output.BirdHabitat.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\obj\Debug\Landis.Extension.Output.BirdHabitat.pdb
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\obj\Debug\output-bird-habitat.csprojResolveAssemblyReference.cache
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.Climate.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.Metadata.dll
+C:\BRM\LANDIS_II\Code\landis-extensions\trunk\bird-habitat\trunk\src\bin\Debug\Landis.Library.Climate.pdb

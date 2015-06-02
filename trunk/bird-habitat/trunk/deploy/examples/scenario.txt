@@ -1,0 +1,34 @@
+LandisData  Scenario
+
+Duration  50
+
+Species   species.txt
+
+Ecoregions      ./ecoregions.txt
+EcoregionsMap   ./ecoregions.gis
+
+CellLength  100 << meters, 100 x 100 m = 1 ha
+
+
+>> NOTE:  This example assumes that you have downloaded and installed 
+>> the correpsonding extensions.  These extensions are currently packaged
+>> together as a package.
+
+>> Succession Extension     Initialization File
+>> --------------------     -------------------
+   "Biomass Succession"    biomass-succession.txt
+
+
+>> Disturbance Extensions   Initialization File
+>> ----------------------   -------------------
+
+>>   DisturbancesRandomOrder  yes  << optional parameter; default = no
+
+
+>> Other Extensions         Initialization File
+>> ----------------         -------------------
+   "Output Bird Habitat"    output-bird-habitat.txt
+
+
+>>RandomNumberSeed  4,357  << optional parameter; default = the seed is
+                         << randomly generated using the current time
