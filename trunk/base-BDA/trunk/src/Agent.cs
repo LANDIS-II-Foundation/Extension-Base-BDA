@@ -5,19 +5,17 @@ using Landis.Core;
 using Landis.SpatialModeling;
 using Edu.Wisc.Forest.Flel.Util;
 using System.Collections.Generic;
-using System;
-using Landis.Library.Climate;
 
 namespace Landis.Extension.BaseBDA
 {
     public enum TemporalType {pulse,  variablepulse};
-    public enum OutbreakPattern { CyclicNormal, CyclicUniform, Climate };
+    public enum OutbreakPattern {CyclicNormal, CyclicUniform};
     public enum SRDmode {max, mean};
     public enum DispersalTemplate {MaxRadius, N4, N8, N12, N24};
     public enum NeighborShape {uniform, linear, gaussian};
     public enum NeighborSpeed {none, X2, X3, X4};
     public enum Zone {Nozone, Lastzone, Newzone};
-    public enum Function { Test1, Test2, Test3 };
+
 
 
     /// <summary>
@@ -43,22 +41,6 @@ namespace Landis.Extension.BaseBDA
         int MinROS{get;set;}
         int MaxROS{get;set;}
         
-        //BDA-Climate
-        //Add new parameters
-        // ClimateLibrary
-        // VariableName
-        // StartMonth
-        // EndMonth
-        // Function
-        // LogicalTest
-        // OutbreakLag
-        // TimeSinceLastClimate
-        // OutbreakList (a list of timesteps when outbreaks occur)
-        //BDA-Climate
-
-
-       
-
         //-- DISPERSAL -------------
         bool Dispersal{get;set;}
         int DispersalRate{get;set;}
@@ -66,6 +48,7 @@ namespace Landis.Extension.BaseBDA
         int EpicenterNum{get;set;}
         bool SeedEpicenter{get;set;}
         double OutbreakEpicenterCoeff{get;set;}
+        double OutbreakEpicenterThresh { get; set; }
         double SeedEpicenterCoeff{get;set;}
         DispersalTemplate DispersalTemp{get;set;}
         IEnumerable<RelativeLocation> DispersalNeighbors{get;set;}
@@ -89,11 +72,6 @@ namespace Landis.Extension.BaseBDA
         List<IDisturbanceType> DisturbanceTypes { get;  }
         ISiteVar<byte> Severity { get; set; }
         ISiteVar<Zone> OutbreakZone { get; set; }
-
-
-        //void CalculateClimate(); //renamed to TimeToNext()
-        int RegionalOutbreakStatus( int BDAtimestep);
-        int TimeToNext(int Timestep);
     }
 }
 
@@ -103,31 +81,27 @@ namespace Landis.Extension.BaseBDA
     /// <summary>
     /// Parameters for the plug-in.
     /// </summary>
-    public abstract class Agent
+    public class Agent
         : IAgent
     {
-
-
         private string agentName;
         private int bdpCalibrator;
         private int startYear;
         private int endYear;
 
         //-- ROS --
-        private int minROS;
-        private int maxROS;
-        private TemporalType tempType;
-        private OutbreakPattern randFunc;
-        //---------
-
         private int timeSinceLastEpidemic;
         private int timeToNextEpidemic;
+        private TemporalType tempType;
+        private OutbreakPattern randFunc;
         private SRDmode srdMode;
         private double normMean;
         private double normStDev;
         private double maxInterval;
         private double minInterval;
-
+        private int minROS;
+        private int maxROS;
+        
         //-- DISPERSAL -------------
         private bool dispersal;
         private int dispersalRate;
@@ -135,6 +109,7 @@ namespace Landis.Extension.BaseBDA
         private int epicenterNum;
         private bool seedEpicenter;
         private double outbreakEpicenterCoeff;
+        private double outbreakEpicenterThresh;
         private double seedEpicenterCoeff;
         private DispersalTemplate dispersalTemp;
         private IEnumerable<RelativeLocation> dispersalNeighbors;
@@ -161,24 +136,20 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public string AgentName
         {
-            get
-            {
+            get {
                 return agentName;
             }
-            set
-            {
+            set {
                 agentName = value;
             }
         }
         //---------------------------------------------------------------------
         public int BDPCalibrator
         {
-            get
-            {
+            get {
                 return bdpCalibrator;
             }
-            set
-            {
+            set {
                 bdpCalibrator = value;
             }
         }
@@ -209,66 +180,56 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public int TimeSinceLastEpidemic
         {
-            get
-            {
+            get {
                 return timeSinceLastEpidemic;
             }
-            set
-            {
+            set {
                 if (value < 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must = or be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must = or be > 0.");
                 if (value > 10000)
-                    throw new InputValueException(value.ToString(),
-                        "Value must < 10000.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must < 10000.");
                 timeSinceLastEpidemic = value;
             }
         }
         //---------------------------------------------------------------------
         public int TimeToNextEpidemic
         {
-            get
-            {
+            get {
                 return timeToNextEpidemic;
             }
-            set
-            {
+            set {
                 timeToNextEpidemic = value;
             }
         }
         //---------------------------------------------------------------------
         public TemporalType TempType
         {
-            get
-            {
+            get {
                 return tempType;
             }
-            set
-            {
+            set {
                 tempType = value;
             }
         }
         //---------------------------------------------------------------------
         public OutbreakPattern RandFunc
         {
-            get
-            {
+            get {
                 return randFunc;
             }
-            set
-            {
+            set {
                 randFunc = value;
             }
         }
         //---------------------------------------------------------------------
         public SRDmode SRDmode
         {
-            get
-            {
+            get {
                 return srdMode;
             }
-            set
-            {
+            set {
                 srdMode = value;
             }
         }
@@ -299,42 +260,36 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public double MaxInterval
         {
-            get
-            {
+            get {
                 return maxInterval;
             }
-            set
-            {
+            set {
                 maxInterval = value;
             }
         }
         //---------------------------------------------------------------------
         public double MinInterval
         {
-            get
-            {
+            get {
                 return minInterval;
             }
-            set
-            {
+            set {
                 minInterval = value;
             }
         }
         //---------------------------------------------------------------------
         public int MinROS
         {
-            get
-            {
+            get {
                 return minROS;
             }
-            set
-            {
+            set {
                 if (value < 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must = or be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must = or be > 0.");
                 if (maxROS > 0 && value > maxROS)
-                    throw new InputValueException(value.ToString(),
-                        "Value must < or = MaxROS.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must < or = MaxROS.");
 
                 minROS = value;
             }
@@ -342,42 +297,36 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public int MaxROS
         {
-            get
-            {
+            get {
                 return maxROS;
             }
-            set
-            {
+            set {
                 if (value < 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must = or be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must = or be > 0.");
                 if (minROS > 0 && value < minROS)
-                    throw new InputValueException(value.ToString(),
-                        "Value must > or = MinROS.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must > or = MinROS.");
                 maxROS = value;
             }
         }
         //---------------------------------------------------------------------
         public ISppParameters[] SppParameters
         {
-            get
-            {
+            get {
                 return sppParameters;
             }
-            set
-            {
+            set {
                 sppParameters = value;
             }
         }
         //---------------------------------------------------------------------
         public IEcoParameters[] EcoParameters
         {
-            get
-            {
+            get {
                 return ecoParameters;
             }
-            set
-            {
+            set {
                 ecoParameters = value;
             }
         }
@@ -405,23 +354,20 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public ISiteVar<byte> Severity
         {
-            get
-            {
+            get {
                 return severity;
             }
-            set
-            {
+            set {
                 severity = value;
             }
         }
+        //---------------------------------------------------------------------
         public ISiteVar<Zone> OutbreakZone
         {
-            get
-            {
+            get {
                 return outbreakZone;
             }
-            set
-            {
+            set {
                 outbreakZone = value;
             }
         }
@@ -429,192 +375,177 @@ namespace Landis.Extension.BaseBDA
         //---------------------------------------------------------------------
         public bool Dispersal
         {
-            get
-            {
+            get {
                 return dispersal;
             }
-            set
-            {
+            set {
                 dispersal = value;
             }
         }
         //---------------------------------------------------------------------
         public int DispersalRate
         {
-            get
-            {
+            get {
                 return dispersalRate;
             }
-            set
-            {
+            set {
                 if (value <= 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must be > 0.");
                 dispersalRate = value;
             }
         }
         //---------------------------------------------------------------------
         public double EpidemicThresh
         {
-            get
-            {
+            get {
                 return epidemicThresh;
             }
-            set
-            {
+            set {
                 if (value < 0.0 || value > 1.0)
-                    throw new InputValueException(value.ToString(),
-                         "Value must be > or = 0 and < or = 1.");
+                       throw new InputValueException(value.ToString(),
+                            "Value must be > or = 0 and < or = 1.");
                 epidemicThresh = value;
             }
         }
         //---------------------------------------------------------------------
         public int EpicenterNum
         {
-            get
-            {
+            get {
                 return epicenterNum;
             }
-            set
-            {
+            set {
                 epicenterNum = value;
             }
         }
         //---------------------------------------------------------------------
         public bool SeedEpicenter
         {
-            get
-            {
+            get {
                 return seedEpicenter;
             }
-            set
-            {
+            set {
                 seedEpicenter = value;
             }
         }
         //---------------------------------------------------------------------
         public double OutbreakEpicenterCoeff
         {
+            get {
+                return outbreakEpicenterCoeff;
+            }
+            set {
+                outbreakEpicenterCoeff = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public double OutbreakEpicenterThresh
+        {
             get
             {
-                return outbreakEpicenterCoeff;
+                return outbreakEpicenterThresh;
             }
             set
             {
-                outbreakEpicenterCoeff = value;
+                if (value < 0.0 || value > 1.0)
+                    throw new InputValueException(value.ToString(),
+                         "Value must be > or = 0 and < or = 1.");
+                outbreakEpicenterThresh = value;
             }
         }
         //---------------------------------------------------------------------
         public double SeedEpicenterCoeff
         {
-            get
-            {
+            get {
                 return seedEpicenterCoeff;
             }
-            set
-            {
+            set {
                 seedEpicenterCoeff = value;
             }
         }
         //---------------------------------------------------------------------
         public DispersalTemplate DispersalTemp
         {
-            get
-            {
+            get {
                 return dispersalTemp;
             }
-            set
-            {
+            set {
                 dispersalTemp = value;
             }
         }
         //---------------------------------------------------------------------
         public IEnumerable<RelativeLocation> DispersalNeighbors
         {
-            get
-            {
+            get {
                 return dispersalNeighbors;
             }
-            set
-            {
+            set {
                 dispersalNeighbors = value;
             }
         }
         //---------------------------------------------------------------------
         public bool NeighborFlag
         {
-            get
-            {
+            get {
                 return neighborFlag;
             }
-            set
-            {
+            set {
                 neighborFlag = value;
             }
         }
         //---------------------------------------------------------------------
         public NeighborSpeed NeighborSpeedUp
         {
-            get
-            {
+            get {
                 return neighborSpeedUp;
             }
-            set
-            {
-                neighborSpeedUp = value;
+            set {
+                 neighborSpeedUp = value;
             }
         }
         //---------------------------------------------------------------------
         public int NeighborRadius
         {
-            get
-            {
+            get {
                 return neighborRadius;
             }
-            set
-            {
+            set {
                 if (value <= 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must be > 0.");
                 neighborRadius = value;
             }
         }
         //---------------------------------------------------------------------
         public NeighborShape ShapeOfNeighbor
         {
-            get
-            {
+            get {
                 return shapeOfNeighbor;
             }
-            set
-            {
+            set {
                 shapeOfNeighbor = value;
             }
         }
         //---------------------------------------------------------------------
         public double NeighborWeight
         {
-            get
-            {
+            get {
                 return neighborWeight;
             }
-            set
-            {
+            set {
                 if (value < 0)
-                    throw new InputValueException(value.ToString(),
-                        "Value must = or be > 0.");
+                        throw new InputValueException(value.ToString(),
+                            "Value must = or be > 0.");
                 neighborWeight = value;
             }
         }
         //---------------------------------------------------------------------
         public IEnumerable<RelativeLocationWeighted> ResourceNeighbors
         {
-            get
-            {
+            get {
                 return resourceNeighbors;
             }
-            set
-            {
+            set {
                 resourceNeighbors = value;
             }
         }
@@ -679,12 +610,6 @@ namespace Landis.Extension.BaseBDA
             }
         }
         //---------------------------------------------------------------------
-
-
-
-
-
-
         /// <summary>
         /// Objects and Lists must be initialized.
         /// </summary>
@@ -698,8 +623,8 @@ namespace Landis.Extension.BaseBDA
             //advRegenSppList = new List<ISpecies>();
             dispersalNeighbors = new List<RelativeLocation>();
             resourceNeighbors = new List<RelativeLocationWeighted>();
-            severity = PlugIn.ModelCore.Landscape.NewSiteVar<byte>();
-            outbreakZone = PlugIn.ModelCore.Landscape.NewSiteVar<Zone>();
+            severity       = PlugIn.ModelCore.Landscape.NewSiteVar<byte>();
+            outbreakZone   = PlugIn.ModelCore.Landscape.NewSiteVar<Zone>();
 
             for (int i = 0; i < sppCount; i++)
                 SppParameters[i] = new SppParameters();
@@ -709,133 +634,8 @@ namespace Landis.Extension.BaseBDA
             //   DistParameters[i] = new DistParameters();
         }
 
-        //BDA-Climate
-        //---------------------------------------------------------------------
-        //public virtual void CalculateClimate()
-        //{
-            //    private void CalculateClimate(IAgent agent)
-            //{
-            // Read climate data from agent.ClimateLibrary
-            // Extract agent.VariableName data
-            // Calculate ecoregion values (EcoClimate) from (agent.StartMonth to agent.EndMonth using agent.Function)
-            // Calculate landscape value (LandscapeClimate) as area-weighted average of EcoClimate
-            // if (LandscapeClimate passes agent.LogicalTest)
-            // Record current timestep in agent.OutbreakList
-            // if OutbreakList contains any values where (current timestep - value ) < OutbreakLag
-            //   { agent.TimtToNext = current timestep - value}
-            // else
-            //   {  agent.TimeToNext = agent.OutbreakLag}
-            // Note:
-            //  This is intended to make not override if outbreak is already set to happen in < OutbreakLag years
-            //
-            // Update TimeOfNext as above 
-
-            //Should get start year in order to get
-
-            
-
-        //}
-
-        // copied from PlugIn
-        //private static int RegionalOutbreakStatus(IAgent activeAgent, int BDAtimestep)
-        public virtual int RegionalOutbreakStatus(int BDAtimestep)
-        {
-            int ROS = 0;
-
-            //if (this.TimeToNextEpidemic <= this.TimeSinceLastEpidemic && PlugIn.ModelCore.CurrentTime <= this.EndYear)
-            //{
-
-            //    this.TimeSinceLastEpidemic = 0;
-            //    //BDA-Climate
-            //    // TimeToNext function does not apply for Climate
-            //    // if OutbreakPattern <> Climate
-            //    //    activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
-            //    // else  skip -- TimeToNext is handled below and must be run every time step
-            //    //BDA-Climate
-
-            //    // Amin BDA-Climate----------------
-            //    if (this.RandFunc.ToString().ToLower() != "climate")
-            //    {
-            //        this.TimeToNextEpidemic = this.TimeToNext(BDAtimestep);
-
-
-            //        //--------------------
-            //        //activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
-
-            //        int timeOfNext = PlugIn.ModelCore.CurrentTime + this.TimeToNextEpidemic;
-            //        SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
-            //        //-----------------------------
-            //        //calculate ROS
-            //        if (this.TempType == TemporalType.pulse)
-            //            ROS = this.MaxROS;
-            //        else if (this.TempType == TemporalType.variablepulse)
-            //        {
-            //            //randomly select an ROS netween ROSmin and ROSmax
-            //            //ROS = (int) (Landis.Util.Random.GenerateUniform() *
-            //            //      (double) (activeAgent.MaxROS - activeAgent.MinROS + 1)) +
-            //            //      activeAgent.MinROS;
-
-            //            // Correction suggested by Brian Miranda, March 2008
-            //            ROS = (int)(PlugIn.ModelCore.GenerateUniform() *
-            //                  (double)(this.MaxROS - this.MinROS)) + 1 +
-            //                  this.MinROS;
-
-            //        }
-
-            //    }
-            //    else
-            //    {
-            //        //activeAgent.TimeSinceLastEpidemic += BDAtimestep;
-            //        ROS = this.MinROS;
-            //    }
-            //}
-            ////BDA-Climate
-            //// If OutbreakPattern = Climate
-            //// Calculate climate variable for current timestep
-            //// Update TimeToNext, TimeOfNext if necessary
-            //// Function outlined below (CalculateClimate)
-            ////BDA-Climate
-            
-            //else if (this.RandFunc.ToString().ToLower() == "climate")
-            //{
-            //    this.CalculateClimate();
-            //    //((Agent_Climate)this).CalculateClimate();
-            //}
-
-            return ROS;
-
-        }
-        public virtual int TimeToNext(int Timestep)
-        {
-                int timeToNext = 0;
-            //    if (this.RandFunc == OutbreakPattern.CyclicUniform)
-            //    {
-            //        int MaxI = (int)Math.Round(this.MaxInterval);
-            //        int MinI = (int)Math.Round(this.MinInterval);
-            //        double randNum = PlugIn.ModelCore.GenerateUniform();
-            //        timeToNext = (MinI) + (int)(randNum * (MaxI - MinI));
-            //    }
-            //    else if (this.RandFunc == OutbreakPattern.CyclicNormal)
-            //    {
-
-            //        PlugIn.ModelCore.NormalDistribution.Mu = this.NormMean;
-            //        PlugIn.ModelCore.NormalDistribution.Sigma = this.NormStDev;
-
-            //        int randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
-
-            //        timeToNext = randNum;
-
-            //        // Interval times are always rounded up to the next time step increment.
-            //        // This bias can be removed by reducing times by half the time step.
-            //        timeToNext = timeToNext - (Timestep / 2);
-
-            //        if (timeToNext < 0) timeToNext = 0;
-            //    }
-
-                return timeToNext;
-            //}
-        }
     }
+
     public class RelativeLocationWeighted
     {
         private RelativeLocation location;
@@ -867,10 +667,6 @@ namespace Landis.Extension.BaseBDA
             this.location = location;
             this.weight = weight;
         }
-
-
-
-
 
     }
 }

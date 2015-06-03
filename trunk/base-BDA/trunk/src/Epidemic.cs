@@ -1,6 +1,5 @@
-//  Copyright 2005-2014 Portland State University, University of Wisconsin, US Forest Service
-//  Authors:  Robert M. Scheller, Brian Miranda
-//  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
+//  Copyright 2005-2010 Portland State University, University of Wisconsin
+//  Authors:  Robert M. Scheller,   James B. Domingo
 
 using Landis.Core;
 using Landis.Library.AgeOnlyCohorts;

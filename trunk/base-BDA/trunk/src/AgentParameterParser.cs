@@ -5,7 +5,6 @@ using Landis.Core;
 using Edu.Wisc.Forest.Flel.Util;
 using System.Collections.Generic;
 using System.Text;
-//using System;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -16,11 +15,17 @@ namespace Landis.Extension.BaseBDA
     public class AgentParameterParser
         : TextParser<IAgent>
     {
+
         public static IEcoregionDataset EcoregionsDataset = PlugIn.ModelCore.Ecoregions;
         public static ISpeciesDataset SpeciesDataset = PlugIn.ModelCore.Species; //null;
 
         //---------------------------------------------------------------------
+        public override string LandisDataValue
+        {
+            get { return "BDA Agent"; }
+        }
 
+        //---------------------------------------------------------------------
         public AgentParameterParser()
         {
             RegisterForInputValues();
@@ -32,133 +37,85 @@ namespace Landis.Extension.BaseBDA
         {
             //PlugIn.ModelCore.Log.WriteLine("Parsing 1; sppCnt={0}", Model.Species.Count);
             //Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count, (int) DisturbanceType.Null);  //The last disturb Type is Null
-            //Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
+            InputVar<string> landisData = new InputVar<string>("LandisData");
+            ReadVar(landisData);
+            if (landisData.Value.Actual != LandisDataValue)
+                throw new InputValueException(landisData.Value.String, "The value is not \"{0}\"", LandisDataValue);
+
+            Agent agentParameters = new Agent(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
 
             InputVar<string> agentName = new InputVar<string>("BDAAgentName");
             ReadVar(agentName);
+            agentParameters.AgentName = agentName.Value;
 
             InputVar<int> bdpc = new InputVar<int>("BDPCalibrator");
             ReadVar(bdpc);
+            agentParameters.BDPCalibrator = bdpc.Value;
 
             InputVar<SRDmode> srd = new InputVar<SRDmode>("SRDMode");
             ReadVar(srd);
+            agentParameters.SRDmode = srd.Value;
 
             InputVar<int> startYear = new InputVar<int>("StartYear");
             if (CurrentName == "StartYear")
             {
                 ReadVar(startYear);
+                agentParameters.StartYear = startYear.Value;
             }
+            else
+                agentParameters.StartYear = 0;
 
             InputVar<int> endYear = new InputVar<int>("EndYear");
             if (CurrentName == "EndYear")
             {
                 ReadVar(endYear);
+                agentParameters.EndYear = endYear.Value;
             }
+            else
+                agentParameters.EndYear = PlugIn.ModelCore.EndTime;
 
             InputVar<OutbreakPattern> rf = new InputVar<OutbreakPattern>("OutbreakPattern");
             ReadVar(rf);
+            agentParameters.RandFunc = rf.Value;
 
-             Agent agentParameters = null;
-             if (rf.Value.ToString().ToLower() == "climate")
-             {
-                 agentParameters = new Agent_Climate(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
-
-                 //Required parameters for Climate
-
-                 //InputVar<string> climateQueriedValuse = new InputVar<string>("VariableName");
-                 //ReadVar(climateQueriedValuse);
-                 //((Agent_Climate)agentParameters).ClimateQueriedValuse = climateQueriedValuse.Value;
-
-                 //VariableName????
-                 InputVar<string> variableName = new InputVar<string>("VariableName");
-                 ReadVar(variableName);
-
-                 ((Agent_Climate)agentParameters).VariableName = variableName.Value;
-                 InputVar<float> thresholdLowerBound = new InputVar<float>("ThresholdLowerBound");
-                 ReadVar(thresholdLowerBound);
-                 ((Agent_Climate)agentParameters).Threshold_Lowerbound =thresholdLowerBound.Value;
-
-                 InputVar<float> thresholdUpperBound = new InputVar<float>("ThresholdUpperBound");
-                 ReadVar(thresholdUpperBound);
-                 ((Agent_Climate)agentParameters).Threshold_Upperbound =thresholdUpperBound.Value;
-
-                 InputVar<int> outbreakLag = new InputVar<int>("OutbreakLag");
-                 ReadVar(outbreakLag);
-                 ((Agent_Climate)agentParameters).OutbreakLag = outbreakLag.Value;
-
-                 InputVar<int> timeSinceLastClimate = new InputVar<int>("TimeSinceLastClimate");
-                 ReadVar(timeSinceLastClimate);
-                 ((Agent_Climate)agentParameters).TimeSinceLastClimate = timeSinceLastClimate.Value;
-                 //agentParameters.tim= outbreakLag.Value;
-
-
-             }
-             //else
-             //{
-             //}
-            if ((rf.Value.ToString().ToLower()) == "cyclicnormal")
+            InputVar<double> normMean = new InputVar<double>("Mean");
+            InputVar<double> normStDev = new InputVar<double>("StDev");
+            if ((rf.Value.ToString()) == "CyclicNormal")
             {
-
-                agentParameters = new Agent_CyclicNormal(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
-
-                InputVar<double> normMean = new InputVar<double>("Mean");
-                InputVar<double> normStDev = new InputVar<double>("StDev");
-                InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
                 ReadVar(normMean);
-                ((Agent_CyclicNormal)agentParameters).Mean = normMean.Value;
+                agentParameters.NormMean = normMean.Value;
                 ReadVar(normStDev);
-
-                ((Agent_CyclicNormal)agentParameters).STdDev = normMean.Value;
-                ReadVar(tSLE);
-
-                ((Agent_CyclicNormal)agentParameters).TimeSinceLastEpidemic = tSLE.Value;
-
-                
+                agentParameters.NormStDev = normStDev.Value;
             }
-            //else 
-            //{
-            //    ((Agent_CyclicNormal)agentParameters).Mean = 0;
-            //    ((Agent_CyclicNormal)agentParameters).STdDev = 0;
-            //}
-
-
-            if ((rf.Value.ToString().ToLower()) == "cyclicuniform")
+            else
             {
-
-                agentParameters = new Agent_CyclicUniform(PlugIn.ModelCore.Species.Count, PlugIn.ModelCore.Ecoregions.Count);
-
-                InputVar<double> maxInterval = new InputVar<double>("MaxInterval");
-                InputVar<double> minInterval = new InputVar<double>("MinInterval");
-                InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
-
-                //agentParameters.TimeSinceLastEpidemic = tSLE.Value;
-                ReadVar(maxInterval);
-                ((Agent_CyclicUniform)agentParameters).MaxInterval = maxInterval.Value;
-                ReadVar(minInterval);
-
-                ((Agent_CyclicUniform)agentParameters).MinInterval = minInterval.Value;
-                ReadVar(tSLE);
-
-                agentParameters.TimeSinceLastEpidemic = tSLE.Value;
-
-                //((Agent_CyclicUniform)agentParameters).TimeSinceLastEpidemic = tSLE.Value;
-
-
+                agentParameters.NormMean = 0;
+                agentParameters.NormStDev = 0;
             }
-            //else if(rf.Value.ToString().ToLower() != "cyclicuniform")
-            //{
-            //    ((Agent_CyclicUniform)agentParameters).MaxInterval = 0;
-            //    ((Agent_CyclicUniform)agentParameters).MinInterval = 0;
-            //}
-            //InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
 
-            //InputVar<int> timeSinceLastClimate = new InputVar<int>("TimeSinceLastClimate");
-            //ReadVar(timeSinceLastClimate);
+            InputVar<double> maxInterval = new InputVar<double>("MaxInterval");
+            InputVar<double> minInterval = new InputVar<double>("MinInterval");
+            if (rf.Value.ToString() == "CyclicUniform")
+            {
+                ReadVar(maxInterval);
+                agentParameters.MaxInterval = maxInterval.Value;
+                ReadVar(minInterval);
+                agentParameters.MinInterval = minInterval.Value;
+            }
+            else
+            {
+                agentParameters.MaxInterval = 0;
+                agentParameters.MinInterval = 0;
+            }
+
+            InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
+            ReadVar(tSLE);
+            agentParameters.TimeSinceLastEpidemic = tSLE.Value;
 
             InputVar<TemporalType> tt = new InputVar<TemporalType>("TemporalType");
             ReadVar(tt);
             agentParameters.TempType = tt.Value;
-
+            
             InputVar<int> minROS = new InputVar<int>("MinROS");
             ReadVar(minROS);
             agentParameters.MinROS = minROS.Value;
@@ -167,42 +124,7 @@ namespace Landis.Extension.BaseBDA
             ReadVar(maxROS);
             agentParameters.MaxROS = maxROS.Value;
 
-            //InputVar<string> agentName = new InputVar<string>("BDAAgentName");
-            //ReadVar(agentName);
-            agentParameters.AgentName = agentName.Value;
 
-            //InputVar<int> bdpc = new InputVar<int>("BDPCalibrator");
-            //ReadVar(bdpc);
-            agentParameters.BDPCalibrator = bdpc.Value;
-
-            //InputVar<SRDmode> srd = new InputVar<SRDmode>("SRDMode");
-            //ReadVar(srd);
-            agentParameters.SRDmode = srd.Value;
-
-            //InputVar<int> startYear = new InputVar<int>("StartYear");
-            if (CurrentName == "StartYear")
-            {
-                //ReadVar(startYear);
-                agentParameters.StartYear = startYear.Value;
-            }
-            //else
-            //    agentParameters.StartYear = 0;
-
-            //InputVar<int> endYear = new InputVar<int>("EndYear");
-            if (CurrentName == "EndYear")
-            {
-                //ReadVar(endYear);
-                agentParameters.EndYear = endYear.Value;
-            }
-            //else
-            //    agentParameters.EndYear = PlugIn.ModelCore.EndTime;
-
-            agentParameters.RandFunc = rf.Value;
-          
-            //------------------------
-
-            
-                     
             InputVar<bool> d = new InputVar<bool>("Dispersal");
             ReadVar(d);
             agentParameters.Dispersal = d.Value;
@@ -223,6 +145,10 @@ namespace Landis.Extension.BaseBDA
             ReadVar(oec);
             agentParameters.OutbreakEpicenterCoeff = oec.Value;
 
+            InputVar<double> outEpiThresh = new InputVar<double>("OutbreakEpicenterThresh");
+            ReadVar(outEpiThresh);
+            agentParameters.OutbreakEpicenterThresh = outEpiThresh.Value;
+            
             InputVar<bool> se = new InputVar<bool>("SeedEpicenter");
             ReadVar(se);
             agentParameters.SeedEpicenter = se.Value;
@@ -262,16 +188,12 @@ namespace Landis.Extension.BaseBDA
             InputVar<double> class3_SV = new InputVar<double>("IntensityClass3_BDP");
             ReadVar(class3_SV);
             agentParameters.Class3_SV = class3_SV.Value;
-            
 
             //--------- Read In Ecoreigon Table ---------------------------------------
             PlugIn.ModelCore.UI.WriteLine("Begin parsing ECOREGION table.");
 
             InputVar<string> ecoName = new InputVar<string>("Ecoregion Name");
             InputVar<double> ecoModifier = new InputVar<double>("Ecoregion Modifier");
-            InputVar<double> latitude = new InputVar<double>("Latitude");
-            InputVar<double> fieldCapacity = new InputVar<double>("Field Capacity (cm)");
-            InputVar<double> wiltingPoint = new InputVar<double>("Wilting Point (cm)");
 
             Dictionary <string, int> lineNumbers = new Dictionary<string, int>();
             const string DistParms = "DisturbanceModifiers";
@@ -300,20 +222,10 @@ namespace Landis.Extension.BaseBDA
                 ReadValue(ecoModifier, currentLine);
                 ecoParms.EcoModifier = ecoModifier.Value;
 
-                ReadValue(latitude, currentLine);
-                ecoParms.Latitude = latitude.Value;
-
-                ReadValue(fieldCapacity, currentLine);
-                ecoParms.FieldCapacity = fieldCapacity.Value;
-
-                ReadValue(wiltingPoint, currentLine);
-                ecoParms.WiltingPoint = wiltingPoint.Value;
-
-                CheckNoDataAfter("the " + wiltingPoint.Name + " column",
+                CheckNoDataAfter("the " + ecoModifier.Name + " column",
                                  currentLine);
                 GetNextLine();
             }
-            //((Agent_Climate)agentParameters).SetPDSI(PlugIn.ModelCore.Ecoregions.Count);
 
             if (CurrentName == DistParms)
             {
@@ -329,20 +241,13 @@ namespace Landis.Extension.BaseBDA
                 lineNumbers = new Dictionary<string, int>();
                 Dictionary<int, int> DisturbanceTypeLineNumbers = new Dictionary<int, int>();
 
+
                 while (!AtEndOfInput && CurrentName != SppParms)
                 {
                     StringReader currentLine = new StringReader(CurrentLine);
 
-                    //Changed----------------?????
-                    ReadValue(prescriptionName, currentLine);
-                    ReadValue(duration, currentLine);
                     ReadValue(distModifier, currentLine);
-
-
-                    List<string> prescriptionNames = new List<string>();
-                    prescriptionNames.Add(prescriptionName.Value);
-
-
+                                     
                     IDisturbanceType currentDisturbanceType = new DisturbanceType();
                     agentParameters.DisturbanceTypes.Add(currentDisturbanceType);
 
@@ -351,10 +256,10 @@ namespace Landis.Extension.BaseBDA
                     //IDistParameters distParms = new DistParameters();
                     //agentParameters.DistParameters[dt] = distParms;
 
-                    //ReadValue(duration, currentLine);
+                    ReadValue(duration, currentLine);
                     currentDisturbanceType.MaxAge = duration.Value;
 
-                    //List<string> prescriptionNames = new List<string>();
+                    List<string> prescriptionNames = new List<string>();
                     TextReader.SkipWhitespace(currentLine);
                     while (currentLine.Peek() != -1)
                     {
@@ -375,14 +280,13 @@ namespace Landis.Extension.BaseBDA
                                      currentLine);
                     GetNextLine();
                 }
-                // Changed-------------------???
-
             }
             //--------- Read In Species Table ---------------------------------------
             PlugIn.ModelCore.UI.WriteLine("Begin parsing SPECIES table.");
 
             ReadName(SppParms);
 
+            //const string FireCurves = "FireCurveTable";
             InputVar<string> sppName = new InputVar<string>("Species");
             InputVar<int> minorHostAge = new InputVar<int>("Minor Host Age");
             InputVar<double> minorHostSRD = new InputVar<double>("Minor Host SRDProb");
@@ -569,11 +473,19 @@ namespace Landis.Extension.BaseBDA
                 return OutbreakPattern.CyclicNormal;
             else if (word == "CyclicUniform")
                 return OutbreakPattern.CyclicUniform;
-            if (word == "Climate")
-                return OutbreakPattern.Climate;
             throw new System.FormatException("Valid algorithms: CyclicNormal and CyclicUniform");
         }
 
+        //public static DisturbanceType DTParse(string word)
+        //{
+        //    if (word == "Wind")
+        //        return DisturbanceType.Wind;
+        //    else if (word == "Fire")
+        //        return DisturbanceType.Fire;
+        //    else if (word == "Harvest")
+        //        return DisturbanceType.Harvest;
+        //    throw new System.FormatException("Valid algorithms: Wind, Fire, Harvest");
+        //}
         public static DispersalTemplate DispTParse(string word)
         {
             if (word == "MaxRadius")
@@ -626,6 +538,9 @@ namespace Landis.Extension.BaseBDA
             Type.SetDescription<OutbreakPattern>("Outbreak Pattern");
             InputValues.Register<OutbreakPattern>(RFParse);
 
+            //Type.SetDescription<DisturbanceType>("Disturbance Type");
+            //InputValues.Register<DisturbanceType>(DTParse);
+
             Type.SetDescription<DispersalTemplate>("Dispersal Template");
             InputValues.Register<DispersalTemplate>(DispTParse);
 
@@ -634,11 +549,6 @@ namespace Landis.Extension.BaseBDA
 
             Type.SetDescription<NeighborSpeed>("Neighbor Speed");
             InputValues.Register<NeighborSpeed>(NSpeedParse);
-        }
-
-        public override string LandisDataValue
-        {
-            get { return "A Single BDA Agent"; }
         }
     }
 }

@@ -2,13 +2,15 @@ LandisData "Base BDA"
 
 Timestep	1
 
-MapNames	bda/{agentName}-{timestep}.img
+MapNames	bda/{agentName}-{timestep}.gis
 
-SRDMapNames	bda/{agentName}-SRD-{timestep}.img
+SRDMapNames	bda/{agentName}-SRD-{timestep}.gis
 
-NRDMapNames	bda/{agentName}-NRD-{timestep}.img
+NRDMapNames	bda/{agentName}-NRD-{timestep}.gis
 
-LogFile		bda-test-log.csv
+BDPMapNames     bda/{agentName}-BDP-{timestep}.gis
 
-BDAInputFiles	TestInsect.txt	
+LogFile		bda/bda-log.csv
+
+BDAInputFiles	spruce_budworm.txt	
 

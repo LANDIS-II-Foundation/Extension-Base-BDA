@@ -44,7 +44,8 @@ namespace Landis.Extension.BaseBDA
             //          table outputs:   
             //---------------------------------------
 
-             PlugIn.EventLog = new MetadataTable<EventsLog>(logFileName);
+             //PlugIn.EventLog = new MetadataTable<EventsLog>(logFileName);
+            PlugIn.EventLog = new MetadataTable<EventsLog>("bda-log.csv");
 
             OutputMetadata tblOut_events = new OutputMetadata()
             {

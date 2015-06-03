@@ -11,9 +11,6 @@ namespace Landis.Extension.BaseBDA
     public interface IEcoParameters
     {
         double EcoModifier{get;set;}
-        double Latitude { get; set; }
-        double FieldCapacity { get; set; }
-        double WiltingPoint { get; set; }
     }
 }
 
@@ -24,9 +21,6 @@ namespace Landis.Extension.BaseBDA
         : IEcoParameters
     {
         private double ecoModifier;
-        private double latitude;
-        private double fieldCapacity;
-        private double wiltingPoint;
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -44,60 +38,19 @@ namespace Landis.Extension.BaseBDA
         }
 
         //---------------------------------------------------------------------
-        /// <summary>
-        /// </summary>
-        public double Latitude
-        {
-            get
-            {
-                return latitude;
-            }
-            set
-            {
-                if (value < -90 || value > 90)
-                    throw new InputValueException(value.ToString(),
-                        "Value must be >= -90.0 and <= 90.0.");
-                latitude = value;
-            }
-        }
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// </summary>
-        public double FieldCapacity
-        {
-            get
-            {
-                return fieldCapacity;
-            }
-            set
-            {
-                if (value < 0.1 || value > 50)
-                    throw new InputValueException(value.ToString(),
-                        "Value must be >= 0.1 and <= 50.0.");
-                fieldCapacity = value;
-            }
-        }
-        //---------------------------------------------------------------------
-        /// <summary>
-        /// </summary>
-        public double WiltingPoint
-        {
-            get
-            {
-                return wiltingPoint;
-            }
-            set
-            {
-                if (value < 0.1 || value > 50)
-                    throw new InputValueException(value.ToString(),
-                        "Value must be >= 0.1 and <= 50.0.");
-                wiltingPoint = value;
-            }
-        }
-        
-        //---------------------------------------------------------------------
         public EcoParameters()
         {
         }
+/*        //---------------------------------------------------------------------
+        public EcoParameters(double ecoModifier)
+        {
+            this.ecoModifier = ecoModifier;
+        }
+
+        //---------------------------------------------------------------------
+        public EcoParameters()
+        {
+            this.ecoModifier        = 0.0;
+        }*/
     }
 }

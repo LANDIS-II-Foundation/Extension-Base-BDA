@@ -1,6 +1,5 @@
-//  Copyright 2005-2014 Portland State University, University of Wisconsin, US Forest Service
-//  Authors:  Robert M. Scheller, Brian Miranda
-//  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
+//  Copyright 2005-2010 Portland State University, University of Wisconsin
+//  Authors:  Robert M. Scheller,   James B. Domingo
 
 using System.Collections.Generic;
 using Edu.Wisc.Forest.Flel.Util;
@@ -33,6 +32,11 @@ namespace Landis.Extension.BaseBDA
         string NRDMapNames{get;set;}
         //---------------------------------------------------------------------
         /// <summary>
+        /// Template for the filenames for output Vulnerabilty maps.
+        /// </summary>
+        string BDPMapNames { get; set; }
+        //---------------------------------------------------------------------
+        /// <summary>
         /// Name of log file.
         /// </summary>
         string LogFileName{get;set;}
@@ -57,6 +61,7 @@ namespace Landis.Extension.BaseBDA
         private string mapNamesTemplate;
         private string srdMapNames;
         private string nrdMapNames;
+        private string bdpMapNames;
         private string logFileName;
         private IEnumerable<IAgent> manyAgentParameters;
 
@@ -111,7 +116,7 @@ namespace Landis.Extension.BaseBDA
 
         //---------------------------------------------------------------------
         /// <summary>
-        /// Template for the filenames for SRD output maps.
+        /// Template for the filenames for NRD output maps.
         /// </summary>
         public string NRDMapNames
         {
@@ -125,7 +130,22 @@ namespace Landis.Extension.BaseBDA
                 nrdMapNames = value;
             }
         }
-
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Template for the filenames for Vulnerability output maps.
+        /// </summary>
+        public string BDPMapNames
+        {
+            get
+            {
+                return bdpMapNames;
+            }
+            set
+            {
+                MapNames.CheckTemplateVars(value);
+                bdpMapNames = value;
+            }
+        }
         //---------------------------------------------------------------------
         /// <summary>
         /// Name of log file.
@@ -159,21 +179,6 @@ namespace Landis.Extension.BaseBDA
         public InputParameters()
         {
         }
-        //---------------------------------------------------------------------
-/*        public Parameters(int                timestep,
-                          string             mapNameTemplate,
-                          string             srdMapNames,
-                          string  nrdMapNames,
-                          string             logFileName,
-                          IEnumerable<IAgent>   manyAgentParameters
-                          )
-        {
-            this.timestep = timestep;
-            this.mapNamesTemplate = mapNameTemplate;
-            this.srdMapNames = srdMapNames;
-            this.nrdMapNames = nrdMapNames;
-            this.logFileName = logFileName;
-            this.manyAgentParameters = manyAgentParameters;
-        }*/
+       
     }
 }

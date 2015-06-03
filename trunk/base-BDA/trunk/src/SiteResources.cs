@@ -303,7 +303,7 @@ namespace Landis.Extension.BaseBDA
                         foreach(RelativeLocationWeighted neighbor in neighborhood)
                         {
                             //Do NOT subsample if there are too few neighbors
-                            //i.e., <= subsample size.D:\PSU\Landis_II\amin-branch\Base_BDA_Climate\InputParameterParser.cs
+                            //i.e., <= subsample size.
                             if(neighborhood.Count <= speedUpFraction ||
                                 neighborCnt%speedUpFraction == 0)
                             {

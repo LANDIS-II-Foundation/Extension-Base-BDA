@@ -1,5 +1,6 @@
 LandisData  "Age-only Succession"
 
+>> Compatible with v4.x
 
 Timestep  10
 
