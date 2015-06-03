@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -66,6 +66,7 @@
     <Compile Include="DisturbanceType.cs" />
     <Compile Include="EventsLog.cs" />
     <Compile Include="MetadataHandler.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ShortPixel.cs" />
     <Compile Include="EcoParameters.cs" />
     <Compile Include="Epicenters.cs" />
@@ -77,6 +78,9 @@
     <Compile Include="SiteResources.cs" />
     <Compile Include="SiteVars.cs" />
     <Compile Include="SppParameters.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
