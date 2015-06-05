@@ -30,9 +30,6 @@ namespace Landis.Extension.BaseBDA
                 return ecoModifier;
             }
             set {
-                if (value < -1 || value > 1)
-                        throw new InputValueException(value.ToString(),
-                            "Value must be >= -1.0 and <= 1.0.");
                 ecoModifier = value;
             }
         }

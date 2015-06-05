@@ -35,8 +35,6 @@ namespace Landis.Extension.BaseBDA
                 return srdMod;
             }
             set {
-                if (value < -1.0 || value > 1.0)
-                    throw new InputValueException(value.ToString(),"Value must be >= -1.0 and <= 1.0.");
                 srdMod = value;
             }
         }

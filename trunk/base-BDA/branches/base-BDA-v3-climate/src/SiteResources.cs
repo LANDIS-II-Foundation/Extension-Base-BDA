@@ -118,7 +118,7 @@ namespace Landis.Extension.BaseBDA
                                 {
                                     if ((SiteVars.HarvestPrescriptionName != null && SiteVars.HarvestPrescriptionName[site].Trim() == pName.Trim()) || (pName.Trim() == "Harvest"))
                                     {
-                                        disturbMod = disturbance.SRDModifier *(double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
@@ -138,13 +138,13 @@ namespace Landis.Extension.BaseBDA
                                     {
                                         if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.FireSeverity[site].ToString())
                                         {
-                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                             sumDisturbMods += disturbMod;
                                         }
                                     }
                                     else if (pName.Trim() == "Fire") // Generic for all fire
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
@@ -165,13 +165,13 @@ namespace Landis.Extension.BaseBDA
                                     {
                                         if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.WindSeverity[site].ToString())
                                         {
-                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                             sumDisturbMods += disturbMod;
                                         }
                                     }
                                     else if (pName.Trim() == "Wind") // Generic for all wind
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
@@ -189,7 +189,7 @@ namespace Landis.Extension.BaseBDA
                                 {
                                     if((SiteVars.BiomassInsectsAgent[site].Trim() == pName.Trim()) || (pName.Trim() == "BiomassInsects"))
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
@@ -207,7 +207,7 @@ namespace Landis.Extension.BaseBDA
                                 {
                                     if ((SiteVars.AgentName[site].Trim() == pName.Trim()) || (pName.Trim() == "BDA"))
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
