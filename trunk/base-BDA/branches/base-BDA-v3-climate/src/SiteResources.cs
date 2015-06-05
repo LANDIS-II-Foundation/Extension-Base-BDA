@@ -124,7 +124,7 @@ namespace Landis.Extension.BaseBDA
                                 }
                             }
                         }
-                        //Check for fire severity effects of fuel type
+                        //Check for fire severity effects
                         if (SiteVars.FireSeverity != null && SiteVars.FireSeverity[site] > 0)
                         {
                             lastDisturb = SiteVars.TimeOfLastFire[site];
@@ -150,7 +150,7 @@ namespace Landis.Extension.BaseBDA
                                 }
                             }
                         }
-                        //Check for wind severity effects of fuel type
+                        //Check for wind severity effects
                         if (SiteVars.WindSeverity != null && SiteVars.WindSeverity[site] > 0)
                         {
                             lastDisturb = SiteVars.TimeOfLastWind[site];
@@ -170,6 +170,42 @@ namespace Landis.Extension.BaseBDA
                                         }
                                     }
                                     else if (pName.Trim() == "Wind") // Generic for all wind
+                                    {
+                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
+                        }
+                        //Check for Biomass Insects effects
+                        if (SiteVars.TimeOfLastBiomassInsects != null && SiteVars.TimeOfLastBiomassInsects[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastBiomassInsects[site];
+                            duration = disturbance.MaxAge;
+
+                            if (SiteVars.TimeOfLastBiomassInsects != null && (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration))
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if((SiteVars.BiomassInsectsAgent[site].Trim() == pName.Trim()) || (pName.Trim() == "BiomassInsects"))
+                                    {
+                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
+                        }
+                        //Check for other BDA agent effects
+                        if (SiteVars.TimeOfLastEvent[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastEvent[site];
+                            duration = disturbance.MaxAge;
+
+                            if (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration)
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if ((SiteVars.AgentName[site].Trim() == pName.Trim()) || (pName.Trim() == "BDA"))
                                     {
                                         disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
                                         sumDisturbMods += disturbMod;

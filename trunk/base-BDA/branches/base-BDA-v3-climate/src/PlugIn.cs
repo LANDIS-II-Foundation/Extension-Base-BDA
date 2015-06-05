@@ -9,6 +9,8 @@ using System.IO;
 using Landis.Core;
 using Landis.Library.Metadata;
 using Landis.SpatialModeling;
+using Landis.Library.Climate;
+using System.Data;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -31,6 +33,7 @@ namespace Landis.Extension.BaseBDA
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private static ICore modelCore;
+        private bool reinitialized;
 
         //---------------------------------------------------------------------
 
@@ -68,6 +71,7 @@ namespace Landis.Extension.BaseBDA
         /// </summary>
         public override void Initialize()
         {
+            reinitialized = false;
             MetadataHandler.InitializeMetadata(parameters.Timestep,
                parameters.MapNamesTemplate,
                parameters.SRDMapNames,
@@ -85,11 +89,9 @@ namespace Landis.Extension.BaseBDA
             SiteVars.Initialize(modelCore);
 
             manyAgentParameters = parameters.ManyAgentParameters;
-            foreach(IAgent activeAgent in manyAgentParameters)
+            foreach (IAgent activeAgent in manyAgentParameters)
             {
-
-
-                if(activeAgent == null)
+                if (activeAgent == null)
                     PlugIn.ModelCore.UI.WriteLine("Agent Parameters NOT loading correctly.");
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep) + activeAgent.StartYear;
                 int timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
@@ -99,24 +101,33 @@ namespace Landis.Extension.BaseBDA
                     timeOfNext = activeAgent.StartYear;
                 SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
-                int i=0;
+                int i = 0;
 
                 activeAgent.DispersalNeighbors
                     = GetDispersalNeighborhood(activeAgent, Timestep);
-                if(activeAgent.DispersalNeighbors != null)
+                if (activeAgent.DispersalNeighbors != null)
                 {
                     foreach (RelativeLocation reloc in activeAgent.DispersalNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
                 }
 
-                i=0;
+                i = 0;
                 activeAgent.ResourceNeighbors = GetResourceNeighborhood(activeAgent);
-                if(activeAgent.ResourceNeighbors != null)
+                if (activeAgent.ResourceNeighbors != null)
                 {
                     foreach (RelativeLocationWeighted reloc in activeAgent.ResourceNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
+
+                if (activeAgent.RandFunc == OutbreakPattern.Climate)
+                    if (activeAgent.ClimateVarSource != "Library")
+                    {
+                        DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
+                        activeAgent.ClimateDataTable = weatherTable;
+                    }
             }
+
+
 
             //string logFileName = parameters.LogFileName;
             //PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
@@ -130,6 +141,7 @@ namespace Landis.Extension.BaseBDA
         public new void InitializePhase2()
         {
                 SiteVars.InitializeTimeOfLastDisturbances();
+                reinitialized = true;
         }
 
         //---------------------------------------------------------------------
@@ -139,6 +151,8 @@ namespace Landis.Extension.BaseBDA
         public override void Run()
         {
             PlugIn.ModelCore.UI.WriteLine("   Processing landscape for BDA events ...");
+            if(!reinitialized)
+                InitializePhase2();
 
             //SiteVars.Epidemic.SiteValues = null;
 
@@ -352,15 +366,75 @@ namespace Landis.Extension.BaseBDA
         private static int RegionalOutbreakStatus(IAgent activeAgent, int BDAtimestep)
         {
             int ROS = 0;
+            bool activeOutbreak = false;
 
-            if(activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
+            if (activeAgent.RandFunc == OutbreakPattern.Climate)
             {
+                double climateValue = 0;
+                if (activeAgent.ClimateVarSource == "Library")
+                {
+                    if (activeAgent.ClimateVarName == "AnnualPDSI")
+                    {
+                        climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
+                        Console.Write("Landscape_PDSI: " + climateValue + "\n");
+                    }
+                }
+                else
+                {
+                    //Read variable from climate data file
+                    string selectString = "Year = '" + PlugIn.ModelCore.CurrentTime + "'";
+                    DataRow[] rows = activeAgent.ClimateDataTable.Select(selectString);
+                    foreach (DataRow row in rows)
+                    {
+                        climateValue = Convert.ToDouble(row[activeAgent.ClimateVarName]);
+                    }
+                    Console.Write("Landscape_" + activeAgent.ClimateVarName + ": " + climateValue + "\n");
+                }
+                if ((climateValue >= activeAgent.ClimateThresh_Lowerbound) && (climateValue <= activeAgent.ClimateThresh_Upperbound))
+                {
+                    // List of TimeofNext
+                    activeAgent.OutbreakList.AddLast(PlugIn.ModelCore.CurrentTime + activeAgent.ClimateLag);
+                }
 
+                if (activeAgent.OutbreakList.Count == 0)
+                {
+                    activeAgent.TimeToNextEpidemic = int.MaxValue;
+                    SiteVars.TimeOfNext.ActiveSiteValues = int.MaxValue;
+                }
+                else
+                {
+                    if (PlugIn.ModelCore.CurrentTime >= activeAgent.OutbreakList.First.Value)
+                    {
+                        activeAgent.OutbreakList.RemoveFirst();
+                        if (ModelCore.CurrentTime <= activeAgent.EndYear)
+                            activeOutbreak = true;
+                        if (activeAgent.OutbreakList.Count > 0)
+                        {
+                            activeAgent.TimeToNextEpidemic = activeAgent.OutbreakList.First.Value - PlugIn.ModelCore.CurrentTime;
+                            SiteVars.TimeOfNext.ActiveSiteValues = activeAgent.OutbreakList.First.Value;
+                        }
+                    }
+                    else
+                    {
+                        activeAgent.TimeToNextEpidemic = activeAgent.OutbreakList.First.Value - PlugIn.ModelCore.CurrentTime;
+                        SiteVars.TimeOfNext.ActiveSiteValues = activeAgent.OutbreakList.First.Value;
+                    }
+                }
+
+            }
+            else
+            {
+                if (activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
+                {
+                    activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
+                    int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
+                    SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
+                    activeOutbreak = true;
+                }
+            }
+            if(activeOutbreak)
+            {
                 activeAgent.TimeSinceLastEpidemic = 0;
-                activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
-                int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
-                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
-
                 //calculate ROS
                 if (activeAgent.TempType == TemporalType.pulse)
                     ROS = activeAgent.MaxROS;

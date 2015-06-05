@@ -5,17 +5,18 @@ using Landis.Core;
 using Landis.SpatialModeling;
 using Edu.Wisc.Forest.Flel.Util;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Landis.Extension.BaseBDA
 {
     public enum TemporalType {pulse,  variablepulse};
-    public enum OutbreakPattern {CyclicNormal, CyclicUniform};
+    public enum OutbreakPattern {CyclicNormal, CyclicUniform, Climate};
     public enum SRDmode {max, mean};
     public enum DispersalTemplate {MaxRadius, N4, N8, N12, N24};
     public enum NeighborShape {uniform, linear, gaussian};
     public enum NeighborSpeed {none, X2, X3, X4};
     public enum Zone {Nozone, Lastzone, Newzone};
-
+    
 
 
     /// <summary>
@@ -40,6 +41,15 @@ namespace Landis.Extension.BaseBDA
         double MinInterval{get;set;}
         int MinROS{get;set;}
         int MaxROS{get;set;}
+        // - Climate - 
+        string ClimateVarName { get; set; }
+        string ClimateVarSource { get; set; }
+        float ClimateThresh_Lowerbound { get; set; }
+        float ClimateThresh_Upperbound { get; set; }
+        int ClimateLag { get; set; }
+        int TimeSinceLastClimate { get; set; }
+        DataTable ClimateDataTable { get; set; }
+        LinkedList<int> OutbreakList { get; set; }
         
         //-- DISPERSAL -------------
         bool Dispersal{get;set;}
@@ -101,6 +111,15 @@ namespace Landis.Extension.BaseBDA
         private double minInterval;
         private int minROS;
         private int maxROS;
+        // - Climate - 
+        private string climateVarName;
+        private string climateVarSource;
+        private float climateThresh_Lowerbound;
+        private float climateThresh_Upperbound;
+        private int climateLag;
+        private int timeSinceLastClimate;
+        private DataTable climateDataTable;
+        public LinkedList<int> outbreakList = new LinkedList<int>();
         
         //-- DISPERSAL -------------
         private bool dispersal;
@@ -310,6 +329,111 @@ namespace Landis.Extension.BaseBDA
                 maxROS = value;
             }
         }
+        //---------------------------------------------------------------------
+        // - Climate - 
+        public string ClimateVarName
+        {
+            get
+            {
+                return climateVarName;
+            }
+            set
+            {
+                climateVarName = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public string ClimateVarSource
+        {
+            get
+            {
+                return climateVarSource;
+            }
+            set
+            {
+                climateVarSource = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public float ClimateThresh_Lowerbound
+        {
+            get
+            {
+                return climateThresh_Lowerbound;
+            }
+            set
+            {
+                climateThresh_Lowerbound = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public float ClimateThresh_Upperbound
+        {
+            get
+            {
+                return climateThresh_Upperbound;
+            }
+            set
+            {
+                climateThresh_Upperbound = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public int ClimateLag
+        {
+            get
+            {
+                return climateLag;
+            }
+            set
+            {
+                climateLag = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public int TimeSinceLastClimate
+        {
+            get
+            {
+                return timeSinceLastClimate;
+            }
+            set
+            {
+                timeSinceLastClimate = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Climate Data Table.
+        /// </summary>
+        public DataTable ClimateDataTable
+        {
+            get
+            {
+                return climateDataTable;
+            }
+            set
+            {
+                climateDataTable = value;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Outbreak List.
+        /// </summary>
+        public LinkedList<int> OutbreakList
+        {
+            get
+            {
+                return outbreakList;
+            }
+            set
+            {
+                outbreakList = value;
+            }
+        }
+
         //---------------------------------------------------------------------
         public ISppParameters[] SppParameters
         {
@@ -625,6 +749,7 @@ namespace Landis.Extension.BaseBDA
             resourceNeighbors = new List<RelativeLocationWeighted>();
             severity       = PlugIn.ModelCore.Landscape.NewSiteVar<byte>();
             outbreakZone   = PlugIn.ModelCore.Landscape.NewSiteVar<Zone>();
+            climateDataTable = new DataTable();
 
             for (int i = 0; i < sppCount; i++)
                 SppParameters[i] = new SppParameters();
