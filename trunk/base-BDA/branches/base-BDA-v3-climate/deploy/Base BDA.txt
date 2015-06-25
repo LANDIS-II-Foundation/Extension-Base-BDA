@@ -1,7 +1,7 @@
 LandisData   Extension
 
 Name         "Base BDA"
-Version      "3.1"
+Version      "3.1 (beta release 2)"
 Type         disturbance:BDA
 Assembly     Landis.Extension.BaseBDA
 Class        Landis.Extension.BaseBDA.PlugIn

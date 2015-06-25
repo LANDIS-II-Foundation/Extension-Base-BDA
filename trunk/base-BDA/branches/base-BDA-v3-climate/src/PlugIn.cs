@@ -178,26 +178,32 @@ namespace Landis.Extension.BaseBDA
                     {
                         LogEvent(PlugIn.ModelCore.CurrentTime, currentEpic, ROS, activeAgent);
 
-                        //----- Write BDA severity maps --------
-                        string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                        //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
-                        //using (map) {
-                        //    SeverityPixel pixel = new SeverityPixel();
-                        using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
+                        if (currentEpic.MeanSeverity > 0) //Temporary fix to work with VizTool
                         {
-                            ShortPixel pixel = outputRaster.BufferPixel;
-                            foreach (Site site in PlugIn.ModelCore.Landscape.AllSites) {
-                                if (site.IsActive) {
-                                    if (SiteVars.Disturbed[site])
-                                        pixel.MapCode.Value = (short) (activeAgent.Severity[site] + 1);
+                            //----- Write BDA severity maps --------
+                            string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
+                            //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
+                            //using (map) {
+                            //    SeverityPixel pixel = new SeverityPixel();
+                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
+                            {
+                                ShortPixel pixel = outputRaster.BufferPixel;
+                                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                                {
+                                    if (site.IsActive)
+                                    {
+                                        if (SiteVars.Disturbed[site])
+                                            pixel.MapCode.Value = (short)(activeAgent.Severity[site] + 1);
+                                        else
+                                            pixel.MapCode.Value = 1;
+                                    }
                                     else
-                                        pixel.MapCode.Value = 1;
+                                    {
+                                        //  Inactive site
+                                        pixel.MapCode.Value = 0;
+                                    }
+                                    outputRaster.WriteBufferPixel();
                                 }
-                                else {
-                                    //  Inactive site
-                                    pixel.MapCode.Value = 0;
-                                }
-                                outputRaster.WriteBufferPixel();
                             }
                         }
                         if (!(srdMapNames == null))
