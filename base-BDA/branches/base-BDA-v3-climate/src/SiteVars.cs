@@ -33,6 +33,7 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<string> agentName;
         private static ISiteVar<int> timeOfLastBiomassInsects;
         private static ISiteVar<string> biomassInsectsAgent;
+        private static ISiteVar<int> biomassInsectsDefol;
 
         //---------------------------------------------------------------------
 
@@ -48,6 +49,7 @@ namespace Landis.Extension.BaseBDA
             timeOfNext = modelCore.Landscape.NewSiteVar<int>();
             agentName = modelCore.Landscape.NewSiteVar<string>();
             biomassInsectsAgent = modelCore.Landscape.NewSiteVar<string>();
+            biomassInsectsDefol = modelCore.Landscape.NewSiteVar<int>();
 
 
             SiteVars.TimeOfLastEvent.ActiveSiteValues = -10000;
@@ -57,6 +59,7 @@ namespace Landis.Extension.BaseBDA
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
             SiteVars.TimeOfNext.ActiveSiteValues = 9999;
             SiteVars.AgentName.ActiveSiteValues = "";
+            SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
 
@@ -85,7 +88,7 @@ namespace Landis.Extension.BaseBDA
             windSeverity = PlugIn.ModelCore.GetSiteVar<byte>("Wind.Severity");
             timeOfLastBiomassInsects = PlugIn.ModelCore.GetSiteVar<int>("BiomassInsects.TimeOfLastEvent");
             biomassInsectsAgent = PlugIn.ModelCore.GetSiteVar<string>("BiomassInsects.InsectName");
-
+            biomassInsectsDefol = PlugIn.ModelCore.GetSiteVar<int>("BiomassInsects.PctDefoliation");
         }
         //---------------------------------------------------------------------
         public static ISiteVar<int> TimeOfLastEvent
@@ -243,6 +246,15 @@ namespace Landis.Extension.BaseBDA
             get
             {
                 return biomassInsectsAgent;
+            }
+
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> BiomassInsectsDefol
+        {
+            get
+            {
+                return biomassInsectsDefol;
             }
 
         }

@@ -6,6 +6,7 @@ using Landis.Core;
 using Landis.Library.AgeOnlyCohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -191,6 +192,24 @@ namespace Landis.Extension.BaseBDA
                                     {
                                         disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
+                                    }
+                                    else if(pName.Contains("BiomassInsectsDefol"))
+                                    {
+                                        var numAlpha = new Regex("(?<Alpha>[a-zA-Z]+)(?<Numeric>[0-9]+)");
+                                        var match = numAlpha.Match(pName.Trim());
+                                        var name = match.Groups["Alpha"].Value;
+                                        var pct = int.Parse(match.Groups["Numeric"].Value);
+                                        if ((name != "BiomassInsectsDefol") || (pct < 0) || (pct > 100))
+                                        {
+                                            string mesg = string.Format("Disturbance modifier using BiomassInsectsDefol must use the format BiomassInsectsDefol##, where ## is the percent defoliation threshold between 0 and 100.");
+                                            throw new System.ApplicationException(mesg);
+                                        }
+                                        
+                                        if(SiteVars.BiomassInsectsDefol[site] >= pct)
+                                        {
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
+                                            sumDisturbMods += disturbMod;
+                                        }
                                     }
                                 }
                             }

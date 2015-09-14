@@ -352,6 +352,7 @@ namespace Landis.Extension.BaseBDA
                 PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.NormStDev;
 
                 int randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
+                randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
 
                 timeToNext = randNum;
 
