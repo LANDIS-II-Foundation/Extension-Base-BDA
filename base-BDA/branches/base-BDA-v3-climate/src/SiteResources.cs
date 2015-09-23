@@ -365,11 +365,11 @@ namespace Landis.Extension.BaseBDA
                                 Site activeSite = site.GetNeighbor(neighbor.Location);
 
                                 //Note:  SiteResourceDomMod ranges from 0 - 1.
-                                if (SiteVars.SiteResourceDomMod[activeSite] > 0)
-                                {
+                                //if (SiteVars.SiteResourceDomMod[activeSite] > 0)  //BRM - 092315 - Turned off this restriction so that non-host in neighborhood reduces calculated value
+                                //{
                                     totalNeighborWeight += SiteVars.SiteResourceDomMod[activeSite] * neighbor.Weight;
                                     maxNeighborWeight += neighbor.Weight;
-                                }
+                                //}
                             }
                             neighborCnt++;
                         }
