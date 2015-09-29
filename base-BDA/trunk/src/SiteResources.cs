@@ -6,6 +6,7 @@ using Landis.Core;
 using Landis.Library.AgeOnlyCohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -118,13 +119,13 @@ namespace Landis.Extension.BaseBDA
                                 {
                                     if ((SiteVars.HarvestPrescriptionName != null && SiteVars.HarvestPrescriptionName[site].Trim() == pName.Trim()) || (pName.Trim() == "Harvest"))
                                     {
-                                        disturbMod = disturbance.SRDModifier *(double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
                             }
                         }
-                        //Check for fire severity effects of fuel type
+                        //Check for fire severity effects
                         if (SiteVars.FireSeverity != null && SiteVars.FireSeverity[site] > 0)
                         {
                             lastDisturb = SiteVars.TimeOfLastFire[site];
@@ -138,19 +139,19 @@ namespace Landis.Extension.BaseBDA
                                     {
                                         if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.FireSeverity[site].ToString())
                                         {
-                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                             sumDisturbMods += disturbMod;
                                         }
                                     }
                                     else if (pName.Trim() == "Fire") // Generic for all fire
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
                             }
                         }
-                        //Check for wind severity effects of fuel type
+                        //Check for wind severity effects
                         if (SiteVars.WindSeverity != null && SiteVars.WindSeverity[site] > 0)
                         {
                             lastDisturb = SiteVars.TimeOfLastWind[site];
@@ -165,13 +166,67 @@ namespace Landis.Extension.BaseBDA
                                     {
                                         if ((pName.Substring((pName.Length - 1), 1)).ToString() == SiteVars.WindSeverity[site].ToString())
                                         {
-                                            disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                             sumDisturbMods += disturbMod;
                                         }
                                     }
                                     else if (pName.Trim() == "Wind") // Generic for all wind
                                     {
-                                        disturbMod = disturbance.SRDModifier * (double)(duration - lastDisturb) / duration;
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                }
+                            }
+                        }
+                        //Check for Biomass Insects effects
+                        if (SiteVars.TimeOfLastBiomassInsects != null && SiteVars.TimeOfLastBiomassInsects[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastBiomassInsects[site];
+                            duration = disturbance.MaxAge;
+
+                            if (SiteVars.TimeOfLastBiomassInsects != null && (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration))
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if((SiteVars.BiomassInsectsAgent[site].Trim() == pName.Trim()) || (pName.Trim() == "BiomassInsects"))
+                                    {
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
+                                        sumDisturbMods += disturbMod;
+                                    }
+                                    else if(pName.Contains("BiomassInsectsDefol"))
+                                    {
+                                        var numAlpha = new Regex("(?<Alpha>[a-zA-Z]+)(?<Numeric>[0-9]+)");
+                                        var match = numAlpha.Match(pName.Trim());
+                                        var name = match.Groups["Alpha"].Value;
+                                        var pct = int.Parse(match.Groups["Numeric"].Value);
+                                        if ((name != "BiomassInsectsDefol") || (pct < 0) || (pct > 100))
+                                        {
+                                            string mesg = string.Format("Disturbance modifier using BiomassInsectsDefol must use the format BiomassInsectsDefol##, where ## is the percent defoliation threshold between 0 and 100.");
+                                            throw new System.ApplicationException(mesg);
+                                        }
+                                        
+                                        if(SiteVars.BiomassInsectsDefol[site] >= pct)
+                                        {
+                                            disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
+                                            sumDisturbMods += disturbMod;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //Check for other BDA agent effects
+                        if (SiteVars.TimeOfLastEvent[site] > 0)
+                        {
+                            lastDisturb = SiteVars.TimeOfLastEvent[site];
+                            duration = disturbance.MaxAge;
+
+                            if (PlugIn.ModelCore.CurrentTime - lastDisturb <= duration)
+                            {
+                                foreach (string pName in disturbance.PrescriptionNames)
+                                {
+                                    if ((SiteVars.AgentName[site].Trim() == pName.Trim()) || (pName.Trim() == "BDA"))
+                                    {
+                                        disturbMod = disturbance.SRDModifier * System.Math.Max(0, (double)(PlugIn.ModelCore.CurrentTime - lastDisturb)) / duration;
                                         sumDisturbMods += disturbMod;
                                     }
                                 }
@@ -310,11 +365,11 @@ namespace Landis.Extension.BaseBDA
                                 Site activeSite = site.GetNeighbor(neighbor.Location);
 
                                 //Note:  SiteResourceDomMod ranges from 0 - 1.
-                                if (SiteVars.SiteResourceDomMod[activeSite] > 0)
-                                {
+                                //if (SiteVars.SiteResourceDomMod[activeSite] > 0)  //BRM - 092315 - Turned off this restriction so that non-host in neighborhood reduces calculated value
+                                //{
                                     totalNeighborWeight += SiteVars.SiteResourceDomMod[activeSite] * neighbor.Weight;
                                     maxNeighborWeight += neighbor.Weight;
-                                }
+                                //}
                             }
                             neighborCnt++;
                         }

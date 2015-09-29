@@ -80,12 +80,16 @@ namespace Landis.Extension.BaseBDA
 
             InputVar<double> normMean = new InputVar<double>("Mean");
             InputVar<double> normStDev = new InputVar<double>("StDev");
+            InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
+
             if ((rf.Value.ToString()) == "CyclicNormal")
             {
                 ReadVar(normMean);
                 agentParameters.NormMean = normMean.Value;
                 ReadVar(normStDev);
                 agentParameters.NormStDev = normStDev.Value;
+                ReadVar(tSLE);
+                agentParameters.TimeSinceLastEpidemic = tSLE.Value;
             }
             else
             {
@@ -101,16 +105,16 @@ namespace Landis.Extension.BaseBDA
                 agentParameters.MaxInterval = maxInterval.Value;
                 ReadVar(minInterval);
                 agentParameters.MinInterval = minInterval.Value;
+                ReadVar(tSLE);
+                agentParameters.TimeSinceLastEpidemic = tSLE.Value;
             }
             else
             {
                 agentParameters.MaxInterval = 0;
                 agentParameters.MinInterval = 0;
             }
-
-            InputVar<int> tSLE = new InputVar<int>("TimeSinceLastEpidemic");
-            ReadVar(tSLE);
-            agentParameters.TimeSinceLastEpidemic = tSLE.Value;
+           
+            
 
             InputVar<TemporalType> tt = new InputVar<TemporalType>("TemporalType");
             ReadVar(tt);
@@ -473,7 +477,7 @@ namespace Landis.Extension.BaseBDA
                 return OutbreakPattern.CyclicNormal;
             else if (word == "CyclicUniform")
                 return OutbreakPattern.CyclicUniform;
-            throw new System.FormatException("Valid algorithms: CyclicNormal and CyclicUniform");
+            throw new System.FormatException("Valid algorithms: CyclicNormal or CyclicUniform");
         }
 
         //public static DisturbanceType DTParse(string word)

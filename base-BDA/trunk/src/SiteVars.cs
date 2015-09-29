@@ -30,6 +30,10 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<Dictionary<int,int>> numberCFSconifersKilled;
         private static ISiteVar<ISiteCohorts> cohorts;
         private static ISiteVar<int> timeOfNext;
+        private static ISiteVar<string> agentName;
+        private static ISiteVar<int> timeOfLastBiomassInsects;
+        private static ISiteVar<string> biomassInsectsAgent;
+        private static ISiteVar<int> biomassInsectsDefol;
 
         //---------------------------------------------------------------------
 
@@ -43,6 +47,10 @@ namespace Landis.Extension.BaseBDA
             disturbed = modelCore.Landscape.NewSiteVar<bool>();
             numberCFSconifersKilled = modelCore.Landscape.NewSiteVar<Dictionary<int, int>>();
             timeOfNext = modelCore.Landscape.NewSiteVar<int>();
+            agentName = modelCore.Landscape.NewSiteVar<string>();
+            biomassInsectsAgent = modelCore.Landscape.NewSiteVar<string>();
+            biomassInsectsDefol = modelCore.Landscape.NewSiteVar<int>();
+
 
             SiteVars.TimeOfLastEvent.ActiveSiteValues = -10000;
             SiteVars.NeighborResourceDom.ActiveSiteValues = 0.0;
@@ -50,6 +58,8 @@ namespace Landis.Extension.BaseBDA
             SiteVars.SiteResourceDom.ActiveSiteValues = 0.0;
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
             SiteVars.TimeOfNext.ActiveSiteValues = 9999;
+            SiteVars.AgentName.ActiveSiteValues = "";
+            SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
 
@@ -59,6 +69,7 @@ namespace Landis.Extension.BaseBDA
             // Added for v1.1 to enable interactions with CFS fuels extension.
             modelCore.RegisterSiteVar(SiteVars.NumberCFSconifersKilled, "BDA.NumCFSConifers");
             modelCore.RegisterSiteVar(SiteVars.TimeOfLastEvent, "BDA.TimeOfLastEvent");
+            modelCore.RegisterSiteVar(SiteVars.AgentName, "BDA.AgentName");
             // Added to enable interactions with other extensions (Presalvage harvest)
             modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
 
@@ -75,7 +86,9 @@ namespace Landis.Extension.BaseBDA
             fireSeverity = PlugIn.ModelCore.GetSiteVar<byte>("Fire.Severity");
             timeOfLastWind = PlugIn.ModelCore.GetSiteVar<int>("Wind.TimeOfLastEvent");
             windSeverity = PlugIn.ModelCore.GetSiteVar<byte>("Wind.Severity");
-
+            timeOfLastBiomassInsects = PlugIn.ModelCore.GetSiteVar<int>("BiomassInsects.TimeOfLastEvent");
+            biomassInsectsAgent = PlugIn.ModelCore.GetSiteVar<string>("BiomassInsects.InsectName");
+            biomassInsectsDefol = PlugIn.ModelCore.GetSiteVar<int>("BiomassInsects.PctDefoliation");
         }
         //---------------------------------------------------------------------
         public static ISiteVar<int> TimeOfLastEvent
@@ -147,27 +160,27 @@ namespace Landis.Extension.BaseBDA
             }
         }
         //---------------------------------------------------------------------
-
-
         public static ISiteVar<double> SiteResourceDom
         {
             get {
                 return siteResourceDom;
             }
         }
+        //---------------------------------------------------------------------
         public static ISiteVar<double> NeighborResourceDom
         {
             get {
                 return neighborResourceDom;
             }
         }
+        //---------------------------------------------------------------------
         public static ISiteVar<double> SiteResourceDomMod
         {
             get {
                 return siteResourceDomMod;
             }
         }
-
+        //---------------------------------------------------------------------
         public static ISiteVar<double> Vulnerability
         {
             get {
@@ -182,7 +195,7 @@ namespace Landis.Extension.BaseBDA
                 return disturbed;
             }
         }
-
+        //---------------------------------------------------------------------
         public static ISiteVar<Dictionary<int,int>> NumberCFSconifersKilled
         {
             get {
@@ -192,7 +205,7 @@ namespace Landis.Extension.BaseBDA
                 numberCFSconifersKilled = value;
             }
         }
-
+        //---------------------------------------------------------------------
         public static ISiteVar<ISiteCohorts> Cohorts
         {
             get
@@ -201,6 +214,7 @@ namespace Landis.Extension.BaseBDA
             }
 
         }
+        //---------------------------------------------------------------------
         public static ISiteVar<int> TimeOfNext
         {
             get
@@ -209,5 +223,41 @@ namespace Landis.Extension.BaseBDA
             }
 
         }
+        //---------------------------------------------------------------------
+        public static ISiteVar<string> AgentName
+        {
+            get
+            {
+                return agentName;
+            }
+
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> TimeOfLastBiomassInsects
+        {
+            get
+            {
+                return timeOfLastBiomassInsects;
+            }
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<string> BiomassInsectsAgent
+        {
+            get
+            {
+                return biomassInsectsAgent;
+            }
+
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> BiomassInsectsDefol
+        {
+            get
+            {
+                return biomassInsectsDefol;
+            }
+
+        }
+        //---------------------------------------------------------------------
     }
 }

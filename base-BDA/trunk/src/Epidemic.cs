@@ -252,6 +252,7 @@ namespace Landis.Extension.BaseBDA
                         totalSiteSeverity += this.siteSeverity;
                         SiteVars.Disturbed[site] = true;
                         SiteVars.TimeOfLastEvent[site] = PlugIn.ModelCore.CurrentTime;
+                        SiteVars.AgentName[site] = agent.AgentName;
                     } else
                         this.siteSeverity = 0;
                 }

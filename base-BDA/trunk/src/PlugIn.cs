@@ -9,6 +9,7 @@ using System.IO;
 using Landis.Core;
 using Landis.Library.Metadata;
 using Landis.SpatialModeling;
+using System.Data;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -31,6 +32,7 @@ namespace Landis.Extension.BaseBDA
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private static ICore modelCore;
+        private bool reinitialized;
 
         //---------------------------------------------------------------------
 
@@ -68,6 +70,7 @@ namespace Landis.Extension.BaseBDA
         /// </summary>
         public override void Initialize()
         {
+            reinitialized = false;
             MetadataHandler.InitializeMetadata(parameters.Timestep,
                parameters.MapNamesTemplate,
                parameters.SRDMapNames,
@@ -85,11 +88,9 @@ namespace Landis.Extension.BaseBDA
             SiteVars.Initialize(modelCore);
 
             manyAgentParameters = parameters.ManyAgentParameters;
-            foreach(IAgent activeAgent in manyAgentParameters)
+            foreach (IAgent activeAgent in manyAgentParameters)
             {
-
-
-                if(activeAgent == null)
+                if (activeAgent == null)
                     PlugIn.ModelCore.UI.WriteLine("Agent Parameters NOT loading correctly.");
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, Timestep) + activeAgent.StartYear;
                 int timeOfNext = PlugIn.ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic - activeAgent.TimeSinceLastEpidemic;
@@ -99,24 +100,27 @@ namespace Landis.Extension.BaseBDA
                     timeOfNext = activeAgent.StartYear;
                 SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
 
-                int i=0;
+                int i = 0;
 
                 activeAgent.DispersalNeighbors
                     = GetDispersalNeighborhood(activeAgent, Timestep);
-                if(activeAgent.DispersalNeighbors != null)
+                if (activeAgent.DispersalNeighbors != null)
                 {
                     foreach (RelativeLocation reloc in activeAgent.DispersalNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Dispersal Neighborhood = {0} neighbors.", i);
                 }
 
-                i=0;
+                i = 0;
                 activeAgent.ResourceNeighbors = GetResourceNeighborhood(activeAgent);
-                if(activeAgent.ResourceNeighbors != null)
+                if (activeAgent.ResourceNeighbors != null)
                 {
                     foreach (RelativeLocationWeighted reloc in activeAgent.ResourceNeighbors) i++;
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
+
             }
+
+
 
             //string logFileName = parameters.LogFileName;
             //PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
@@ -130,6 +134,7 @@ namespace Landis.Extension.BaseBDA
         public new void InitializePhase2()
         {
                 SiteVars.InitializeTimeOfLastDisturbances();
+                reinitialized = true;
         }
 
         //---------------------------------------------------------------------
@@ -139,6 +144,8 @@ namespace Landis.Extension.BaseBDA
         public override void Run()
         {
             PlugIn.ModelCore.UI.WriteLine("   Processing landscape for BDA events ...");
+            if(!reinitialized)
+                InitializePhase2();
 
             //SiteVars.Epidemic.SiteValues = null;
 
@@ -164,26 +171,31 @@ namespace Landis.Extension.BaseBDA
                     {
                         LogEvent(PlugIn.ModelCore.CurrentTime, currentEpic, ROS, activeAgent);
 
-                        //----- Write BDA severity maps --------
-                        string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                        //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
-                        //using (map) {
-                        //    SeverityPixel pixel = new SeverityPixel();
-                        using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
                         {
-                            ShortPixel pixel = outputRaster.BufferPixel;
-                            foreach (Site site in PlugIn.ModelCore.Landscape.AllSites) {
-                                if (site.IsActive) {
-                                    if (SiteVars.Disturbed[site])
-                                        pixel.MapCode.Value = (short) (activeAgent.Severity[site] + 1);
+                            //----- Write BDA severity maps --------
+                            string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
+                            //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
+                            //using (map) {
+                            //    SeverityPixel pixel = new SeverityPixel();
+                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
+                            {
+                                ShortPixel pixel = outputRaster.BufferPixel;
+                                foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                                {
+                                    if (site.IsActive)
+                                    {
+                                        if (SiteVars.Disturbed[site])
+                                            pixel.MapCode.Value = (short)(activeAgent.Severity[site] + 1);
+                                        else
+                                            pixel.MapCode.Value = 1;
+                                    }
                                     else
-                                        pixel.MapCode.Value = 1;
+                                    {
+                                        //  Inactive site
+                                        pixel.MapCode.Value = 0;
+                                    }
+                                    outputRaster.WriteBufferPixel();
                                 }
-                                else {
-                                    //  Inactive site
-                                    pixel.MapCode.Value = 0;
-                                }
-                                outputRaster.WriteBufferPixel();
                             }
                         }
                         if (!(srdMapNames == null))
@@ -332,6 +344,7 @@ namespace Landis.Extension.BaseBDA
                 PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.NormStDev;
 
                 int randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
+                randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
 
                 timeToNext = randNum;
 
@@ -352,15 +365,20 @@ namespace Landis.Extension.BaseBDA
         private static int RegionalOutbreakStatus(IAgent activeAgent, int BDAtimestep)
         {
             int ROS = 0;
+            bool activeOutbreak = false;
 
-            if(activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
+
+            if (activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
             {
-
-                activeAgent.TimeSinceLastEpidemic = 0;
                 activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
                 int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
                 SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
-
+                activeOutbreak = true;
+            }
+            
+            if(activeOutbreak)
+            {
+                activeAgent.TimeSinceLastEpidemic = 0;
                 //calculate ROS
                 if (activeAgent.TempType == TemporalType.pulse)
                     ROS = activeAgent.MaxROS;
