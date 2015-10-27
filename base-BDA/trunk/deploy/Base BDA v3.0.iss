@@ -24,6 +24,7 @@
 
 ; The extension's assembly
 Source: {#ConfigOutDir}\{#ExtensionAssembly}.dll; DestDir: {app}\bin\extensions
+Source:  {#LandisExtDir}\Landis.Library.Metadata.dll; DestDir: {app}\bin\extensions
 
 ; The user guide
 #define UserGuideSrc "LANDIS-II " + ExtensionName + " vX.Y User Guide.pdf"
