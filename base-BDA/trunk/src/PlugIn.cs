@@ -131,7 +131,7 @@ namespace Landis.Extension.BaseBDA
 
         }
 
-        public new void InitializePhase2()
+        public override void InitializePhase2()
         {
                 SiteVars.InitializeTimeOfLastDisturbances();
                 reinitialized = true;
