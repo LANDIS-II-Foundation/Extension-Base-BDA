@@ -1,0 +1,14 @@
+LandisData "Base BDA"
+
+Timestep	1
+
+MapNames	bda/{agentName}-{timestep}.img
+
+SRDMapNames	bda/{agentName}-SRD-{timestep}.img
+
+NRDMapNames	bda/{agentName}-NRD-{timestep}.img
+
+LogFile		bda/bda-event-log.csv
+
+BDAInputFiles	TestInsect.txt	
+
