@@ -1,4 +1,0 @@
-CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity
-1,3,budworm,28,4,2.0
-20,3,budworm,8,1,2.0
-38,3,budworm,9,2,1.5
