@@ -1,6 +1,6 @@
 #define PackageName      "Base BDA"
 #define PackageNameLong  "Base BDA Extension"
-#define Version          "3.0"
+#define Version          "3.0.1"
 #define ReleaseType      "official"
 #define ReleaseNumber    "3"
 #define CoreVersion      "6.0"
