@@ -25,9 +25,9 @@ Source: ..\..\src\bin\debug\Landis.Library.Climate.dll; DestDir: {#ExtDir}; Flag
 
 
 ; Complete example for testing the extension
-Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\Base BDA
-Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\Base BDA
-Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\Base BDA
+Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
+Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
+Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
 
 
 ; User Guides are no longer shipped with installer
