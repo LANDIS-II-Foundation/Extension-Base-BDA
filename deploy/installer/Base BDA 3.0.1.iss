@@ -30,10 +30,6 @@ Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\Base BDA; Flags: replaces
 Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
 
 
-; User Guides are no longer shipped with installer
-;Source: docs\LANDIS-II Biological Disturbance Agent v3.0 User Guide.pdf; DestDir: {#AppDir}\docs
-
-
 
 ; LANDIS-II identifies the extension with the info in this .txt file
 ; NB. New releases must modify the name of this file and the info in it
