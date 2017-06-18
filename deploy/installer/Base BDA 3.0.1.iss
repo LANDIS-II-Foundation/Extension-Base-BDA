@@ -1,6 +1,6 @@
 #define PackageName      "Base BDA"
 #define PackageNameLong  "Base BDA Extension"
-#define Version          "3.0"
+#define Version          "3.0.1"
 #define ReleaseType      "official"
 #define ReleaseNumber    "3"
 #define CoreVersion      "6.0"
@@ -25,19 +25,15 @@ Source: ..\..\src\bin\debug\Landis.Library.Climate.dll; DestDir: {#ExtDir}; Flag
 
 
 ; Complete example for testing the extension
-Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\Base BDA
-Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\Base BDA
-Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\Base BDA
-
-
-; User Guides are no longer shipped with installer
-;Source: docs\LANDIS-II Biological Disturbance Agent v3.0 User Guide.pdf; DestDir: {#AppDir}\docs
+Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
+Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
+Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\Base BDA; Flags: replacesameversion
 
 
 
 ; LANDIS-II identifies the extension with the info in this .txt file
 ; NB. New releases must modify the name of this file and the info in it
-#define InfoTxt "Base BDA 3.0.txt"
+#define InfoTxt "Base BDA 3.0.1.txt"
 Source: {#InfoTxt}; DestDir: {#LandisPlugInDir}
 
 

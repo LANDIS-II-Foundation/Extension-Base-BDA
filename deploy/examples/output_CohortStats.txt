@@ -11,7 +11,7 @@ Timestep   10
 >> ---- STAT1 ------------------------------------------------
 
 SpeciesAgeStats
-MapNames   basic-stats/age-per-spp/{species}-{statistic}-{timestep}.img
+MapNames   outputs/age-per-spp/{species}-{statistic}-{timestep}.img
 
 MIN 		tsugcana  betupapy    		<< minimum age for each species
 MAX 		tsugcana  abiebals tiliamer	<< maximum age for each species
@@ -22,7 +22,7 @@ AVG		tsugcana			<< average age for each species
 >> ---- STAT2 -----------------------------------------------------
 
 SiteAgeStats
-MapNames   basic-stats/age-all-spp/AGE-{statistic}-{timestep}.img
+MapNames   outputs/age-all-spp/AGE-{statistic}-{timestep}.img
 
 MIN 			<< minimum age across all species on site
 MAX			<< maximum age across all species on site
@@ -35,6 +35,6 @@ COUNT   		<< count of cohorts
 >> ---- STAT3 ----------------------------------------------------------
 
 SiteSpeciesStats
-MapNames   basic-stats/spp-counts/SPP-{statistic}-{timestep}.img
+MapNames   outputs/spp-counts/SPP-{statistic}-{timestep}.img
 
 RICH   			<<count of species

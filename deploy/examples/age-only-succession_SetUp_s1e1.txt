@@ -1,22 +1,21 @@
 LandisData  "Age-only Succession"
 
 
-Timestep  10
+>>--------------------
+>> REQUIRED INPUTS
+>>--------------------
+Timestep  			10
 
-SeedingAlgorithm  WardSeedDispersal
+SeedingAlgorithm  		WardSeedDispersal
 
->>-----------------------------
->>SETUP MAPS AND FILES
->>------------------------------
+InitialCommunities      	./age-only-succession_InitialCommunities_s1e1.txt
+InitialCommunitiesMap   	./age-only-succession_InitialCommunities_s1e1.gis
 
-InitialCommunities      ./age-only-succession_InitialCommunities.txt
-InitialCommunitiesMap   ./age-only-succession_InitialCommunities.gis
-
-DynamicInputFile	age-only-succession_DynamicInput.txt
+DynamicInputFile		./age-only-succession_DynamicInputs_s1e1.txt
 
 
 >>-------------------------------
->> SETUP PARAMETERS
+>> LIFE HISTORY PARAMETERS
 >>-------------------------------
 
 >>EstablishProbabilities

@@ -6,6 +6,11 @@ SRDMode			mean
 >>StartYear 50
 >>EndYear   100
 
+
+>>----------------------------------
+>> BDA DISTURBANE REGIME PARAMETERS
+>>----------------------------------
+
 >>-------- Regional Outbreak Inputs -------------
 OutbreakPattern		CyclicNormal	<<CyclicNormal or CyclicUniform
 Mean			33.5
@@ -49,6 +54,11 @@ DisturbanceModifiers
 >>SRD Modifer	Duration	Type
     0.33	20		WindSeverity4 WindSeverity5 AspenClearcut
    -0.25	20		Fire MaxAgeClearcut
+
+
+>>-------------------------
+>> BDA SEVERITY PARAMETERS
+>>--------------------------
 
 BDASpeciesParameters
 >>         -------------Host Value--------------  -------------Susceptibility-------------
