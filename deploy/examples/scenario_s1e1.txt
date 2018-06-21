@@ -58,7 +58,7 @@ CellLength  	100 << meters, 100 x 100 m = 1 ha
 >> 	Output Extension		Initialization File
 >> 	----------------		-------------------
 	"Output Max Species Age"	output_MaxSppAge.txt
-	"Output Cohort Statistics"	output_CohortStats.txt
+>>	"Output Cohort Statistics"	output_CohortStats.txt
 
 
 >> RandomNumberSeed  147  << optional parameter; uncomment for reproducibilty tests
