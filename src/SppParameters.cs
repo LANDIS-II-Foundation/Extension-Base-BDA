@@ -2,7 +2,7 @@
 //  Authors:  Robert M. Scheller,   James B. Domingo
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
-using Edu.Wisc.Forest.Flel.Util;
+using Landis.Utilities;
 
 namespace Landis.Extension.BaseBDA
 {
