@@ -1,4 +1,3 @@
-//  Copyright 2007-2010 USFS Portland State University, Northern Research Station, University of Wisconsin
 //  Authors:  Robert M. Scheller, Brian R. Miranda
 
 using Landis.Utilities;
