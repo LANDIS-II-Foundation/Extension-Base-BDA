@@ -26,12 +26,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClimateData.cs.save" />
+    <None Remove="CSVParser.cs.save" />
+    <None Remove="DistParameters.cs.save" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="ClimateData.cs.save" />
+    <Compile Include="CSVParser.cs.save" />
+    <Compile Include="DistParameters.cs.save" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Landis.Core" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Landis.Library.AgeOnlyCohorts-v3">
       <HintPath>lib\Landis.Library.AgeOnlyCohorts-v3.dll</HintPath>
+    </Reference>
+    <Reference Include="Landis.Library.Climate-v3">
+      <HintPath>lib\Landis.Library.Climate-v3.dll</HintPath>
     </Reference>
     <Reference Include="Landis.Library.Cohorts-v2">
       <HintPath>lib\Landis.Library.Cohorts-v2.dll</HintPath>

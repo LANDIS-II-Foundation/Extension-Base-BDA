@@ -1,5 +1,4 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller
 
 using Landis.Core;
 using Landis.Utilities;
@@ -113,7 +112,43 @@ namespace Landis.Extension.BaseBDA
                 agentParameters.MaxInterval = 0;
                 agentParameters.MinInterval = 0;
             }
-           
+            InputVar<string> climateVarName = new InputVar<string>("VariableName");
+            InputVar<string> climateVarSource = new InputVar<string>("Source");
+            InputVar<float> climateThresh_Lowerbound = new InputVar<float>("ThresholdLowerBound");
+            InputVar<float> climateThresh_Upperbound = new InputVar<float>("ThresholdUpperBound");
+            InputVar<int> climateLag  = new InputVar<int>("OutbreakLag");
+            InputVar<int>  timeSinceLastClimate = new InputVar<int>("TimeSinceLastClimate");
+
+            if (rf.Value.ToString().ToLower() == "climate")
+            {
+                ReadVar(climateVarName);
+                agentParameters.ClimateVarName = climateVarName.Value;
+                ReadVar(climateVarSource);
+                agentParameters.ClimateVarSource = climateVarSource.Value;
+                ReadVar(climateThresh_Lowerbound);
+                agentParameters.ClimateThresh_Lowerbound = climateThresh_Lowerbound.Value;
+                ReadVar(climateThresh_Upperbound);
+                agentParameters.ClimateThresh_Upperbound = climateThresh_Upperbound.Value;
+                ReadVar(climateLag);
+                agentParameters.ClimateLag = climateLag.Value;
+                if (ReadOptionalVar(timeSinceLastClimate))
+                {
+                    agentParameters.TimeSinceLastClimate = timeSinceLastClimate.Value;
+                }
+                else
+                    agentParameters.TimeSinceLastClimate = 0;
+                agentParameters.TimeSinceLastEpidemic = 0;
+            }
+            else
+            {
+                agentParameters.ClimateVarName = "";
+                agentParameters.ClimateVarSource = "";
+                agentParameters.ClimateThresh_Lowerbound = 0;
+                agentParameters.ClimateThresh_Upperbound = 0;
+                agentParameters.ClimateLag = 0;
+                agentParameters.TimeSinceLastClimate = 0;
+            }
+
             
 
             InputVar<TemporalType> tt = new InputVar<TemporalType>("TemporalType");
@@ -477,7 +512,9 @@ namespace Landis.Extension.BaseBDA
                 return OutbreakPattern.CyclicNormal;
             else if (word == "CyclicUniform")
                 return OutbreakPattern.CyclicUniform;
-            throw new System.FormatException("Valid algorithms: CyclicNormal or CyclicUniform");
+            else if (word == "Climate")
+                return OutbreakPattern.Climate;
+            throw new System.FormatException("Valid algorithms: CyclicNormal or CyclicUniform or Climate");
         }
 
         //public static DisturbanceType DTParse(string word)

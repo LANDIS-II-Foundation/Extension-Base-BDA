@@ -1,5 +1,4 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 //  Modified for budworm-BDA version by Brian Miranda, 2012
 
@@ -9,6 +8,7 @@ using System.IO;
 using Landis.Core;
 using Landis.Library.Metadata;
 using Landis.SpatialModeling;
+using Landis.Library.Climate;
 using System.Data;
 
 namespace Landis.Extension.BaseBDA
@@ -118,6 +118,12 @@ namespace Landis.Extension.BaseBDA
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
 
+                if (activeAgent.RandFunc == OutbreakPattern.Climate)
+                    if (activeAgent.ClimateVarSource != "Library")
+                    {
+                        DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
+                        activeAgent.ClimateDataTable = weatherTable;
+                    }
             }
 
 
@@ -131,7 +137,7 @@ namespace Landis.Extension.BaseBDA
 
         }
 
-        public override void InitializePhase2()
+        public new void InitializePhase2()
         {
                 SiteVars.InitializeTimeOfLastDisturbances();
                 reinitialized = true;
@@ -171,6 +177,7 @@ namespace Landis.Extension.BaseBDA
                     {
                         LogEvent(PlugIn.ModelCore.CurrentTime, currentEpic, ROS, activeAgent);
 
+                        if (currentEpic.MeanSeverity > 0) //Temporary fix to work with VizTool
                         {
                             //----- Write BDA severity maps --------
                             string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
@@ -367,15 +374,70 @@ namespace Landis.Extension.BaseBDA
             int ROS = 0;
             bool activeOutbreak = false;
 
-
-            if (activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
+            if (activeAgent.RandFunc == OutbreakPattern.Climate)
             {
-                activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
-                int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
-                SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
-                activeOutbreak = true;
+                double climateValue = 0;
+                if (activeAgent.ClimateVarSource == "Library")
+                {
+                    if (activeAgent.ClimateVarName == "AnnualPDSI")
+                    {
+                        climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
+                        Console.Write("Landscape_PDSI: " + climateValue + "\n");
+                    }
+                }
+                //else
+                //{
+                //    //Read variable from climate data file
+                //    string selectString = "Year = '" + PlugIn.ModelCore.CurrentTime + "'";
+                //    DataRow[] rows = activeAgent.ClimateDataTable.Select(selectString);
+                //    foreach (DataRow row in rows)
+                //    {
+                //        climateValue = Convert.ToDouble(row[activeAgent.ClimateVarName]);
+                //    }
+                //    Console.Write("Landscape_" + activeAgent.ClimateVarName + ": " + climateValue + "\n");
+                //}
+                if ((climateValue >= activeAgent.ClimateThresh_Lowerbound) && (climateValue <= activeAgent.ClimateThresh_Upperbound))
+                {
+                    // List of TimeofNext
+                    activeAgent.OutbreakList.AddLast(PlugIn.ModelCore.CurrentTime + activeAgent.ClimateLag);
+                }
+
+                if (activeAgent.OutbreakList.Count == 0)
+                {
+                    activeAgent.TimeToNextEpidemic = int.MaxValue;
+                    SiteVars.TimeOfNext.ActiveSiteValues = int.MaxValue;
+                }
+                else
+                {
+                    if (PlugIn.ModelCore.CurrentTime >= activeAgent.OutbreakList.First.Value)
+                    {
+                        activeAgent.OutbreakList.RemoveFirst();
+                        if (ModelCore.CurrentTime <= activeAgent.EndYear)
+                            activeOutbreak = true;
+                        if (activeAgent.OutbreakList.Count > 0)
+                        {
+                            activeAgent.TimeToNextEpidemic = activeAgent.OutbreakList.First.Value - PlugIn.ModelCore.CurrentTime;
+                            SiteVars.TimeOfNext.ActiveSiteValues = activeAgent.OutbreakList.First.Value;
+                        }
+                    }
+                    else
+                    {
+                        activeAgent.TimeToNextEpidemic = activeAgent.OutbreakList.First.Value - PlugIn.ModelCore.CurrentTime;
+                        SiteVars.TimeOfNext.ActiveSiteValues = activeAgent.OutbreakList.First.Value;
+                    }
+                }
+
             }
-            
+            else
+            {
+                if (activeAgent.TimeToNextEpidemic <= activeAgent.TimeSinceLastEpidemic && ModelCore.CurrentTime <= activeAgent.EndYear)
+                {
+                    activeAgent.TimeToNextEpidemic = TimeToNext(activeAgent, BDAtimestep);
+                    int timeOfNext = ModelCore.CurrentTime + activeAgent.TimeToNextEpidemic;
+                    SiteVars.TimeOfNext.ActiveSiteValues = timeOfNext;
+                    activeOutbreak = true;
+                }
+            }
             if(activeOutbreak)
             {
                 activeAgent.TimeSinceLastEpidemic = 0;
