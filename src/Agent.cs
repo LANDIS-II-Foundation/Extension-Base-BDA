@@ -6,7 +6,7 @@ using Landis.Utilities;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public enum TemporalType {pulse,  variablepulse};
     public enum OutbreakPattern {CyclicNormal, CyclicUniform, Climate};
@@ -85,7 +85,7 @@ namespace Landis.Extension.BaseBDA
 }
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// Parameters for the plug-in.

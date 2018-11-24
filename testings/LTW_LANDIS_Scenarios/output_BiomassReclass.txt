@@ -1,0 +1,30 @@
+LandisData  "Output Biomass Reclass"
+
+Timestep   1
+
+
+ReclassMaps
+
+>> Map Name    Forest Type    Species
+>> --------    -------------  -------
+   dominance -> JeffreyPine   PinuJeff -PinuCont -AbieConc -AbieMagn
+				Lodgepole	  PinuCont -PinuJeff -AbieConc -AbieMagn
+				WhiteFir	  AbieConc -PinuCont -PinuJeff -AbieMagn
+				RedFir		  AbieMagn -PinuCont -PinuJeff -AbieConc 
+				MixedCon	  PinuJeff  PinuCont  AbieConc  AbieMagn
+				Aspen		  PopuTrem  -AbieMagn -PinuCont -PinuJeff -AbieConc
+				MCP			  FixnResp	NonnSeed FixnSeed	 -PinuJeff -PinuLamb -CaloDecu -AbieConc -AbieMagn -PinuCont -PinuMont -TsugMert -PinuAlbi -PopuTrem <<NonnSeed FixnSeed FixnResp 	
+				                                                        
+				                                                        
+				                                                        
+				                                                        
+				                                                        
+				                                                        
+				                                                       
+				                                                        
+				
+				
+				
+MapFileNames   biomass-reclass/biomass-reclass-{reclass-map-name}-{timestep}.img
+
+<<This is for classifying cells into forest types via 50% total biomass threshold

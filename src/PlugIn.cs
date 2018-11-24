@@ -11,7 +11,7 @@ using Landis.SpatialModeling;
 using Landis.Library.Climate;
 using System.Data;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     ///<summary>
     /// A disturbance plug-in that simulates Biological Agents.
@@ -21,7 +21,7 @@ namespace Landis.Extension.BaseBDA
         : ExtensionMain
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
-        public static readonly string ExtensionName = "Base BDA";
+        public static readonly string ExtensionName = "Biomass BDA";
         public static MetadataTable<EventsLog> EventLog;
 
         private string mapNameTemplate;
@@ -80,6 +80,7 @@ namespace Landis.Extension.BaseBDA
                ModelCore);
 
             Timestep = parameters.Timestep;
+            Climate.Initialize(parameters.ClimateConfigFile, false, modelCore);
             mapNameTemplate = parameters.MapNamesTemplate;
             srdMapNames = parameters.SRDMapNames;
             nrdMapNames = parameters.NRDMapNames;
@@ -118,12 +119,13 @@ namespace Landis.Extension.BaseBDA
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
 
-                if (activeAgent.RandFunc == OutbreakPattern.Climate)
-                    if (activeAgent.ClimateVarSource != "Library")
-                    {
-                        DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
-                        activeAgent.ClimateDataTable = weatherTable;
-                    }
+                //if (activeAgent.RandFunc == OutbreakPattern.Climate)
+                    //if (activeAgent.ClimateVarSource != "Library")
+                    //{
+                    //    DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
+                    //    activeAgent.ClimateDataTable = weatherTable;
+                    //}
+            
             }
 
 

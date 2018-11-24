@@ -1,0 +1,17 @@
+LandisData "Biomass BDA"
+
+Timestep	1
+
+MapNames	bda/{agentName}-{timestep}.img
+
+SRDMapNames	bda/{agentName}-SRD-{timestep}.img
+
+NRDMapNames	bda/{agentName}-NRD-{timestep}.img
+
+>>BDPMapNames     bda/{agentName}-BDP-{timestep}.img
+
+LogFile		bda_log.csv
+
+BDAInputFiles	BDA-inputs/JeffreyPineBeetle_Jan23.txt	
+                BDA-inputs/MtnPineBeetle.txt	
+		BDA-inputs/FirEngraver_Dominant.txt	

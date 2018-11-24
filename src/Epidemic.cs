@@ -6,7 +6,7 @@ using Landis.Library.AgeOnlyCohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public class Epidemic
         : ICohortDisturbance

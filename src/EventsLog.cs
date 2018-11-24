@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Landis.Library.Metadata;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public class EventsLog
     {

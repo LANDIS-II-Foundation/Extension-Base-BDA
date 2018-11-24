@@ -3,7 +3,7 @@
 
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// Extra Spp Paramaters
@@ -29,7 +29,7 @@ namespace Landis.Extension.BaseBDA
 }
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public class SppParameters
         : ISppParameters

@@ -5,7 +5,7 @@ using Landis.Utilities;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
 
     /// <summary>
