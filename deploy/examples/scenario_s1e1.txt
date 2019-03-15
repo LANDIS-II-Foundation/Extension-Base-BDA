@@ -42,7 +42,7 @@ CellLength  	100 << meters, 100 x 100 m = 1 ha
 >> 	Disturbance Extension	Initialization File
 >>	--------------------	-------------------
 >>	"Base Fire"		base-fire_SetUp_s1e1.txt
-	"Base Wind"		base-wind_SetUp_s1e1.txt
+>>	"Base Wind"		base-wind_SetUp_s1e1.txt
 >>	"Base Harvest"		base-harvest_SetUp_s1e1.txt
 	"Base BDA"		base-BDA_SetUp_s1e1.txt
 
@@ -57,7 +57,7 @@ CellLength  	100 << meters, 100 x 100 m = 1 ha
 
 >> 	Output Extension		Initialization File
 >> 	----------------		-------------------
-	"Output Max Species Age"	output_MaxSppAge.txt
+>>	"Output Max Species Age"	output_MaxSppAge.txt
 >>	"Output Cohort Statistics"	output_CohortStats.txt
 
 

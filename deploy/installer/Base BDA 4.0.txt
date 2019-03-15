@@ -1,9 +1,9 @@
 LandisData   Extension
 
 Name         "Base BDA"
-Version      "4.0"
+Version      "4.0 (official release)"
 Type         disturbance:BDA
-Assembly     Landis.Extension.BaseBDA
+Assembly     Landis.Extension.BaseBDA-v4
 Class        Landis.Extension.BaseBDA.PlugIn
 Description  "Biological disturbance agents"
 CoreVersion  7.0
