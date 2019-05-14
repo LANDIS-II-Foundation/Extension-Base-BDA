@@ -22,7 +22,7 @@
     <PackageTags>LANDIS-II;Landis;Extension;Base BDA</PackageTags>
     <Description></Description>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <FileVersion>4.0.0.0</FileVersion>
+    <FileVersion>4.0.1.0</FileVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   

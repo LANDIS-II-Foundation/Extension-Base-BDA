@@ -339,13 +339,15 @@ namespace Landis.Extension.BaseBDA
             }
             else if (activeAgent.RandFunc == OutbreakPattern.CyclicNormal)
             {
+                int randNum = (int)activeAgent.NormMean;
+                if (!(activeAgent.NormStDev == 0))
+                {
+                    PlugIn.ModelCore.NormalDistribution.Mu = activeAgent.NormMean;
+                    PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.NormStDev;
 
-                PlugIn.ModelCore.NormalDistribution.Mu = activeAgent.NormMean;
-                PlugIn.ModelCore.NormalDistribution.Sigma = activeAgent.NormStDev;
-
-                int randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
-                randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
-
+                    randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
+                    randNum = (int)PlugIn.ModelCore.NormalDistribution.NextDouble();
+                }
                 timeToNext = randNum;
 
                 // Interval times are always rounded up to the next time step increment.
