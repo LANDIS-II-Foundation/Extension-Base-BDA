@@ -44,7 +44,11 @@ namespace Landis.Extension.BaseBDA
             //          table outputs:   
             //---------------------------------------
 
-            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(logFileName));
+            var logDir = System.IO.Path.GetDirectoryName(logFileName);
+            if (!string.IsNullOrWhiteSpace(logDir))
+            {
+                System.IO.Directory.CreateDirectory(logDir);
+            }
             PlugIn.EventLog = new MetadataTable<EventsLog>(logFileName);
 
             OutputMetadata tblOut_events = new OutputMetadata()
