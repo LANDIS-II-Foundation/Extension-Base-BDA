@@ -1,10 +1,9 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller
 
 using System.Collections.Generic;
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// Parameters for the extension.
@@ -16,10 +15,11 @@ namespace Landis.Extension.BaseBDA
         /// </summary>
         int Timestep {get;set;}
         //---------------------------------------------------------------------
+        string ClimateConfigFile { get; set; }
         /// <summary>
         /// Template for the filenames for output maps.
         /// </summary>
-        string MapNamesTemplate{get;set;}
+        string MapNamesTemplate {get;set;}
         //---------------------------------------------------------------------
         /// <summary>
         /// Template for the filenames for output SRD maps.
@@ -49,7 +49,7 @@ namespace Landis.Extension.BaseBDA
     }
 }
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// Parameters for the plug-in.
@@ -58,6 +58,7 @@ namespace Landis.Extension.BaseBDA
         : IInputParameters
     {
         private int timestep;
+        private string climateConfigFile;
         private string mapNamesTemplate;
         private string srdMapNames;
         private string nrdMapNames;
@@ -82,6 +83,19 @@ namespace Landis.Extension.BaseBDA
             }
         }
 
+        //---------------------------------------------------------------------
+        public string ClimateConfigFile
+        {
+            get
+            {
+                return climateConfigFile;
+            }
+            set
+            {
+
+                climateConfigFile = value;
+            }
+        }
         //---------------------------------------------------------------------
         /// <summary>
         /// Template for the filenames for output maps.

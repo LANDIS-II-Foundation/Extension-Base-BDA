@@ -1,0 +1,36 @@
+>> REMEMBER TO TURN OFF HARVEST ONCE ITS FIXED
+
+LandisData Scenario
+
+Duration 100
+
+Species 		"species.txt"
+
+Ecoregions 		"ecoregions5.txt" << using 5 ecoregions
+EcoregionsMap 		"ecoregions5.img"
+CellLength 100 << meters, so cell area = 1 ha
+
+>> Succession Extension Initialization File
+>> -------------------- -------------------
+
+"NECN Succession"	"NECN_Succession.txt"
+
+
+>> Disturbance Extensions Initialization File
+>> ---------------------- -------------------
+>>	SCRAPPLE				E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/SCRAPPLE_LTW.txt
+>>	"Dynamic Fuel System"	E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/DynamicFuels.txt
+>>	"Biomass Harvest"		E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/fuel-treatments-LTW-WUI-focused_PRETEND.txt
+    "Biomass BDA"              BDA-inputs/biomass-BDA-input.txt
+
+DisturbancesRandomOrder no
+
+>> Output Extensions Initialization File
+>> ----------------- -------------------
+"Output Max Species Age"		"max-spp-age.output.txt"
+>>"Output Biomass-by-Age"			"E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/output.biomass-by-age.txt"
+>> "Output Cohort Statistics"    	"./cohort-stats.output.txt"		<< any succession ext.
+>>"Output Biomass Reclass"        "E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/output_BiomassReclass.txt"
+>>"Output Biomass"		"E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/output-biomass.txt"   << output biomass
+
+>>RandomNumberSeed 4,357

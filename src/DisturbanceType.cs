@@ -3,7 +3,7 @@
 using Landis.Utilities;
 using System.Collections.Generic;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     //This slash type is used for all disturbance fuel types
     public interface IDisturbanceType

@@ -1,9 +1,8 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller
 
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// Extra Ecoregion Paramaters
@@ -15,7 +14,7 @@ namespace Landis.Extension.BaseBDA
 }
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public class EcoParameters
         : IEcoParameters

@@ -1,5 +1,4 @@
-﻿//  Copyright 2005-2014 Portland State University, University of Wisconsin, US Forest Service
-//  Authors:  Robert M. Scheller, Brian Miranda
+﻿//  Authors:  Robert M. Scheller, Brian Miranda
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
 using System;
@@ -10,7 +9,7 @@ using Landis.Library.Metadata;
 using Landis.Utilities;
 using Landis.Core;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     public static class MetadataHandler
     {

@@ -1,0 +1,9 @@
+LandisData   Extension
+
+Name         "Biomass BDA"
+Version      "1.0"
+Type         disturbance:BDA
+Assembly     Landis.Extension.BiomassBDA
+Class        Landis.Extension.BiomassBDA.PlugIn
+Description  "Biological disturbance agents"
+CoreVersion  7.0

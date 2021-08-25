@@ -1,12 +1,11 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller
 
 using Landis.Core;
 using Landis.Utilities;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.BiomassBDA
 {
     /// <summary>
     /// A parser that reads the extension parameters from text input.
@@ -46,6 +45,10 @@ namespace Landis.Extension.BaseBDA
             InputVar<int> timestep = new InputVar<int>("Timestep");
             ReadVar(timestep);
             parameters.Timestep = timestep.Value;
+
+            InputVar<string> climateConfigFile = new InputVar<string>("ClimateConfigFile");
+            ReadVar(climateConfigFile);
+            parameters.ClimateConfigFile = climateConfigFile.Value;
 
             //----------------------------------------------------------
             // Read in Map and Log file names.
