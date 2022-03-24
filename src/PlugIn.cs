@@ -11,7 +11,7 @@ using Landis.SpatialModeling;
 using Landis.Library.Climate;
 using System.Data;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     ///<summary>
     /// A disturbance plug-in that simulates Biological Agents.
@@ -21,7 +21,7 @@ namespace Landis.Extension.BiomassBDA
         : ExtensionMain
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
-        public static readonly string ExtensionName = "Biomass BDA";
+        public static readonly string ExtensionName = "Base BDA";
         public static MetadataTable<EventsLog> EventLog;
 
         private string mapNameTemplate;
@@ -80,7 +80,7 @@ namespace Landis.Extension.BiomassBDA
                ModelCore);
 
             Timestep = parameters.Timestep;
-            Climate.Initialize(parameters.ClimateConfigFile, false, modelCore);
+            //Climate.Initialize(parameters.ClimateConfigFile, false, modelCore);
             mapNameTemplate = parameters.MapNamesTemplate;
             srdMapNames = parameters.SRDMapNames;
             nrdMapNames = parameters.NRDMapNames;
@@ -119,12 +119,12 @@ namespace Landis.Extension.BiomassBDA
                     PlugIn.ModelCore.UI.WriteLine("Resource Neighborhood = {0} neighbors.", i);
                 }
 
-                //if (activeAgent.RandFunc == OutbreakPattern.Climate)
-                    //if (activeAgent.ClimateVarSource != "Library")
-                    //{
-                    //    DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
-                    //    activeAgent.ClimateDataTable = weatherTable;
-                    //}
+                if (activeAgent.RandFunc == OutbreakPattern.Climate)
+                    if (activeAgent.ClimateVarSource != "Library")
+                    {
+                        DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
+                        activeAgent.ClimateDataTable = weatherTable;
+                    }
             
             }
 
@@ -389,17 +389,17 @@ namespace Landis.Extension.BiomassBDA
                         Console.Write("Landscape_PDSI: " + climateValue + "\n");
                     }
                 }
-                //else
-                //{
-                //    //Read variable from climate data file
-                //    string selectString = "Year = '" + PlugIn.ModelCore.CurrentTime + "'";
-                //    DataRow[] rows = activeAgent.ClimateDataTable.Select(selectString);
-                //    foreach (DataRow row in rows)
-                //    {
-                //        climateValue = Convert.ToDouble(row[activeAgent.ClimateVarName]);
-                //    }
-                //    Console.Write("Landscape_" + activeAgent.ClimateVarName + ": " + climateValue + "\n");
-                //}
+                else
+                {
+                    //Read variable from climate data file Was commented out from 392 to 407
+                    string selectString = "Year = '" + PlugIn.ModelCore.CurrentTime + "'";
+                    DataRow[] rows = activeAgent.ClimateDataTable.Select(selectString);
+                    foreach (DataRow row in rows)
+                    {
+                        climateValue = Convert.ToDouble(row[activeAgent.ClimateVarName]);
+                    }
+                    Console.Write("Landscape_" + activeAgent.ClimateVarName + ": " + climateValue + "\n");
+                }
                 if ((climateValue >= activeAgent.ClimateThresh_Lowerbound) && (climateValue <= activeAgent.ClimateThresh_Upperbound))
                 {
                     // List of TimeofNext

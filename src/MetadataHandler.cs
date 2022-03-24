@@ -9,7 +9,7 @@ using Landis.Library.Metadata;
 using Landis.Utilities;
 using Landis.Core;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     public static class MetadataHandler
     {

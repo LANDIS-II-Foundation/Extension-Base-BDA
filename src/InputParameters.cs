@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Landis.Utilities;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     /// <summary>
     /// Parameters for the extension.
@@ -15,7 +15,7 @@ namespace Landis.Extension.BiomassBDA
         /// </summary>
         int Timestep {get;set;}
         //---------------------------------------------------------------------
-        string ClimateConfigFile { get; set; }
+        // string ClimateConfigFile { get; set; }
         /// <summary>
         /// Template for the filenames for output maps.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Landis.Extension.BiomassBDA
     }
 }
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     /// <summary>
     /// Parameters for the plug-in.
@@ -58,7 +58,7 @@ namespace Landis.Extension.BiomassBDA
         : IInputParameters
     {
         private int timestep;
-        private string climateConfigFile;
+        // private string climateConfigFile;
         private string mapNamesTemplate;
         private string srdMapNames;
         private string nrdMapNames;
@@ -84,7 +84,7 @@ namespace Landis.Extension.BiomassBDA
         }
 
         //---------------------------------------------------------------------
-        public string ClimateConfigFile
+        /*public string ClimateConfigFile
         {
             get
             {
@@ -95,7 +95,7 @@ namespace Landis.Extension.BiomassBDA
 
                 climateConfigFile = value;
             }
-        }
+        }*/
         //---------------------------------------------------------------------
         /// <summary>
         /// Template for the filenames for output maps.

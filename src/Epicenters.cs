@@ -6,7 +6,7 @@ using Landis.SpatialModeling;
 using System.Collections.Generic;
 
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     public class Epicenters
     {

@@ -2,7 +2,7 @@
 
 using Landis.Utilities;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     /// <summary>
     /// Extra Ecoregion Paramaters
@@ -14,7 +14,7 @@ namespace Landis.Extension.BiomassBDA
 }
 
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     public class EcoParameters
         : IEcoParameters

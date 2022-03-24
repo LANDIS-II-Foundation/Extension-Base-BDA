@@ -8,7 +8,7 @@ using Landis.SpatialModeling;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
 
     public class SiteResources

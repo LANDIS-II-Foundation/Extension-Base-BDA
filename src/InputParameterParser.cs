@@ -5,7 +5,7 @@ using Landis.Utilities;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     /// <summary>
     /// A parser that reads the extension parameters from text input.
@@ -46,9 +46,9 @@ namespace Landis.Extension.BiomassBDA
             ReadVar(timestep);
             parameters.Timestep = timestep.Value;
 
-            InputVar<string> climateConfigFile = new InputVar<string>("ClimateConfigFile");
-            ReadVar(climateConfigFile);
-            parameters.ClimateConfigFile = climateConfigFile.Value;
+            // InputVar<string> climateConfigFile = new InputVar<string>("ClimateConfigFile");
+            // ReadVar(climateConfigFile);
+            // parameters.ClimateConfigFile = climateConfigFile.Value;
 
             //----------------------------------------------------------
             // Read in Map and Log file names.

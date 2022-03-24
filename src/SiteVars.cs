@@ -7,7 +7,7 @@ using Landis.SpatialModeling;
 using Landis.Library.AgeOnlyCohorts;
 using System.Collections.Generic;
 
-namespace Landis.Extension.BiomassBDA
+namespace Landis.Extension.BaseBDA
 {
     ///<summary>
     /// Site Variables for a disturbance plug-in that simulates Biological Agents.
