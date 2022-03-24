@@ -1,0 +1,34 @@
+LandisData  "Output Cohort Statistics"
+
+
+Timestep   10
+
+SpeciesAgeStats
+
+MapNames   spp-age-stats/{species}-{statistic}-{timestep}.img
+
+>>MIN 	<<tsugcana  betupapy    	<< minimum age for each species
+>>MAX 	<<tsugcana		<< maximum age for each species
+>>MED		<<tsugcana	<< median age for each species
+>>SD		<<tsugcana	<< standard deviation age for each species
+>>AVG		<<tsugcana	<< average age for each species
+
+
+SiteAgeStats
+
+MapNames   spp-age-stats/AGE-{statistic}-{timestep}.img
+
+>>MIN 			<< minimum age across all species on site
+>>MAX			<< maximum age across all species on site
+>>MED			<< median age across all species on site
+AVG			<< average age across all species on site
+>>RICH   			<< number of age classes across all species on site
+>>EVEN   			<< evenness 
+>>COUNT   		<< count of cohorts
+
+
+SiteSpeciesStats
+
+MapNames   spp-age-stats/SPP-{statistic}-{timestep}.img
+
+>>RICH   			<<count of species

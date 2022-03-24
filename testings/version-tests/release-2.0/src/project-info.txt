@@ -1,6 +1,0 @@
-#  project information
-
-project-name	Landis.BaseBDA
-project-type	library
-version		1.2
-release		official

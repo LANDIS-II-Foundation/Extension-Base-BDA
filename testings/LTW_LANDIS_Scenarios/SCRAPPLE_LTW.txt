@@ -1,0 +1,207 @@
+LandisData  "SCRAPPLE"
+
+Timestep                            1
+
+AccidentalIgnitionsMap     E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/human_ign1.tif
+LightningIgnitionsMap  E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/lightning1.tif
+RxIgnitionsMap  E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/RxBurn_FACTS_CA_Igns.tif <<1/25 Incorporated Ca state parks into this new map
+>>RxIgnitionsMap  E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/rx1.tif
+
+AccidentalSuppressionMap	E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/Suppression_2014_TFFP.tif
+LightningSuppressionMap		E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/Suppression_2014_TFFP.tif
+RxSuppressionMap		E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/Suppression_2014_TFFP.tif
+
+GroundSlopeMap E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/slope.img
+UphillSlopeAzimuthMap  E:/SNPLMA3/LANDIS_modeling/LTW_NECN_H/ScrappleInputs/upslope.img
+
+>>Updated on 2/20 w new fits params
+LightningIgnitionsB0   -4.5
+LightningIgnitionsB1   0.03
+AccidentalIgnitionsB0  -3.3
+AccidentalIgnitionsB1  0.03
+
+>> A generic parameter
+>> Developed from running sim sith no fire and analyzing patterns
+MaximumFineFuels 200.00 <<Was 500
+
+>> Prescribed Fire Parameters
+MaximumRxWindSpeed 8.0
+MaximumRxFireWeatherIndex 10.0
+MinimumRxFireWeatherIndex 8.0
+MaximumRxFireIntensity 1
+NumberRxAnnualFires 0
+FirstDayRxFires 275 <<October 1
+>>TargetRxSize 40
+
+>>These are all based on a simple glm, unless we can find a better method I guess (11/15)
+>> 1/17/2018 With suppression tables on all 5, 65, 95 we get pretty good results from 80, -3, -2.5. The FRP is good but there are too many little fires
+MaximumSpreadAreaB0	-80 <<7/31 replicates on Box were run with -80
+MaximumSpreadAreaB1	3.5 <<-3 <<FWI
+MaximumSpreadAreaB2	2.5 <<-2.5  <<effective wind speed
+
+>>Fitted params on 12/27 using optim() BFGS method : -1.79, 0.06, -.915, 0.0126
+>>Fitted params on 12/28 using optim() SANN method: 0.33980600,  0.01726217, -0.31600116,  0.03447919
+SpreadProbabilityB0 -35.8 <<more negative means lower spread. 7/31 replicates on Box were run with -38
+SpreadProbabilityB1 0.6  <<FWI
+SpreadProbabilityB2  0.915 << relativized fine fuels. Was .915
+SpreadProbabilityB3 0.0126 << effective wind speed. 
+
+IntensityFactor:FineFuelPercent  0.3 <<Was 0.1
+IntensityFactor:LadderFuelMaxAge 40
+IntensityFactor:LadderFuelBiomass 1500 <<was 1200
+
+LadderFuelSpeciesList 
+PinuJeff AbieConc CaloDecu
+
+SuppressionMaxWindSpeed 40
+SuppressionTable  << 1/19/18 This still needs some work to finalize these numbers since we didn't get them from the sub-committee
+>>Type		FWI1	FWI2	Lo	Md	High-Effectiveness
+Accidental	40 		60		0	5	10	<< Used to be 5 65 95. FWI cutoffs used to be 30 and 50
+Lightning	40 		60		0	5	10
+Rx 			40 		60  	0	5	10
+
+DeadWoodTable
+PinuJeff  22
+CaloDecu  33
+PinuCont  38
+PinuLamb  27
+AbieMagn  28
+AbieConc  29
+
+>> Mortality data is compiled from Brian Garrett and Brandon Collins 12/7/2017
+>> There could also be a high age cohort with slightly elevated mortality levels per Brian
+
+FireIntensityClass_1_DamageTable
+>> Format = species [maxAge Pmortality] ... [repeating]  Any missing data is 0.0
+PinuJeff 0   40   0.45
+PinuJeff 40  80   0.1
+PinuJeff 80  500  0.05
+PinuLamb 0   40   0.45
+PinuLamb 40  80   0.1
+PinuLamb 80  500  0.05
+CaloDecu 0   40   0.5
+CaloDecu 40  80   0.15
+CaloDecu 80  500  0.1
+AbieConc 0   40   0.6
+AbieConc 40  80   0.15
+AbieConc 80  450  0.05
+AbieMagn 0   40   0.6
+AbieMagn 40  80   0.15
+AbieMagn 80  500  0.05
+PinuCont 0   30   0.6
+PinuCont 30  70   0.35
+PinuCont 70  250  0.25
+PinuMont 0   40   0.55
+PinuMont 40  80   0.15
+PinuMont 80  550  0.1
+TsugMert 0   30   0.6
+TsugMert 30  70   0.2
+TsugMert 70  800  0.1
+PinuAlbi 0   30   0.65
+PinuAlbi 30  70   0.3
+PinuAlbi 70  900  0.1
+PopuTrem 0   30   0.5
+PopuTrem 30  70   0.3
+PopuTrem 70  175  0.1
+NonnResp 0   10   0.6
+NonnResp 10  40   0.7
+NonnResp 40  80   0.8
+NonnSeed 0   10   0.6
+NonnSeed 10  40   0.7
+NonnSeed 40  80   0.8
+FixnResp 0   10   0.6
+FixnResp 10  40   0.7
+FixnResp 40  80   0.8
+FixnSeed 0   10   0.6
+FixnSeed 10  40   0.7
+FixnSeed 40  80   0.8
+
+FireIntensityClass_2_DamageTable
+>> Format = species [maxAge Pmortality] ... [repeating]  Any missing data is 0.0
+PinuJeff 0   40    0.6
+PinuJeff 40  80    0.25
+PinuJeff 80  500   0.15
+PinuLamb 0   40    0.7
+PinuLamb 40  80    0.2
+PinuLamb 80  500   0.1
+CaloDecu 0   40    0.75
+CaloDecu 40  80    0.2
+CaloDecu 80  500   0.1
+AbieConc 0   40    0.8
+AbieConc 40  80    0.4
+AbieConc 80  450   0.2
+AbieMagn 0   40    0.8
+AbieMagn 40  80    0.25
+AbieMagn 80  500   0.1
+PinuCont 0   30    0.85
+PinuCont 30  70    0.7
+PinuCont 70  250   0.6
+PinuMont 0   40    0.77
+PinuMont 40  80    0.3
+PinuMont 80  550   0.25
+TsugMert 0   30    0.8
+TsugMert 30  70    0.5
+TsugMert 70  800   0.3
+PinuAlbi 0   30    0.8
+PinuAlbi 30  70    0.5
+PinuAlbi 70  900   0.4
+PopuTrem 0   30    0.9
+PopuTrem 30  70    0.7
+PopuTrem 70  175   0.6
+NonnResp 0   10    1.0
+NonnResp 10  40    1.0
+NonnResp 40  80    1.0
+NonnSeed 0   10    1.0
+NonnSeed 10  40    1.0
+NonnSeed 40  80    1.0
+FixnResp 0   10    1.0
+FixnResp 10  40    1.0
+FixnResp 40  80    1.0
+FixnSeed 0   10    1.0
+FixnSeed 10  40    1.0
+FixnSeed 40  80    1.0
+
+FireIntensityClass_3_DamageTable
+>> Format = species [maxAge Pmortality] ... [repeating]  Any missing data is 0.0
+PinuJeff 0   40   0.9
+PinuJeff 40  80   0.8
+PinuJeff 80  500  0.7
+PinuLamb 0   40   0.9
+PinuLamb 40  80   0.8
+PinuLamb 80  500  0.6
+CaloDecu 0   40   0.9
+CaloDecu 40  80   0.7
+CaloDecu 80  500  0.5
+AbieConc 0   40   0.99
+AbieConc 40  80   0.75
+AbieConc 80  450  0.8
+AbieMagn 0   40   0.99
+AbieMagn 40  80   0.75
+AbieMagn 80  500  0.8
+PinuCont 0   30   0.99
+PinuCont 30  70   0.95
+PinuCont 70  250  0.9
+PinuMont 0   40   0.9
+PinuMont 40  80   0.75
+PinuMont 80  550  0.6
+TsugMert 0   30   0.9
+TsugMert 30  70   0.75
+TsugMert 70  800  0.6
+PinuAlbi 0   30   0.97
+PinuAlbi 30  70   0.8
+PinuAlbi 70  900  0.7
+PopuTrem 0   30   0.99
+PopuTrem 30  70   0.95
+PopuTrem 70  175  0.9
+NonnResp 0   10   1.0 
+NonnResp 10  40   1.0 
+NonnResp 40  80   1.0 
+NonnSeed 0   10   1.0 
+NonnSeed 10  40   1.0 
+NonnSeed 40  80   1.0 
+FixnResp 0   10   1.0 
+FixnResp 10  40   1.0 
+FixnResp 40  80   1.0 
+FixnSeed 0   10   1.0 
+FixnSeed 10  40   1.0 
+FixnSeed 40  80   1.0 
