@@ -214,7 +214,7 @@ namespace Landis.Extension.BaseBDA
 
                 double myRand = PlugIn.ModelCore.GenerateUniform();
 
-                if(agent.OutbreakZone[site] == Zone.Newzone
+                if((agent.OutbreakZone[site] == Zone.Newzone || agent.OutbreakZone[site] == Zone.Lastzone)
                     && SiteVars.Vulnerability[site] > myRand)
                 {
                     //PlugIn.ModelCore.Log.WriteLine("Zone={0}, agent.OutbreakZone={1}", Zone.Newzone.ToString(), agent.OutbreakZone[site]);
@@ -230,8 +230,13 @@ namespace Landis.Extension.BaseBDA
                     this.random = myRand;
                     this.siteVulnerability = SiteVars.Vulnerability[site];
 
-                    if(this.siteSeverity > 0)
+                    if(this.siteSeverity > 0)                        
+                    {
                         cohortsKilled = KillSiteCohorts(site);
+                        SiteVars.TimeOfLastEvent[site] = PlugIn.ModelCore.CurrentTime;
+                        SiteVars.AgentName[site] = agent.AgentName;
+                        SiteVars.BDASeverity[site] = this.siteSeverity;
+                    }
 
                     siteCohortsKilled = cohortsKilled[0];
 
@@ -251,12 +256,11 @@ namespace Landis.Extension.BaseBDA
                         this.totalSitesDamaged++;
                         totalSiteSeverity += this.siteSeverity;
                         SiteVars.Disturbed[site] = true;
-                        SiteVars.TimeOfLastEvent[site] = PlugIn.ModelCore.CurrentTime;
-                        SiteVars.AgentName[site] = agent.AgentName;
                     } else
                         this.siteSeverity = 0;
                 }
                 agent.Severity[site] = (byte) this.siteSeverity;
+                SiteVars.BDASeverity[site] = this.siteSeverity;
             }
             if (this.totalSitesDamaged > 0)
                 this.meanSeverity = (double) totalSiteSeverity / (double) this.totalSitesDamaged;

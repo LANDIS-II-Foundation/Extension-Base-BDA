@@ -1,0 +1,73 @@
+LandisData "BDA Agent"
+
+BDAAgentName		Siberian-silk-moth
+BDPCalibrator		1
+SRDMode			mean
+>>StartYear 50
+>>EndYear   100
+
+
+>>----------------------------------
+>> BDA DISTURBANE REGIME PARAMETERS
+>>----------------------------------
+
+>>-------- Regional Outbreak Inputs -------------
+OutbreakPattern		CyclicNormal << CyclicNormal or CyclicUniform
+Mean			2
+StDev			2
+TimeSinceLastEpidemic	2		<<years
+TemporalType 		pulse 		<< pulse or variablepulse
+MinROS			0
+MaxROS			3
+
+
+>>-------- Dispersal Inputs ----------------------
+Dispersal		yes	<<yes or no  NOTE: APPLY THIS OPTION IF THE OUTBREAK DOES NOT AFFECT ALL AVAILABLE HOST IN A GIVEN OUTBREAK (I.E., SPATIALLY RESTRICTED)
+DispersalRate		750	<<meters/year (midpoint of 300-1200m range of Kharuk et al. 2016)
+EpidemicThresh		0.66  << High value (close to 1) under the assumption that outbreaks initiate in areas with high concentrations of primary host.
+InitialEpicenterNum	1  << remaining parameters to be calibrated depending on relative extent of outbreak
+OutbreakEpicenterCoeff	0.5
+OutbreakEpicenterThresh  3
+SeedEpicenter		yes	<< yes or no
+SeedEpicenterMax	25
+SeedEpicenterCoeff	0.5
+DispersalTemplate	4N	<<MaxRadius, 4N, 8N, 12N, or 24N << Maximize resistance to spread for irregular patterns...but will have to investigate behavior
+
+>>-------- Neighborhood Resource Inputs -----------
+NeighborFlag	yes			<<yes or no
+NeighborSpeedUp none			<<none, 2x, 3x, or 4x
+NeighborRadius	250			<<meters
+NeighborShape	uniform			<<uniform, linear, or gaussian
+NeighborWeight	1.0
+
+
+>>-- Intensity Class Thresholds --  
+>>IntensityClass1_BDP 	0.0  << Hardwired value
+IntensityClass2_BDP 	0.30 << Based on the observation that mortality is rare if composition of host is < 30%
+IntensityClass3_BDP 	0.50
+
+>>Ecoregion Modifiers
+
+>>DisturbanceModifiers
+>>SRD Modifer	Duration	Type
+
+>>-------------------------
+>> BDA SEVERITY PARAMETERS
+>>--------------------------
+
+BDASpeciesParameters
+>>         -------------Host Value--------------  -------------Susceptibility-------------
+>>Species  MinorHost    2ndHost      MajorHost    Class3        Class2        Class1	    CFS
+>>Name     Age SRDProb  Age SRDProb  Age SRDProb  Age VulnProb  Age VulnProb  Age VulnProb  Conifer?
+>> ---------------------------------------------------------------------------------------------
+abiebals  20   0.21	40  0.42   80  0.85	  	0    0.7	40  1.0	     40  1.0		yes
+>>piceglau  20   0.12	40  0.25   80  0.5	  	0    0.7	40  0.85     40 0.85		yes
+piceglau  20   0.12	40  0.25   80  0.5	  	0    0.15	40  0.25     40 0.25		yes
+
+IgnoredSpecies
+pinubank
+pinuresi
+pinustro
+thujocci
+tsugcana
+

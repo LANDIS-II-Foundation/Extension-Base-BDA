@@ -55,9 +55,11 @@ namespace Landis.Extension.BaseBDA
         int DispersalRate{get;set;}
         double EpidemicThresh{get;set;}
         int EpicenterNum{get;set;}
+        int InitialEpicenterNum { get; set; }
         bool SeedEpicenter{get;set;}
         double OutbreakEpicenterCoeff{get;set;}
         double OutbreakEpicenterThresh { get; set; }
+        double SeedEpicenterMax { get; set; }
         double SeedEpicenterCoeff{get;set;}
         DispersalTemplate DispersalTemp{get;set;}
         IEnumerable<RelativeLocation> DispersalNeighbors{get;set;}
@@ -125,9 +127,11 @@ namespace Landis.Extension.BaseBDA
         private int dispersalRate;
         private double epidemicThresh;
         private int epicenterNum;
+        private int initialEpicenterNum;
         private bool seedEpicenter;
         private double outbreakEpicenterCoeff;
         private double outbreakEpicenterThresh;
+        private double seedEpicenterMax;
         private double seedEpicenterCoeff;
         private DispersalTemplate dispersalTemp;
         private IEnumerable<RelativeLocation> dispersalNeighbors;
@@ -540,6 +544,17 @@ namespace Landis.Extension.BaseBDA
             set {
                 epicenterNum = value;
             }
+        }        //---------------------------------------------------------------------
+        public int InitialEpicenterNum
+        {
+            get
+            {
+                return initialEpicenterNum;
+            }
+            set
+            {
+                initialEpicenterNum = value;
+            }
         }
         //---------------------------------------------------------------------
         public bool SeedEpicenter
@@ -570,7 +585,7 @@ namespace Landis.Extension.BaseBDA
             }
             set
             {
-                if (value < 0.0 || value > 1.0)
+                if (value < 0.0 || value > 4.0)
                     throw new InputValueException(value.ToString(),
                          "Value must be > or = 0 and < or = 1.");
                 outbreakEpicenterThresh = value;
@@ -584,6 +599,18 @@ namespace Landis.Extension.BaseBDA
             }
             set {
                 seedEpicenterCoeff = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        public double SeedEpicenterMax
+        {
+            get
+            {
+                return seedEpicenterMax;
+            }
+            set
+            {
+                seedEpicenterMax = value;
             }
         }
         //---------------------------------------------------------------------

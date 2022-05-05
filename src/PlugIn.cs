@@ -166,7 +166,7 @@ namespace Landis.Extension.BaseBDA
 
                 int ROS = RegionalOutbreakStatus(activeAgent, Timestep);
 
-                if(ROS > 0)
+                if (ROS > 0)
                 {
                     Epidemic.Initialize(activeAgent);
                     Epidemic currentEpic = Epidemic.Simulate(activeAgent,
@@ -218,7 +218,7 @@ namespace Landis.Extension.BaseBDA
                                 {
                                     if (site.IsActive)
                                     {
-                                        pixel.MapCode.Value = (short) System.Math.Round(SiteVars.SiteResourceDom[site] * 100.00);
+                                        pixel.MapCode.Value = (short)System.Math.Round(SiteVars.SiteResourceDom[site] * 100.00);
                                     }
                                     else
                                     {
@@ -278,6 +278,15 @@ namespace Landis.Extension.BaseBDA
 
                         eventCount++;
                     }
+                }
+                else // ROS == 0
+                {
+                    foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                    {
+                        activeAgent.OutbreakZone[site] = Zone.Nozone;
+                        activeAgent.Severity[site] = 0;
+                    }
+                    activeAgent.EpicenterNum = activeAgent.InitialEpicenterNum;
                 }
             }
         }

@@ -179,6 +179,7 @@ namespace Landis.Extension.BaseBDA
             InputVar<int> ien = new InputVar<int>("InitialEpicenterNum");
             ReadVar(ien);
             agentParameters.EpicenterNum = ien.Value;
+            agentParameters.InitialEpicenterNum = ien.Value;
 
             InputVar<double> oec = new InputVar<double>("OutbreakEpicenterCoeff");
             ReadVar(oec);
@@ -191,6 +192,10 @@ namespace Landis.Extension.BaseBDA
             InputVar<bool> se = new InputVar<bool>("SeedEpicenter");
             ReadVar(se);
             agentParameters.SeedEpicenter = se.Value;
+
+            InputVar<double> seMax = new InputVar<double>("SeedEpicenterMax");
+            ReadVar(seMax);
+            agentParameters.SeedEpicenterMax = seMax.Value;
 
             InputVar<double> sec = new InputVar<double>("SeedEpicenterCoeff");
             ReadVar(sec);

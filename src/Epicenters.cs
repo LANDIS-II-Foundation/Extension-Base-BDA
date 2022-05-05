@@ -46,48 +46,55 @@ namespace Landis.Extension.BaseBDA
                     firstIteration = false;
                     continue;
                 }
+                if ((SiteVars.TimeOfLastEvent[asite] == (PlugIn.ModelCore.CurrentTime - 1)) && (SiteVars.AgentName[asite] == agent.AgentName))
+                {
+                    firstIteration = false;
+                    continue;
+                }
             }
 
             //Generate New Epicenters based on the location of past outbreaks
             //and the vulnerability of the current landscape:
-            if(!firstIteration)
-            {
+            //if(!firstIteration)
+            //{
                 List<Location> oldZoneSiteList = new List<Location>(0);
+                List<Location> outsideSiteList = new List<Location>(0);
+
 
                 //---------------------------------------------------------
                 //Count the number of potential new inside and outside epicenters:
                 int totalInOut = 0;
                 foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
                 {
-                        if (agent.Severity[site] > 0)
+                    if ((agent.Severity[site] >= agent.OutbreakEpicenterThresh) || ((SiteVars.TimeOfLastEvent[site] == (PlugIn.ModelCore.CurrentTime - 1)) && (SiteVars.AgentName[site] == agent.AgentName) && (SiteVars.BDASeverity[site] >= agent.OutbreakEpicenterThresh)))
+                    {
+                        totalInOut++;
+                        numInside++;//potential new epicenter inside last OutbreakZone
+                        oldZoneSiteList.Add(site.Location);
+                        //PlugIn.ModelCore.Log.WriteLine("  Severity = {0}.  Zone = {1}.", agent.Severity[site], agent.OutbreakZone[site]);
+                    }
+                    else
+                    {
+                        if ((agent.OutbreakZone[site] == Zone.Nozone) &&(SiteVars.Vulnerability[site] >= agent.EpidemicThresh)) //potential new epicenter
                         {
-                            if (SiteVars.Vulnerability[site] >= agent.OutbreakEpicenterThresh) //potential new epicenter
-                            {
-                                totalInOut++;
-                                numInside++;//potential new epicenter inside last OutbreakZone
-                                oldZoneSiteList.Add(site.Location);
-                                //PlugIn.ModelCore.Log.WriteLine("  Severity = {0}.  Zone = {1}.", agent.Severity[site], agent.OutbreakZone[site]);
-                            }
+                            totalInOut++;
+                            numOutside++;//potential new epicenter outside last OutbreakZone
+                            outsideSiteList.Add(site.Location);
                         }
-                        if(agent.OutbreakZone[site] != Zone.Lastzone)
-                            if (SiteVars.Vulnerability[site] >= agent.EpidemicThresh) //potential new epicenter
-                            {
-                                totalInOut++;
-                                numOutside++;//potential new epicenter outside last OutbreakZone
-                            }
+                    }
                 }
 
-                PlugIn.ModelCore.UI.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
+                    PlugIn.ModelCore.UI.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
 
                 //---------------------------------------------------------
                 //Calculate number of Epicenters that will occur
                 //INSIDE the last epidemic outbreak area.
                 //This always occurs after the first iteration.
                 //PlugIn.ModelCore.Log.WriteLine("   Adding epicenters INSIDE last outbreak zone.");
-                PlugIn.ModelCore.shuffle(oldZoneSiteList);
+                oldZoneSiteList = PlugIn.ModelCore.shuffle(oldZoneSiteList);
 
-                numInside = (int)((double) numInside *
-                            System.Math.Exp(-1.0 * agent.OutbreakEpicenterCoeff * oldEpicenterNum));
+                //numInside = (int)((double) numInside *System.Math.Exp(-1.0 * agent.OutbreakEpicenterCoeff * oldEpicenterNum));
+                numInside = (int)((double)numInside * agent.OutbreakEpicenterCoeff);
 
                 //PlugIn.ModelCore.Log.WriteLine("   Actual Number Inside = {0}.", numInside);
 
@@ -110,7 +117,8 @@ namespace Landis.Extension.BaseBDA
                 {
                     PlugIn.ModelCore.UI.WriteLine("Adding epicenters OUTSIDE last outbreak zone.");
 
-                    numOutside = (int)((double) numOutside *
+                    // Negative exponential function (log-linear) - used in versions < 4.1
+                    /*numOutside = (int)((double) numOutside *
                                     System.Math.Exp(-1.0 * (double) agent.SeedEpicenterCoeff * (double) oldEpicenterNum));
                     PlugIn.ModelCore.UI.WriteLine("   Actual Number Outside = {0}.  SeedCoef = {1}.  OldEpiNum = {2}.", numOutside, agent.SeedEpicenterCoeff, oldEpicenterNum);
                     //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
@@ -135,15 +143,37 @@ namespace Landis.Extension.BaseBDA
                                     System.Math.Exp(-1.0 * (double) agent.SeedEpicenterCoeff * (double) epicenterNum));
                             }
                         }
+                    }*/
+
+                    outsideSiteList = PlugIn.ModelCore.shuffle(outsideSiteList);
+                //numOutside = (int)((double)numOutside * agent.SeedEpicenterCoeff); // Linear function
+                //numOutside = (int)(System.Math.Pow((double)numOutside, agent.SeedEpicenterCoeff)); // Power function
+                // Michaelis-Menton curve
+                double propVuln = (double)numOutside / (double)PlugIn.ModelCore.Landscape.ActiveSiteCount;
+                numOutside = (int)System.Math.Round((agent.SeedEpicenterMax * propVuln) / (agent.SeedEpicenterCoeff + propVuln));
+
+                    //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
+
+                    listIndex = 0;
+                    if (outsideSiteList.Count > 0)
+                    {
+                        while (numOutside > 0)
+                        {
+                            newSiteList.Add(outsideSiteList[listIndex]);
+                            epicenterNum++;
+                            numOutside--;
+                            listIndex++;
+                        } //endwhile
                     }
                 }
 
-            } //end !firstIteration
+            //} //end !firstIteration
 
             //If necessary, create list from scratch without
             //consideration of previous outbreaks.
-            if (firstIteration || epicenterNum == 0)
-            {
+            //if (firstIteration || epicenterNum == 0)
+            if (firstIteration)
+                {
                 int i, j;
                 //int cnt = 0;
 
@@ -232,9 +262,10 @@ namespace Landis.Extension.BaseBDA
                             //PlugIn.ModelCore.Log.WriteLine("Distance between neighbor and center = {0}.", DistanceBetweenSites(neighbor, initiationSite));
                             //PlugIn.ModelCore.Log.WriteLine("SV={0:0.0}.", SiteVars.Vulnerability[neighbor]);
                             //PlugIn.ModelCore.Log.WriteLine("Threshold={0:0.0}.", agent.EpidemicThresh);
-                            if(DistanceBetweenSites(neighbor, initiationSite) <= dispersalDistance
-                                && SiteVars.Vulnerability[neighbor] > agent.EpidemicThresh)
-                            {
+                            //if(DistanceBetweenSites(neighbor, initiationSite) <= dispersalDistance
+                             //   && SiteVars.Vulnerability[neighbor] > agent.EpidemicThresh)
+                             if (DistanceBetweenSites(neighbor, initiationSite) <= dispersalDistance)
+                               {
                                 sitesToConsider.Enqueue(neighbor);
                             }
                         }

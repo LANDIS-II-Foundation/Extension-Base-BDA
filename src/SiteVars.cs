@@ -31,6 +31,7 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<ISiteCohorts> cohorts;
         private static ISiteVar<int> timeOfNext;
         private static ISiteVar<string> agentName;
+        private static ISiteVar<int> bdaSeverity;
         private static ISiteVar<int> timeOfLastBiomassInsects;
         private static ISiteVar<string> biomassInsectsAgent;
         private static ISiteVar<int> biomassInsectsDefol;
@@ -48,6 +49,7 @@ namespace Landis.Extension.BaseBDA
             numberCFSconifersKilled = modelCore.Landscape.NewSiteVar<Dictionary<int, int>>();
             timeOfNext = modelCore.Landscape.NewSiteVar<int>();
             agentName = modelCore.Landscape.NewSiteVar<string>();
+            bdaSeverity = modelCore.Landscape.NewSiteVar<int>();
             biomassInsectsAgent = modelCore.Landscape.NewSiteVar<string>();
             biomassInsectsDefol = modelCore.Landscape.NewSiteVar<int>();
 
@@ -59,6 +61,7 @@ namespace Landis.Extension.BaseBDA
             SiteVars.Vulnerability.ActiveSiteValues = 0.0;
             SiteVars.TimeOfNext.ActiveSiteValues = 9999;
             SiteVars.AgentName.ActiveSiteValues = "";
+            SiteVars.BDASeverity.ActiveSiteValues = 0;
             SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
@@ -70,6 +73,7 @@ namespace Landis.Extension.BaseBDA
             modelCore.RegisterSiteVar(SiteVars.NumberCFSconifersKilled, "BDA.NumCFSConifers");
             modelCore.RegisterSiteVar(SiteVars.TimeOfLastEvent, "BDA.TimeOfLastEvent");
             modelCore.RegisterSiteVar(SiteVars.AgentName, "BDA.AgentName");
+            modelCore.RegisterSiteVar(SiteVars.BDASeverity, "BDA.Severity");
             // Added to enable interactions with other extensions (Presalvage harvest)
             modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
 
@@ -229,6 +233,15 @@ namespace Landis.Extension.BaseBDA
             get
             {
                 return agentName;
+            }
+
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<int> BDASeverity
+        {
+            get
+            {
+                return bdaSeverity;
             }
 
         }

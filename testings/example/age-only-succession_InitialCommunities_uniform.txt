@@ -1,0 +1,29 @@
+LandisData   "Initial Communities"
+
+MapCode  0
+  abiebals 80
+  piceglau 80
+
+MapCode  1
+  abiebals 80
+  piceglau 80
+
+MapCode  2
+  abiebals 80
+  piceglau 80
+
+MapCode  3
+  abiebals 80
+  piceglau 80
+
+MapCode  4
+  abiebals 80
+  piceglau 80
+
+MapCode  5
+  abiebals 80
+  piceglau 80
+
+MapCode  6
+  abiebals 80
+  piceglau 80
