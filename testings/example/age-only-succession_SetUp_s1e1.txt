@@ -8,7 +8,7 @@ Timestep  			10
 
 SeedingAlgorithm  		WardSeedDispersal
 
-InitialCommunities      	./age-only-succession_InitialCommunities_uniform.txt
+InitialCommunities      	./age-only-succession_InitialCommunities_s1e1.txt
 InitialCommunitiesMap   	./age-only-succession_InitialCommunities_s1e1.gis
 
 DynamicInputFile		./age-only-succession_DynamicInputs_s1e1.txt

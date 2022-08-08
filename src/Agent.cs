@@ -81,6 +81,7 @@ namespace Landis.Extension.BaseBDA
         IEcoParameters[] EcoParameters { get; set; }
         //IDistParameters[] DistParameters { get; set; }
         List<IDisturbanceType> DisturbanceTypes { get;  }
+        List<IClimateModifier> ClimateModifiers { get; }
         ISiteVar<byte> Severity { get; set; }
         ISiteVar<Zone> OutbreakZone { get; set; }
     }
@@ -153,6 +154,7 @@ namespace Landis.Extension.BaseBDA
         private IEcoParameters[] ecoParameters;
         //private IDistParameters[] distParameters;
         private List<IDisturbanceType> disturbanceTypes;
+        private List<IClimateModifier> climateModifiers;
         private ISiteVar<byte> severity;
         private ISiteVar<Zone> outbreakZone;
         //---------------------------------------------------------------------
@@ -479,6 +481,17 @@ namespace Landis.Extension.BaseBDA
             }
         }
         //---------------------------------------------------------------------
+        /// <summary>
+        /// Climate variables that can alter the SRD value
+        /// </summary>
+        public List<IClimateModifier> ClimateModifiers
+        {
+            get
+            {
+                return climateModifiers;
+            }
+        }
+        //---------------------------------------------------------------------
         public ISiteVar<byte> Severity
         {
             get {
@@ -769,6 +782,7 @@ namespace Landis.Extension.BaseBDA
             EcoParameters = new IEcoParameters[ecoCount];
             //DistParameters = new IDistParameters[distCount];
             disturbanceTypes = new List<IDisturbanceType>();
+            climateModifiers = new List<IClimateModifier>();
             negSppList = new List<ISpecies>();
             //advRegenSppList = new List<ISpecies>();
             dispersalNeighbors = new List<RelativeLocation>();

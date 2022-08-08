@@ -5,8 +5,12 @@
 using Landis.Core;
 using Landis.Library.AgeOnlyCohorts;
 using Landis.SpatialModeling;
+using Landis.Library.Climate;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Data;
+using System.Linq;
+using System;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -94,7 +98,7 @@ namespace Landis.Extension.BaseBDA
 
             PlugIn.ModelCore.UI.WriteLine("   Calculating BDA Modified Site Resource Dominance.");
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
-
+                IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
                 if (SiteVars.SiteResourceDom[site] > 0.0)
                 {
                     int     lastDisturb = 0;
@@ -233,15 +237,106 @@ namespace Landis.Extension.BaseBDA
                             }
                         }
                     }
-
-
                     //PlugIn.ModelCore.Log.WriteLine("   Summation of Disturbance Modifiers = {0}.", sumMods);
-                    //---- APPLY ECOREGION MODIFIERS --------
-                    IEcoregion ecoregion = PlugIn.ModelCore.Ecoregion[site];
+                    // Calculate Climate modifiers
+                    IEnumerable<IClimateModifier> climateModifiers = agent.ClimateModifiers;
+                    double climateModifierValue = 0; ;
+                    foreach (ClimateModifier climateMod in climateModifiers)
+                    {
+                        double climateValue = 0;
+                        if (climateMod.ClimateSource != "Library")
+                        {
+                            DataTable weatherTable = ClimateData.ReadWeatherFile(climateMod.ClimateSource);
 
+                        }
+                        else
+                        {
+                            float climateValueLag = 0;
+                            int climateValueLagMonths = 0;
+                            float climateValueTemp = 0;
+                            for (int y = 0; y <= climateMod.LagYears; y++)
+                            {
+                                if (PlugIn.ModelCore.CurrentTime - 1 - y >= 0)
+                                {
+                                    //AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min()][ecoregion.Index];
+                                    //int maxSpinUpYear = Climate.Spinup_MonthlyData.Keys.Max();
 
-                    SRDM = SiteVars.SiteResourceDom[site] +
-                           sumDisturbMods +
+                                    AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min() + PlugIn.ModelCore.CurrentTime - 1 - y][ecoregion.Index];
+
+                                    double monthTotal = 0;
+                                    int monthCount = 0;
+                                    double varValue = 0;
+                                    var monthRange = Enumerable.Range(climateMod.StartMonth, (climateMod.EndMonth - climateMod.StartMonth) + 1);
+                                    foreach (int monthIndex in monthRange)
+                                    {
+                                        if (climateMod.ClimateVariableName.Equals("SPEI", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            double monthSPEI = AnnualWeather.MonthlySpei[monthIndex - 1];
+                                            varValue = monthSPEI;
+                                        }
+                                        else if (climateMod.ClimateVariableName.Equals("temp", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            double monthTemp = AnnualWeather.MonthlyTemp[monthIndex - 1];
+                                            varValue = monthTemp;
+                                        }
+
+                                        monthTotal += varValue;
+                                        monthCount++;
+                                    }
+                                    if (climateMod.Aggregation == "Average")
+                                    {
+                                        climateValueTemp = (float)monthTotal / (float)monthCount;
+                                    }
+                                    else if (climateMod.Aggregation == "Sum")
+                                    {
+                                        climateValueTemp = (float)monthTotal;
+                                    }
+                                    climateValueLag += (float)climateValueTemp;
+                                    climateValueLagMonths++;
+                                }
+                            }
+                            climateValue = climateValueLag / (float)climateValueLagMonths;
+                        }
+                        if (climateMod.ThresholdOperator == "equal")
+                        {
+                            if (climateValue == climateMod.ThresholdValue)
+                            {
+                                climateModifierValue += climateMod.ModifierValue;
+                            }
+                        }
+                        else if (climateMod.ThresholdOperator == "gt")
+                        {
+                            if (climateValue > climateMod.ThresholdValue)
+                            {
+                                climateModifierValue += climateMod.ModifierValue;
+                            }
+                        }
+                        else if (climateMod.ThresholdOperator == "gt_equal")
+                        {
+                            if (climateValue >= climateMod.ThresholdValue)
+                            {
+                                climateModifierValue += climateMod.ModifierValue;
+                            }
+                        }
+                        else if (climateMod.ThresholdOperator == "lt")
+                        {
+                            if (climateValue < climateMod.ThresholdValue)
+                            {
+                                climateModifierValue += climateMod.ModifierValue;
+                            }
+                        }
+                        else if (climateMod.ThresholdOperator == "lt_equal")
+                        {
+                            if (climateValue <= climateMod.ThresholdValue)
+                            {
+                                climateModifierValue += climateMod.ModifierValue;
+                            }
+                        }
+                    }
+                        //---- APPLY ECOREGION MODIFIERS --------
+
+                        SRDM = SiteVars.SiteResourceDom[site] +
+                           sumDisturbMods + climateModifierValue + 
                            agent.EcoParameters[ecoregion.Index].EcoModifier;
 
                     SRDM = System.Math.Max(0.0, SRDM);
@@ -332,8 +427,8 @@ namespace Landis.Extension.BaseBDA
             int speedUpFraction = (int) agent.NeighborSpeedUp + 1;
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape) {
-                if (agent.OutbreakZone[site] == Zone.Newzone)
-                {
+                //if (agent.OutbreakZone[site] == Zone.Newzone)
+                //{
                     //neighborWeight = 0.0;
                     totalNeighborWeight = 0.0;
                     maxNeighborWeight = 0.0;
@@ -380,7 +475,7 @@ namespace Landis.Extension.BaseBDA
                             SiteVars.NeighborResourceDom[site] = 0.0;
                     } else
                         SiteVars.NeighborResourceDom[site] = 0.0;
-                 }
+                // }
              }
         }
 

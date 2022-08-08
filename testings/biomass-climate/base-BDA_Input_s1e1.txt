@@ -53,9 +53,9 @@ IntensityClass3_BDP 	0.50
 
 ClimateModifiers
 >> Variable	Source	Threshold	Months	Aggregation	LagYears	Modifier
-SPEI		Library	<-0.5		5-7	Average		2		0.5
-SPEI		Library	<-1		5-7	Average		2		0.5
-temp		Library	<13.5		8	Average		0		-99.0
+SPEI		Library	<-0.1		5-7	Average		2		0.5
+SPEI		Library	<-0.2		5-7	Average		2		0.5
+temp		Library	<28		8	Average		0		-99.0
 
 >>-------------------------
 >> BDA SEVERITY PARAMETERS
@@ -75,5 +75,5 @@ pinubank
 pinuresi
 pinustro
 thujocci
-tsugcana
+
 

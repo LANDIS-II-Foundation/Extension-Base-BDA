@@ -241,9 +241,10 @@ namespace Landis.Extension.BaseBDA
 
             Dictionary <string, int> lineNumbers = new Dictionary<string, int>();
             const string DistParms = "DisturbanceModifiers";
+            const string ClimateModParms = "ClimateModifiers";
             const string SppParms = "BDASpeciesParameters";
 
-            while (! AtEndOfInput && CurrentName != DistParms && CurrentName != SppParms) {
+            while (! AtEndOfInput && CurrentName != DistParms && CurrentName != ClimateModParms && CurrentName != SppParms) {
                 StringReader currentLine = new StringReader(CurrentLine);
 
                 ReadValue(ecoName, currentLine);
@@ -286,7 +287,7 @@ namespace Landis.Extension.BaseBDA
                 Dictionary<int, int> DisturbanceTypeLineNumbers = new Dictionary<int, int>();
 
 
-                while (!AtEndOfInput && CurrentName != SppParms)
+                while (!AtEndOfInput && CurrentName != ClimateModParms && CurrentName != SppParms)
                 {
                     StringReader currentLine = new StringReader(CurrentLine);
 
@@ -321,6 +322,48 @@ namespace Landis.Extension.BaseBDA
                     //int dt = (int)distType.Value.Actual;
 
                     CheckNoDataAfter("the " + distModifier.Name + " column",
+                                     currentLine);
+                    GetNextLine();
+                }
+            }
+            if (CurrentName == ClimateModParms)
+            {
+                //--------- Read In Climate Modifier Table -------------------------------
+                PlugIn.ModelCore.UI.WriteLine("Begin parsing ClimateModifier table.");
+
+                ReadName(ClimateModParms);
+
+                InputVar<string> climateVariable = new InputVar<string>("ClimateVariable");
+                InputVar<string> climateSource = new InputVar<string>("ClimateSource");
+                InputVar<string> threshold = new InputVar<string>("Threshold");
+                InputVar<string> climateMonths = new InputVar<string>("ClimateMonths");
+                InputVar<string> aggregation = new InputVar<string>("Aggregation");
+                InputVar<int> lagYears = new InputVar<int>("LagYears");
+                InputVar<float> modValue = new InputVar<float>("ModifierValue");
+
+                while (!AtEndOfInput && CurrentName != SppParms)
+                {
+                    StringReader currentLine = new StringReader(CurrentLine);
+                    ReadValue(climateVariable, currentLine);
+                    IClimateModifier currentClimateModifier = new ClimateModifier();
+                    currentClimateModifier.ClimateVariableName = climateVariable.Value;
+
+                    ReadValue(climateSource, currentLine);
+                    currentClimateModifier.ClimateSource = climateSource.Value;
+                    ReadValue(threshold, currentLine);
+                    currentClimateModifier.ClimateThreshold = threshold.Value;
+                    ReadValue(climateMonths, currentLine);
+                    currentClimateModifier.ClimateMonths = climateMonths.Value;
+                    ReadValue(aggregation, currentLine);
+                    currentClimateModifier.Aggregation = aggregation.Value;
+                    ReadValue(lagYears, currentLine);
+                    currentClimateModifier.LagYears = lagYears.Value;
+                    ReadValue(modValue, currentLine);
+                    currentClimateModifier.ModifierValue = modValue.Value;
+
+                    agentParameters.ClimateModifiers.Add(currentClimateModifier);
+
+                    CheckNoDataAfter("the " + modValue.Name + " column",
                                      currentLine);
                     GetNextLine();
                 }
