@@ -165,6 +165,7 @@ namespace Landis.Extension.BaseBDA
                 activeAgent.TimeSinceLastEpidemic += Timestep;
 
                 int ROS = RegionalOutbreakStatus(activeAgent, Timestep);
+                bool vulnerableSites = false;
 
                 if (ROS > 0)
                 {
@@ -265,6 +266,11 @@ namespace Landis.Extension.BaseBDA
                                     if (site.IsActive)
                                     {
                                         pixel.MapCode.Value = (short)System.Math.Round(SiteVars.Vulnerability[site] * 100.00);
+                                        if (pixel.MapCode.Value > 0)
+                                        {
+                                            vulnerableSites = true;
+                                        }
+
                                     }
                                     else
                                     {
@@ -275,11 +281,25 @@ namespace Landis.Extension.BaseBDA
                                 }
                             }
                         }
+                        else
+                        {
+                            foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
+                            {
+                                float value = (float)SiteVars.Vulnerability[site];
+                                if (value > 0)
+                                {
+                                    vulnerableSites = true;
+                                    break;
+                                }
+
+                            }
+
+                        }
 
                         eventCount++;
                     }
                 }
-                else // ROS == 0
+                if((ROS == 0) || !vulnerableSites) // ROS == 0
                 {
                     foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
                     {
