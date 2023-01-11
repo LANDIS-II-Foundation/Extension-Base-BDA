@@ -24,7 +24,7 @@ namespace Landis.Extension.BaseBDA
         double TolerantHostVuln { get; set; }
         int VulnerableHostAge { get; set; }
         double VulnerableHostVuln { get; set; }
-        bool CFSConifer{get;set;}
+        string CFSConifer{get;set;}
     }
 }
 
@@ -46,7 +46,7 @@ namespace Landis.Extension.BaseBDA
         private double tolerantHostVuln;
         private int vulnerableHostAge;
         private double vulnerableHostVuln;
-        private bool cfsConifer;
+        private string cfsConifer;
 
         //---------------------------------------------------------------------
 
@@ -244,7 +244,7 @@ namespace Landis.Extension.BaseBDA
                 vulnerableHostVuln = value;
             }
         }
-        public bool CFSConifer
+        public string CFSConifer
         {
             get {
                 return cfsConifer;
@@ -270,7 +270,7 @@ namespace Landis.Extension.BaseBDA
             this.tolerantHostVuln = 0;
             this.vulnerableHostAge = 999;
             this.vulnerableHostVuln = 0;
-            this.cfsConifer = false;
+            this.cfsConifer = "no";
         }
  
     }

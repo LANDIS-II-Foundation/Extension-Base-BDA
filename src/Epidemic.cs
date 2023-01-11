@@ -5,6 +5,8 @@ using Landis.Core;
 using Landis.Library.AgeOnlyCohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace Landis.Extension.BaseBDA
 {
@@ -24,6 +26,8 @@ namespace Landis.Extension.BaseBDA
         //private int advRegenAgeCutoff;
         private int siteCohortsKilled;
         private int siteCFSconifersKilled;
+        private int siteDarkAgesKilled;
+        private int siteLightAgesKilled;
         private int[] sitesInEvent;
 
         private ActiveSite currentSite; // current site where cohorts are being damaged
@@ -203,7 +207,7 @@ namespace Landis.Extension.BaseBDA
         {
             int totalSiteSeverity = 0;
             int siteCohortsKilled = 0;
-            int[] cohortsKilled = new int[2];
+            int[] cohortsKilled = new int[4];
             //this.advRegenAgeCutoff = agent.AdvRegenAgeCutoff;
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
@@ -229,16 +233,19 @@ namespace Landis.Extension.BaseBDA
 
                     this.random = myRand;
                     this.siteVulnerability = SiteVars.Vulnerability[site];
+                    Dictionary<string, int> vegTypeDict = new Dictionary<string, int>();
 
                     if(this.siteSeverity > 0)                        
                     {
-                        cohortsKilled = KillSiteCohorts(site);
+
+                        vegTypeDict = CalculateDominantVeg(site);
+                        cohortsKilled = KillSiteCohorts(site);  // [0] - all cohorts killed; [1] CFS conifer cohorts killed; [2] dark cohorts killed; [3] light cohorts killed
                         SiteVars.TimeOfLastEvent[site] = PlugIn.ModelCore.CurrentTime;
                         SiteVars.AgentName[site] = agent.AgentName;
                         SiteVars.BDASeverity[site] = this.siteSeverity;
                     }
 
-                    siteCohortsKilled = cohortsKilled[0];
+                    siteCohortsKilled = cohortsKilled[0]; // All cohorts killed
 
                     if (SiteVars.NumberCFSconifersKilled[site].ContainsKey(PlugIn.ModelCore.CurrentTime))
                     {
@@ -256,6 +263,32 @@ namespace Landis.Extension.BaseBDA
                         this.totalSitesDamaged++;
                         totalSiteSeverity += this.siteSeverity;
                         SiteVars.Disturbed[site] = true;
+
+                        float disturbanceEffect = 0;
+                        if (vegTypeDict.ContainsKey("dark"))
+                        {
+                            int darkAgesKilled = cohortsKilled[2];
+                            int darkAgesTotal = vegTypeDict["dark"];
+                            disturbanceEffect = (float)darkAgesKilled / (float)darkAgesTotal;
+                            if (disturbanceEffect >= 0.5)
+                            {
+                                SiteVars.SilkMothFuel[site] = "DarkConiferSilkMoth";
+                            }else
+                                SiteVars.SilkMothFuel[site] = "";
+                        }
+                        else if (vegTypeDict.ContainsKey("light"))
+                        {
+                            int lightAgesKilled = cohortsKilled[3];
+                            int lightAgesTotal = vegTypeDict["light"];
+                            disturbanceEffect = (float)lightAgesKilled / (float)lightAgesTotal;
+                            if (disturbanceEffect >= 0.5)
+                            {
+                                SiteVars.SilkMothFuel[site] = "LightConiferSilkMoth";
+                            }else
+                                SiteVars.SilkMothFuel[site] = "";
+                        }
+                        else
+                            SiteVars.SilkMothFuel[site] = "";
                     } else
                         this.siteSeverity = 0;
                 }
@@ -273,15 +306,19 @@ namespace Landis.Extension.BaseBDA
         {
             this.siteCohortsKilled = 0;
             this.siteCFSconifersKilled = 0;
+            this.siteDarkAgesKilled = 0;
+            this.siteLightAgesKilled = 0;
 
             currentSite = site;
 
             SiteVars.Cohorts[site].RemoveMarkedCohorts(this); 
 
-            int[] cohortsKilled = new int[2];
+            int[] cohortsKilled = new int[4];
 
             cohortsKilled[0] = this.siteCohortsKilled;
             cohortsKilled[1] = this.siteCFSconifersKilled;
+            cohortsKilled[2] = this.siteDarkAgesKilled;
+            cohortsKilled[3] = this.siteLightAgesKilled;
 
 
             return cohortsKilled; 
@@ -342,16 +379,82 @@ namespace Landis.Extension.BaseBDA
                         killCohort = true;
                 }
             }
-            
+
 
             if (killCohort)
             {
                 this.siteCohortsKilled++;
-                if (sppParms.CFSConifer)
+                if (sppParms.CFSConifer.Equals("yes", StringComparison.OrdinalIgnoreCase))
+                {
                     this.siteCFSconifersKilled++;
+                }
+                if (sppParms.CFSConifer.Equals("dark", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.siteCFSconifersKilled++;
+                    this.siteDarkAgesKilled += cohort.Age;
+                }
+                if (sppParms.CFSConifer.Equals("light", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.siteCFSconifersKilled++;
+                    this.siteLightAgesKilled += cohort.Age;                
+                }
             }
 
             return killCohort;
+        }
+
+        Dictionary<string, int> CalculateDominantVeg(ActiveSite site)
+        {
+            Dictionary<string, int> vegTypeDict = new Dictionary<string, int>();
+            ISiteCohorts siteCohorts = SiteVars.Cohorts[site];
+            int darkSum = 0;
+            int lightSum = 0;
+            int otherSum = 0;
+            int totalSum = 0;
+            foreach (ISpeciesCohorts speciesCohorts in siteCohorts)
+            {
+                foreach (Cohort cohort in speciesCohorts)
+                {
+                    ISppParameters sppParms = epidemicParms.SppParameters[cohort.Species.Index];
+                    if (sppParms.CFSConifer.Equals("dark", StringComparison.OrdinalIgnoreCase))
+                    {
+                        darkSum += cohort.Age;
+                        totalSum += cohort.Age;
+                    }
+                    else if (sppParms.CFSConifer.Equals("light", StringComparison.OrdinalIgnoreCase))
+                    {
+                        lightSum += cohort.Age;
+                        totalSum += cohort.Age;
+                    }
+                    else if (this.EpidemicParameters.NegSppList.Contains(cohort.Species))
+                    {
+                    }
+                    else
+                    {
+                        otherSum += cohort.Age;
+                        totalSum += cohort.Age;
+                    }
+                }
+            }
+            float darkProp = (float)darkSum / (float)totalSum;
+            float lightProp = (float)lightSum / (float)totalSum;
+            if (darkProp >= 0.5)
+            {   
+                if (lightProp >= 0.5)
+                {
+                    vegTypeDict.Add("mixed", totalSum);
+                }
+                else
+                    vegTypeDict.Add("dark", darkSum);
+            }
+            else if (lightProp >= 0.5)
+            {
+                if (darkProp >= 0.5)
+                    vegTypeDict.Add("mixed", totalSum);
+                else
+                    vegTypeDict.Add("light", lightSum);
+            }
+            return vegTypeDict;
         }
 
     }

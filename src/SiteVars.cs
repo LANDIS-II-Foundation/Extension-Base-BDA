@@ -35,6 +35,7 @@ namespace Landis.Extension.BaseBDA
         private static ISiteVar<int> timeOfLastBiomassInsects;
         private static ISiteVar<string> biomassInsectsAgent;
         private static ISiteVar<int> biomassInsectsDefol;
+        private static ISiteVar<string> silkMothFuel;
 
         //---------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ namespace Landis.Extension.BaseBDA
             bdaSeverity = modelCore.Landscape.NewSiteVar<int>();
             biomassInsectsAgent = modelCore.Landscape.NewSiteVar<string>();
             biomassInsectsDefol = modelCore.Landscape.NewSiteVar<int>();
+            silkMothFuel = modelCore.Landscape.NewSiteVar<string>();
 
 
             SiteVars.TimeOfLastEvent.ActiveSiteValues = -10000;
@@ -63,6 +65,7 @@ namespace Landis.Extension.BaseBDA
             SiteVars.AgentName.ActiveSiteValues = "";
             SiteVars.BDASeverity.ActiveSiteValues = 0;
             SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
+            SiteVars.SilkMothFuel.ActiveSiteValues = "";
 
             cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
 
@@ -76,6 +79,8 @@ namespace Landis.Extension.BaseBDA
             modelCore.RegisterSiteVar(SiteVars.BDASeverity, "BDA.Severity");
             // Added to enable interactions with other extensions (Presalvage harvest)
             modelCore.RegisterSiteVar(SiteVars.TimeOfNext, "BDA.TimeOfNext");
+            // Added to enable silk moth interaction with dynamic fuel
+            modelCore.RegisterSiteVar(SiteVars.SilkMothFuel, "BDA.SilkMothFuel");
 
         }
 
@@ -233,6 +238,15 @@ namespace Landis.Extension.BaseBDA
             get
             {
                 return agentName;
+            }
+
+        }
+        //---------------------------------------------------------------------
+        public static ISiteVar<string> SilkMothFuel
+        {
+            get
+            {
+                return silkMothFuel;
             }
 
         }

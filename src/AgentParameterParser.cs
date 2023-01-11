@@ -387,7 +387,7 @@ namespace Landis.Extension.BaseBDA
             InputVar<double> tolerantHostVuln = new InputVar<double>("Tolerant Host VulnProb");
             InputVar<int> vulnerableHostAge = new InputVar<int>("Vulnerable Host Age");
             InputVar<double> vulnerableHostVuln = new InputVar<double>("Vulnerable Host VulnProb");
-            InputVar<bool> cfsConifer = new InputVar<bool>("CFS Conifer type:  yes/no");
+            InputVar<string> cfsConifer = new InputVar<string>("CFS Conifer type:  yes/no/dark/light");
 
             const string NegSpp = "IgnoredSpecies";
             const string AdvRegenSpp = "AdvancedRegenSpecies";
