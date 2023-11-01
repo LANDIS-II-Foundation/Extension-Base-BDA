@@ -272,9 +272,9 @@ namespace Landis.Extension.BaseBDA
                             disturbanceEffect = (float)darkAgesKilled / (float)darkAgesTotal;
                             if (disturbanceEffect >= 0.5)
                             {
-                                SiteVars.SilkMothFuel[site] = "DarkConiferSilkMoth";
+                                SiteVars.DisturbedFuel[site] = "DarkDisturbed";
                             }else
-                                SiteVars.SilkMothFuel[site] = "";
+                                SiteVars.DisturbedFuel[site] = "";
                         }
                         else if (vegTypeDict.ContainsKey("light"))
                         {
@@ -283,12 +283,12 @@ namespace Landis.Extension.BaseBDA
                             disturbanceEffect = (float)lightAgesKilled / (float)lightAgesTotal;
                             if (disturbanceEffect >= 0.5)
                             {
-                                SiteVars.SilkMothFuel[site] = "LightConiferSilkMoth";
+                                SiteVars.DisturbedFuel[site] = "LightDisturbed";
                             }else
-                                SiteVars.SilkMothFuel[site] = "";
+                                SiteVars.DisturbedFuel[site] = "";
                         }
                         else
-                            SiteVars.SilkMothFuel[site] = "";
+                            SiteVars.DisturbedFuel[site] = "";
                     } else
                         this.siteSeverity = 0;
                 }

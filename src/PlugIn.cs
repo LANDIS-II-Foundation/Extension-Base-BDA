@@ -122,10 +122,18 @@ namespace Landis.Extension.BaseBDA
                 if (activeAgent.RandFunc == OutbreakPattern.Climate)
                     if (activeAgent.ClimateVarSource != "Library")
                     {
-                        DataTable weatherTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
-                        activeAgent.ClimateDataTable = weatherTable;
+                        DataTable outbreakClimateTable = ClimateData.ReadWeatherFile(activeAgent.ClimateVarSource);
+                        activeAgent.ClimateDataTable = outbreakClimateTable;
                     }
-            
+                foreach(ClimateModifier climateModifier in activeAgent.ClimateModifiers)
+                {
+                    if(climateModifier.ClimateSource != "Library")
+                    {
+                        DataTable climateModifierTable = ClimateData.ReadWeatherFile(climateModifier.ClimateSource);
+                        climateModifier.WeatherTable = climateModifierTable;
+                    }
+                }
+
             }
 
 

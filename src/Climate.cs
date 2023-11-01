@@ -49,6 +49,7 @@ namespace Landis.Extension.BaseBDA
         private int startMonth;
         private int endMonth;
         private float modValue;
+        private DataTable weatherTable;
         //---------------------------------------------------------------------
         /// <summary>
         /// Climate variable name
@@ -79,6 +80,22 @@ namespace Landis.Extension.BaseBDA
             {
                 if (value != null)
                     climateSource = value;
+            }
+        }
+        //---------------------------------------------------------------------
+        /// <summary>
+        /// Climate data table
+        /// </summary>
+        public DataTable WeatherTable
+        {
+            get
+            {
+                return weatherTable;
+            }
+            set
+            {
+                if (value != null)
+                    weatherTable = value;
             }
         }
         //---------------------------------------------------------------------
