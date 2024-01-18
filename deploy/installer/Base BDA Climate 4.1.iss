@@ -12,8 +12,8 @@
 
 ; Build directory
 ;<<<<<<< HEAD:deploy/installer/Base BDA 4.0.iss
-#define BuildDir "..\..\src\bin\Debug"
-;#define BuildDir "..\..\src\bin\Release"
+;#define BuildDir "..\..\src\bin\Debug"
+#define BuildDir "..\libs"
 ;=======
 ;#define BuildDir "..\..\src\bin\Debug\netstandard2.0"
 ;>>>>>>> Base-BDA-Climate:deploy/installer/Biomass BDA Climate 1.0.iss

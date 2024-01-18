@@ -29,6 +29,7 @@ InitialEpicenterNum	0
 OutbreakEpicenterCoeff	0.01
 OutbreakEpicenterThresh 0.0
 SeedEpicenter		yes		<<yes or no
+SeedEpicenterMax	10
 SeedEpicenterCoeff	0.5
 DispersalTemplate	MaxRadius	<<MaxRadius, 4N,
 					<<8N, 12N, or 24N
