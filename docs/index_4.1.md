@@ -24,8 +24,8 @@ To use Base BDA, you need:
 Version 4.1 can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/installer/LANDIS-II-V7%20Base%20BDA%204.1-setup.exe). To install it on your computer, launch the installer.
 
 IMPORTANT: If you had a previous version of Base BDA installed:
--  The previous version of the Base BDA extension should be uninstalled before installing the current version.  This can be done using the Windows ‘Add or remove programs’ tool, or using a DOS command line by entering: landis-ii-extensions remove “Base BDA”. The uninstallation should remove the file C:\Program Files\LANDIS-II-v7\extensions\Landis.Extension.BaseBDA-v4.dll.  If that file is not removed during uninstallation, it can be deleted manually prior to installing the new version.
--  Previous versions of the extension installed example files in the following location: C:\Program Files\LANDIS-II-v7\examples\Base BDA.  The new version does not include example files packaged with the installer, and will not overwrite the examples provided by an earlier version.  To get an updated set of example files compatible with v4.1, follow the ‘Example Files’ download link below.
+-  The previous version of the Base BDA extension should be uninstalled before installing the current version.  This should be done using the Windows ‘Add or remove programs’ tool. The uninstallation should remove the file C:\Program Files\LANDIS-II-v7\extensions\Landis.Extension.BaseBDA-v4.dll.  If that file is not removed during uninstallation, it can be deleted manually prior to installing the new version.
+-  Previous versions of the extension installed example files in the following location: C:\Program Files\LANDIS-II-v7\examples\Base BDA.  The new version does not include example files packaged with the installer, and will not overwrite the examples provided by an earlier version.  Uninstalling the older version using the Windows uninstaller should remove the example files.  To get an updated set of example files compatible with v4.1, follow the ‘Example Files’ download link below, and save to a file location with appropriate user permission to modify and write files.
 
 
 # Citation
@@ -38,6 +38,7 @@ LANDIS-II requires a global parameter file for your scenario, and separate param
 
 
 Example files are [here](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/examples/Base-BDA-example.zip).
+Save the example files to a location with appropriate user permission to modify and write files.
 
 # Support
 
