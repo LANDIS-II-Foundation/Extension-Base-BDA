@@ -37,7 +37,7 @@ Sturtevant, B.R., E.J. Gustafson, W. Li, and H.S. He. 2004. Modeling biological 
 LANDIS-II requires a global parameter file for your scenario, and separate parameter files for each extension.
 
 
-Example files are [here](https://downgit.github.io/#/home?url=https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/examples/Base-BDA-eample.zip).
+Example files are [here](https://downgit.github.io/#/home?url=https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/examples/Base-BDA-example.zip).
 
 # Support
 
