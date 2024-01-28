@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "base-BDA", "base-BDA.csproj", "{92BAAA82-448D-4D3C-B237-10BF084BFECE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92BAAA82-448D-4D3C-B237-10BF084BFECE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BAAA82-448D-4D3C-B237-10BF084BFECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92BAAA82-448D-4D3C-B237-10BF084BFECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92BAAA82-448D-4D3C-B237-10BF084BFECE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {39CFD629-E648-4409-BB24-6E96FBE65F53}
+	EndGlobalSection
+EndGlobal
