@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     /// <summary>
     /// Parameters for the extension.
@@ -49,7 +49,7 @@ namespace Landis.Extension.BaseBDA
     }
 }
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     /// <summary>
     /// Parameters for the plug-in.
@@ -63,8 +63,6 @@ namespace Landis.Extension.BaseBDA
         private string srdMapNames;
         private string nrdMapNames;
         private string bdpMapNames;
-        private string logFileName;
-        private IEnumerable<IAgent> manyAgentParameters;
 
         //---------------------------------------------------------------------
         /// <summary>
@@ -83,19 +81,6 @@ namespace Landis.Extension.BaseBDA
             }
         }
 
-        //---------------------------------------------------------------------
-        /*public string ClimateConfigFile
-        {
-            get
-            {
-                return climateConfigFile;
-            }
-            set
-            {
-
-                climateConfigFile = value;
-            }
-        }*/
         //---------------------------------------------------------------------
         /// <summary>
         /// Template for the filenames for output maps.
@@ -164,30 +149,13 @@ namespace Landis.Extension.BaseBDA
         /// <summary>
         /// Name of log file.
         /// </summary>
-        public string LogFileName
-        {
-            get {
-                return logFileName;
-            }
-            set {
-                    // FIXME: check for null or empty path (value.Actual);
-                logFileName = value;
-            }
-        }
+        public string LogFileName { get; set; }
 
         //---------------------------------------------------------------------
         /// <summary>
         /// List of Agent Files
         /// </summary>
-        public IEnumerable<IAgent> ManyAgentParameters
-        {
-            get {
-                return manyAgentParameters;
-            }
-            set {
-                manyAgentParameters = value;
-            }
-        }
+        public IEnumerable<IAgent> ManyAgentParameters { get; set; }
 
         //---------------------------------------------------------------------
         public InputParameters()

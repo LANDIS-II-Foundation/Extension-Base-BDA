@@ -5,7 +5,7 @@ using System.Text;
 using System.Data;
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     class ClimateData
     {

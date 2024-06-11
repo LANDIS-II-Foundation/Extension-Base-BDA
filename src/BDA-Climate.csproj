@@ -18,18 +18,14 @@
     <Authors>Landis-II-Foundation</Authors>
     <Product>Landis.Extension.ClimateBDA-v4</Product>
     <Copyright>Landis-II-Foundation</Copyright>
-    <Version>5.1</Version>
     <PackageTags>LANDIS-II;Landis;Extension;Biological disturbance agents</PackageTags>
     <Description></Description>
     <PackageReleaseNotes></PackageReleaseNotes>
+    <Version>5.0</Version>
     <FileVersion>5.0.0.0</FileVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\deploy\libs\</OutputPath>
-  </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="Landis.Core" Version="3.0.1" />
   </ItemGroup>

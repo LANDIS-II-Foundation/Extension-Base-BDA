@@ -7,7 +7,7 @@ using Landis.SpatialModeling;
 using Landis.Library.UniversalCohorts;
 using System.Collections.Generic;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     ///<summary>
     /// Site Variables for a disturbance plug-in that simulates Biological Agents.
@@ -67,7 +67,7 @@ namespace Landis.Extension.BaseBDA
             SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
             SiteVars.DisturbedFuel.ActiveSiteValues = "";
 
-            cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.AgeCohorts");
+            cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.UniversalCohorts");
 
             foreach(ActiveSite site in modelCore.Landscape)
                 SiteVars.NumberCFSconifersKilled[site] = new Dictionary<int, int>();

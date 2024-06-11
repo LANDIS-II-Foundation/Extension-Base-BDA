@@ -1,15 +1,12 @@
 ﻿//  Authors:  Robert M. Scheller, Brian Miranda
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-//using System.Text;
 using Landis.Library.Metadata;
-using Landis.Utilities;
 using Landis.Core;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public static class MetadataHandler
     {
@@ -25,12 +22,9 @@ namespace Landis.Extension.BaseBDA
             ICore mCore)
         {
             ScenarioReplicationMetadata scenRep = new ScenarioReplicationMetadata() {
-                //String outputFolder = OutputPath.ReplaceTemplateVars("", FINISH ME LATER);
-                //FolderName = System.IO.Directory.GetCurrentDirectory().Split("\\".ToCharArray()).Last(),
                 RasterOutCellArea = PlugIn.ModelCore.CellArea,
                 TimeMin = PlugIn.ModelCore.StartTime,
                 TimeMax = PlugIn.ModelCore.EndTime,
-                //ProjectionFilePath = "Projection.?" //How do we get projections???
             };
 
             Extension = new ExtensionMetadata(mCore){
@@ -55,18 +49,6 @@ namespace Landis.Extension.BaseBDA
             };
             tblOut_events.RetriveFields(typeof(EventsLog));
             Extension.OutputMetadatas.Add(tblOut_events);
-
-            //PlugIn.PDSILog = new MetadataTable<PDSI_Log>("PDSI_log.csv");
-
-            //OutputMetadata tblOut_PDSI = new OutputMetadata()
-            //{
-            //    Type = OutputType.Table,
-            //    Name = "PDSILog",
-            //    FilePath = PlugIn.PDSILog.FilePath
-            //};
-            //tblOut_events.RetriveFields(typeof(PDSI_Log));
-            //Extension.OutputMetadatas.Add(tblOut_PDSI);
-
 
             //---------------------------------------            
             //          map outputs:         

@@ -12,7 +12,7 @@ using System.Data;
 using System.Linq;
 using System;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
 
     public class SiteResources
@@ -83,7 +83,7 @@ namespace Landis.Extension.BaseBDA
 
             }
 
-        }  //end siteResourceDom
+        }  
 
         //---------------------------------------------------------------------
         ///<summary>
@@ -248,7 +248,6 @@ namespace Landis.Extension.BaseBDA
                         double climateValue = 0;
                         if (climateMod.ClimateSource != "Library")
                         {
-                            //DataTable weatherTable = ClimateData.ReadWeatherFile(climateMod.ClimateSource);
                             DataTable weatherTable = climateMod.WeatherTable;
 
                             float climateValueLag = 0;
@@ -320,9 +319,6 @@ namespace Landis.Extension.BaseBDA
                             {
                                 if (PlugIn.ModelCore.CurrentTime - 1 - y >= 0)
                                 {
-                                    //AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min()][ecoregion.Index];
-                                    //int maxSpinUpYear = Climate.Spinup_MonthlyData.Keys.Max();
-
                                     AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min() + PlugIn.ModelCore.CurrentTime - 1 - y][ecoregion.Index];
 
                                     double monthTotal = 0;

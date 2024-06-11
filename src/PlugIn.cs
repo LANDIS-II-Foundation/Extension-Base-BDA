@@ -10,7 +10,7 @@ using Landis.SpatialModeling;
 using Landis.Library.Climate;
 using System.Data;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     ///<summary>
     /// A disturbance plug-in that simulates Biological Agents.
@@ -29,7 +29,6 @@ namespace Landis.Extension.BaseBDA
         private string vulnMapNames;
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
-        private static ICore modelCore;
         private bool reinitialized;
 
         //---------------------------------------------------------------------
@@ -44,27 +43,19 @@ namespace Landis.Extension.BaseBDA
         public override void LoadParameters(string dataFile,
                                             ICore mCore)
         {
-            modelCore = mCore;
-            InputParameterParser.EcoregionsDataset = modelCore.Ecoregions;
+            ModelCore = mCore;
+            InputParameterParser.EcoregionsDataset = ModelCore.Ecoregions;
             InputParameterParser parser = new InputParameterParser();
             parameters = Landis.Data.Load<IInputParameters>(dataFile, parser);
         }
 
         //---------------------------------------------------------------------
 
-        public static ICore ModelCore
-        {
-            get
-            {
-                return modelCore;
-            }
-        }
+        public static ICore ModelCore { get; private set; }
         public override void AddCohortData()
         {
             return;
         }
-
-
         //---------------------------------------------------------------------
 
 
@@ -89,7 +80,7 @@ namespace Landis.Extension.BaseBDA
             nrdMapNames = parameters.NRDMapNames;
             vulnMapNames = parameters.BDPMapNames;
 
-            SiteVars.Initialize(modelCore);
+            SiteVars.Initialize(ModelCore);
 
             manyAgentParameters = parameters.ManyAgentParameters;
             foreach (IAgent activeAgent in manyAgentParameters)
@@ -138,16 +129,6 @@ namespace Landis.Extension.BaseBDA
                 }
 
             }
-
-
-
-            //string logFileName = parameters.LogFileName;
-            //PlugIn.ModelCore.UI.WriteLine("Opening BDA log file \"{0}\" ...", logFileName);
-            //log = PlugIn.ModelCore.CreateTextFile(logFileName);
-            //log.AutoFlush = true;
-            //log.Write("CurrentTime, ROS, AgentName, NumCohortsKilled, NumSitesDamaged, MeanSeverity");
-            //log.WriteLine("");
-
         }
 
         public new void InitializePhase2()
@@ -165,8 +146,6 @@ namespace Landis.Extension.BaseBDA
             PlugIn.ModelCore.UI.WriteLine("   Processing landscape for BDA events ...");
             if(!reinitialized)
                 InitializePhase2();
-
-            //SiteVars.Epidemic.SiteValues = null;
 
             int eventCount = 0;
 
@@ -195,10 +174,7 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA severity maps --------
                             string path = MapNames.ReplaceTemplateVars(mapNameTemplate, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            //IOutputRaster<SeverityPixel> map = CreateMap(PlugIn.ModelCore.CurrentTime, activeAgent.AgentName);
-                            //using (map) {
-                            //    SeverityPixel pixel = new SeverityPixel();
-                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = ModelCore.CreateRaster<ShortPixel>(path, ModelCore.Landscape.Dimensions))
                             {
                                 ShortPixel pixel = outputRaster.BufferPixel;
                                 foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
@@ -223,7 +199,7 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA SRD maps --------
                             string path2 = MapNames.ReplaceTemplateVars(srdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path2, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = ModelCore.CreateRaster<ShortPixel>(path2, ModelCore.Landscape.Dimensions))
                             {
                                 ShortPixel pixel = outputRaster.BufferPixel;
                                 foreach (Site site in PlugIn.ModelCore.Landscape.AllSites)
@@ -245,7 +221,7 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA NRD maps --------
                             string path3 = MapNames.ReplaceTemplateVars(nrdMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path3, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = ModelCore.CreateRaster<ShortPixel>(path3, ModelCore.Landscape.Dimensions))
                             {
                                 ShortPixel pixel = outputRaster.BufferPixel;
 
@@ -268,7 +244,7 @@ namespace Landis.Extension.BaseBDA
                         {
                             //----- Write BDA Vulnerability maps --------
                             string path4 = MapNames.ReplaceTemplateVars(vulnMapNames, activeAgent.AgentName, PlugIn.ModelCore.CurrentTime);
-                            using (IOutputRaster<ShortPixel> outputRaster = modelCore.CreateRaster<ShortPixel>(path4, modelCore.Landscape.Dimensions))
+                            using (IOutputRaster<ShortPixel> outputRaster = ModelCore.CreateRaster<ShortPixel>(path4, ModelCore.Landscape.Dimensions))
                             {
                                 ShortPixel pixel = outputRaster.BufferPixel;
 
@@ -322,21 +298,6 @@ namespace Landis.Extension.BaseBDA
             }
         }
 
-        //---------------------------------------------------------------------
-        /*private void LogEvent(int   currentTime,
-                              Epidemic CurrentEvent,
-                              int ROS, IAgent agent)
-        {
-            log.Write("{0},{1},{2},{3},{4},{5:0.0}",
-                      currentTime,
-                      ROS,
-                      agent.AgentName,
-                      CurrentEvent.CohortsKilled,
-                      CurrentEvent.TotalSitesDamaged,
-                      CurrentEvent.MeanSeverity);
-            log.WriteLine("");
-        }
-        */
         //---------------------------------------------------------------------
         private void LogEvent(int currentTime,
                               Epidemic CurrentEvent,
@@ -490,11 +451,6 @@ namespace Landis.Extension.BaseBDA
                     ROS = activeAgent.MaxROS;
                 else if (activeAgent.TempType == TemporalType.variablepulse)
                 {
-                    //randomly select an ROS netween ROSmin and ROSmax
-                    //ROS = (int) (Landis.Util.Random.GenerateUniform() *
-                    //      (double) (activeAgent.MaxROS - activeAgent.MinROS + 1)) +
-                    //      activeAgent.MinROS;
-
                     // Correction suggested by Brian Miranda, March 2008
                     ROS = (int) (PlugIn.ModelCore.GenerateUniform() *
                           (double) (activeAgent.MaxROS - activeAgent.MinROS)) + 1 +
@@ -503,7 +459,6 @@ namespace Landis.Extension.BaseBDA
                 }
 
             } else  {
-                //activeAgent.TimeSinceLastEpidemic += BDAtimestep;
                 ROS = activeAgent.MinROS;
             }
             return ROS;

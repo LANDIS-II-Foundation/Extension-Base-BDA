@@ -1,9 +1,9 @@
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Authors:  Robert M. Scheller, Brian Miranda, James B. Domingo
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     /// <summary>
     /// Extra Spp Paramaters
@@ -29,7 +29,7 @@ namespace Landis.Extension.BaseBDA
 }
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public class SppParameters
         : ISppParameters

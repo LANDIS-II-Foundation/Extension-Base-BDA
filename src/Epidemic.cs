@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public class Epidemic
         : IDisturbance
