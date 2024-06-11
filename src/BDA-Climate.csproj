@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Landis.Library.UniversalCohorts-v1">
     </Reference>
-    <Reference Include="Landis.Library.Climate-v4.3">
+    <Reference Include="Landis.Library.Climate-v4.4">
     </Reference>
     <Reference Include="Landis.Library.Metadata-v2">
     </Reference>

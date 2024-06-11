@@ -20,7 +20,7 @@ namespace Landis.Extension.ClimateBDA
         : ExtensionMain
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
-        public static readonly string ExtensionName = "BDA Climate";
+        public static readonly string ExtensionName = "Climate BDA";
         public static MetadataTable<EventsLog> EventLog;
 
         private string mapNameTemplate;

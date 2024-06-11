@@ -327,11 +327,12 @@ namespace Landis.Extension.ClimateBDA
                                     var monthRange = Enumerable.Range(climateMod.StartMonth, (climateMod.EndMonth - climateMod.StartMonth) + 1);
                                     foreach (int monthIndex in monthRange)
                                     {
-                                        //if (climateMod.ClimateVariableName.Equals("SPEI", StringComparison.OrdinalIgnoreCase))
-                                        //{
-                                        //    double monthVar = AnnualWeather.MonthlySpei[monthIndex - 1];
-                                        //    varValue = monthVar;
-                                        //} else
+                                        if (climateMod.ClimateVariableName.Equals("SPEI", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            double monthVar = AnnualWeather.MonthlySpei[monthIndex - 1];
+                                            varValue = monthVar;
+                                        }
+                                        else
                                         if (climateMod.ClimateVariableName.Equals("temp", StringComparison.OrdinalIgnoreCase))
                                         {
                                             double monthVar = AnnualWeather.MonthlyTemp[monthIndex - 1];
