@@ -1,9 +1,9 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Copyright The LANDIS-II Foundation
+//  Authors:  Robert M. Scheller, Brian Miranda, James B. Domingo
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 
 using Landis.Core;
-using Landis.Library.AgeOnlyCohorts;
+using Landis.Library.UniversalCohorts;
 using Landis.SpatialModeling;
 using Landis.Library.Climate;
 using System.Collections.Generic;
@@ -258,17 +258,9 @@ namespace Landis.Extension.BaseBDA
                             {
                                 if (PlugIn.ModelCore.CurrentTime - 1 - y >= 0)
                                 {
-                                    //AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min()][ecoregion.Index];
-                                    //int maxSpinUpYear = Climate.Spinup_MonthlyData.Keys.Max();
-
-                                    //AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min() + PlugIn.ModelCore.CurrentTime - 1 - y][ecoregion.Index];
                                     //Read variable from climate data file
                                     string selectString = "Year = '" + (PlugIn.ModelCore.CurrentTime-y) + "'";
                                     DataRow[] rows = weatherTable.Select(selectString);
-                                    //foreach (DataRow row in rows)
-                                    //{
-                                    //    climateValue = Convert.ToDouble(row[activeAgent.ClimateVarName]);
-                                    //}
 
                                     double monthTotal = 0;
                                     int monthCount = 0;
@@ -339,12 +331,12 @@ namespace Landis.Extension.BaseBDA
                                     var monthRange = Enumerable.Range(climateMod.StartMonth, (climateMod.EndMonth - climateMod.StartMonth) + 1);
                                     foreach (int monthIndex in monthRange)
                                     {
-                                        if (climateMod.ClimateVariableName.Equals("SPEI", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            double monthVar = AnnualWeather.MonthlySpei[monthIndex - 1];
-                                            varValue = monthVar;
-                                        }
-                                        else if (climateMod.ClimateVariableName.Equals("temp", StringComparison.OrdinalIgnoreCase))
+                                        //if (climateMod.ClimateVariableName.Equals("SPEI", StringComparison.OrdinalIgnoreCase))
+                                        //{
+                                        //    double monthVar = AnnualWeather.MonthlySpei[monthIndex - 1];
+                                        //    varValue = monthVar;
+                                        //} else
+                                        if (climateMod.ClimateVariableName.Equals("temp", StringComparison.OrdinalIgnoreCase))
                                         {
                                             double monthVar = AnnualWeather.MonthlyTemp[monthIndex - 1];
                                             varValue = monthVar;

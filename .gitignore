@@ -208,3 +208,4 @@ FakesAssemblies/
 # LANDIS-II
 /src/lib/*.dll
 .vs
+src/BDA-Climate.sln

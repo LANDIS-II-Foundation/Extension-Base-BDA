@@ -1,10 +1,9 @@
-//  Authors:  Robert M. Scheller
+//  Authors:  Robert M. Scheller, Brian Miranda
 //  BDA originally programmed by Wei (Vera) Li at University of Missouri-Columbia in 2004.
 //  Modified for budworm-BDA version by Brian Miranda, 2012
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Landis.Core;
 using Landis.Library.Metadata;
 using Landis.SpatialModeling;
@@ -21,14 +20,13 @@ namespace Landis.Extension.BaseBDA
         : ExtensionMain
     {
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
-        public static readonly string ExtensionName = "Base BDA";
+        public static readonly string ExtensionName = "BDA Climate";
         public static MetadataTable<EventsLog> EventLog;
 
         private string mapNameTemplate;
         private string srdMapNames;
         private string nrdMapNames;
         private string vulnMapNames;
-        //private StreamWriter log;
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private static ICore modelCore;
@@ -61,6 +59,11 @@ namespace Landis.Extension.BaseBDA
                 return modelCore;
             }
         }
+        public override void AddCohortData()
+        {
+            return;
+        }
+
 
         //---------------------------------------------------------------------
 

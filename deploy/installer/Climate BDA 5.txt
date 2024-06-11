@@ -1,0 +1,9 @@
+LandisData   Extension
+
+Name         "Climate BDA"
+Version      "5.0"
+Type         disturbance:BDA
+Assembly     Landis.Extension.ClimateBDA-v5
+Class        Landis.Extension.ClimateBDA.PlugIn
+Description  "Biological disturbance agents"
+CoreVersion  8.0
