@@ -10,26 +10,22 @@ The Climate BDA module simulates tree mortality following major outbreaks of ins
 
 # Requirements
 
-To use Base BDA, you need:
+To use Climate BDA, you need:
 
 - The [LANDIS-II model v8.0](http://www.landis-ii.org/install) installed on your computer.
 - Example files (see below)
 
-# Download the Extension
+# Download and Run the Extension Installer
 
-The latest version can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/installer/LANDIS-II-V8%20Base%20BDA%205.0-setup.exe). (Look for the download icon in the upper right corner.)  To install it on your computer, launch the installer.
+The latest version can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/installer/LANDIS-II-V8%20Climate%20BDA%205.0-setup.exe). (Look for the download icon in the upper right corner.)  Launch the installer.
+
+# Example Files
+
+Example files are [here](https://downgit.github.io/#/home?url=https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/testings/Core8-ClimateBDA5.0).
 
 # Citation
 
 Sturtevant, B.R., E.J. Gustafson, W. Li, and H.S. He. 2004. Modeling biological disturbances in LANDIS: A module description and demonstration using spruce budworm. Ecological Modelling 180: 153 – 174.
-
-# Example Files
-
-LANDIS-II requires a global parameter file for your scenario, and separate parameter files for each extension.
-
-Example files are [here](https://downgit.github.io/#/home?url=https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/testings/Core8-ClimateBDA5.0).
-
-Save the example files to a location with appropriate user permission to modify and write files.
 
 # Support
 
