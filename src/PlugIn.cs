@@ -22,6 +22,7 @@ namespace Landis.Extension.ClimateBDA
         public static readonly ExtensionType type = new ExtensionType("disturbance:bda");
         public static readonly string ExtensionName = "Climate BDA";
         public static MetadataTable<EventsLog> EventLog;
+        //public static AnnualClimate AnnualWeatherData;
 
         private string mapNameTemplate;
         private string srdMapNames;
@@ -30,6 +31,7 @@ namespace Landis.Extension.ClimateBDA
         private IEnumerable<IAgent> manyAgentParameters;
         private static IInputParameters parameters;
         private bool reinitialized;
+
 
         //---------------------------------------------------------------------
 
@@ -131,12 +133,7 @@ namespace Landis.Extension.ClimateBDA
             }
         }
 
-        public new void InitializePhase2()
-        {
-                SiteVars.InitializeTimeOfLastDisturbances();
-                reinitialized = true;
-        }
-
+        
         //---------------------------------------------------------------------
         ///<summary>
         /// Run the BDA extension at a particular timestep.
@@ -144,8 +141,15 @@ namespace Landis.Extension.ClimateBDA
         public override void Run()
         {
             PlugIn.ModelCore.UI.WriteLine("   Processing landscape for BDA events ...");
-            if(!reinitialized)
-                InitializePhase2();
+
+            //AnnualWeatherData = Climate.FutureEcoregionYearClimate[0][PlugIn.ModelCore.CurrentTime];
+
+            if (!reinitialized)
+            {
+                SiteVars.InitializeTimeOfLastDisturbances();
+                reinitialized = true;
+            }
+            
 
             int eventCount = 0;
 
@@ -384,11 +388,31 @@ namespace Landis.Extension.ClimateBDA
                 double climateValue = 0;
                 if (activeAgent.ClimateVarSource == "Library")
                 {
-                    if (activeAgent.ClimateVarName == "AnnualPDSI")
+                    foreach (IEcoregion ecoregion in ModelCore.Ecoregions)
                     {
-                        climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
-                        Console.Write("Landscape_PDSI: " + climateValue + "\n");
+                        for (int month = 1; month <= 12; month++)
+                        {
+                            if (activeAgent.ClimateVarName == "AnnualVPD")
+                            {
+                                climateValue += Climate.FutureEcoregionYearClimate[ecoregion.Index][PlugIn.ModelCore.CurrentTime - 1].MonthlyVPD[month];
+                                //climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
+                                Console.Write("Landscape_CWD: " + climateValue + "\n");
+                            }
+                            if (activeAgent.ClimateVarName == "AnnualSPEI")
+                            {
+                                climateValue += Climate.FutureEcoregionYearClimate[ecoregion.Index][PlugIn.ModelCore.CurrentTime - 1].MonthlySpei[month];
+                                //climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
+                                Console.Write("Landscape_CWD: " + climateValue + "\n");
+                            }
+                            if (activeAgent.ClimateVarName == "AnnualFWI")
+                            {
+                                climateValue += Climate.FutureEcoregionYearClimate[ecoregion.Index][PlugIn.ModelCore.CurrentTime - 1].MonthlyFireWeatherIndex[month];
+                                //climateValue = Climate.LandscapeAnnualPDSI[PlugIn.ModelCore.CurrentTime - 1];
+                                Console.Write("Landscape_CWD: " + climateValue + "\n");
+                            }
+                        }
                     }
+                    climateValue = climateValue / ModelCore.Ecoregions.Count / 12;
                 }
                 else
                 {

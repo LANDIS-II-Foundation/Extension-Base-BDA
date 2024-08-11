@@ -319,7 +319,8 @@ namespace Landis.Extension.ClimateBDA
                             {
                                 if (PlugIn.ModelCore.CurrentTime - 1 - y >= 0)
                                 {
-                                    AnnualClimate_Monthly AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min() + PlugIn.ModelCore.CurrentTime - 1 - y][ecoregion.Index];
+                                    //AnnualClimate AnnualWeather = Climate.Future_MonthlyData[Climate.Future_MonthlyData.Keys.Min() + PlugIn.ModelCore.CurrentTime - 1 - y][ecoregion.Index];
+                                    AnnualClimate AnnualWeather = Climate.FutureEcoregionYearClimate[ecoregion.Index][PlugIn.ModelCore.CurrentTime - 1 - y];
 
                                     double monthTotal = 0;
                                     int monthCount = 0;
@@ -350,7 +351,7 @@ namespace Landis.Extension.ClimateBDA
                                         }
                                         else if (climateMod.ClimateVariableName.Equals("DayLength", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            double monthVar = AnnualWeather.MonthlyDayLength[monthIndex - 1];
+                                            double monthVar = AnnualWeather.MonthlyDayLightHours[monthIndex - 1];
                                             varValue = monthVar;
                                         }
                                         else if (climateMod.ClimateVariableName.Equals("DroughtCode", StringComparison.OrdinalIgnoreCase))
@@ -368,11 +369,11 @@ namespace Landis.Extension.ClimateBDA
                                             double monthVar = AnnualWeather.MonthlyFineFuelMoistureCode[monthIndex - 1];
                                             varValue = monthVar;
                                         }
-                                        else if (climateMod.ClimateVariableName.Equals("FWI", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            double monthVar = AnnualWeather.MonthlyFWI[monthIndex - 1];
-                                            varValue = monthVar;
-                                        }
+                                        //else if (climateMod.ClimateVariableName.Equals("FWI", StringComparison.OrdinalIgnoreCase))
+                                        //{
+                                        //    double monthVar = AnnualWeather.Mon[monthIndex - 1];
+                                        //    varValue = monthVar;
+                                        //}
                                         else if (climateMod.ClimateVariableName.Equals("GDD", StringComparison.OrdinalIgnoreCase))
                                         {
                                             double monthVar = AnnualWeather.MonthlyGDD[monthIndex - 1];
@@ -398,11 +399,11 @@ namespace Landis.Extension.ClimateBDA
                                             double monthVar = AnnualWeather.MonthlyNDeposition[monthIndex - 1];
                                             varValue = monthVar;
                                         }
-                                        else if (climateMod.ClimateVariableName.Equals("NightLength", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            double monthVar = AnnualWeather.MonthlyNightLength[monthIndex - 1];
-                                            varValue = monthVar;
-                                        }
+                                        //else if (climateMod.ClimateVariableName.Equals("NightLength", StringComparison.OrdinalIgnoreCase))
+                                        //{
+                                        //    double monthVar = AnnualWeather.MonthlyNightLength[monthIndex - 1];
+                                        //    varValue = monthVar;
+                                        //}
                                         else if (climateMod.ClimateVariableName.Equals("Ozone", StringComparison.OrdinalIgnoreCase))
                                         {
                                             double monthVar = AnnualWeather.MonthlyOzone[monthIndex - 1];
@@ -438,16 +439,16 @@ namespace Landis.Extension.ClimateBDA
                                             double monthVar = AnnualWeather.MonthlySpecificHumidity[monthIndex - 1];
                                             varValue = monthVar;
                                         }
-                                        else if (climateMod.ClimateVariableName.Equals("VarPpt", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            double monthVar = AnnualWeather.MonthlyVarPpt[monthIndex - 1];
-                                            varValue = monthVar;
-                                        }
-                                        else if (climateMod.ClimateVariableName.Equals("VarTemp", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            double monthVar = AnnualWeather.MonthlyVarTemp[monthIndex - 1];
-                                            varValue = monthVar;
-                                        }
+                                        //else if (climateMod.ClimateVariableName.Equals("VarPpt", StringComparison.OrdinalIgnoreCase))
+                                        //{
+                                        //    double monthVar = AnnualWeather.MonthlyVarPpt[monthIndex - 1];
+                                        //    varValue = monthVar;
+                                        //}
+                                        //else if (climateMod.ClimateVariableName.Equals("VarTemp", StringComparison.OrdinalIgnoreCase))
+                                        //{
+                                        //    double monthVar = AnnualWeather.MonthlyVarTemp[monthIndex - 1];
+                                        //    varValue = monthVar;
+                                        //}
                                         else if (climateMod.ClimateVariableName.Equals("VPD", StringComparison.OrdinalIgnoreCase))
                                         {
                                             double monthVar = AnnualWeather.MonthlyVPD[monthIndex - 1];
