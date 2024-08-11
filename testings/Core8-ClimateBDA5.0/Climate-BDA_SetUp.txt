@@ -18,4 +18,4 @@ LogFile		bda/bda-log.csv
 >>-----------------
 >> REQUIRED INPUTS
 >>------------------
-BDAInputFiles	Climate-BDA_Agents.txt
+BDAInputFiles	Climate-BDA_Agent_BUDWORM.txt

@@ -1,7 +1,7 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V8"
 #define ExtensionName "Climate BDA"
-#define AppVersion "5.0.0"
+#define AppVersion "5.0"
 ;=======
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
@@ -53,7 +53,7 @@ Source: {#BuildDir}\Landis.Extension.ClimateBDA-v5.pdb; DestDir: {#ExtDir}; Flag
 ; NB. These libraries are used by other extensions and thus are never uninstalled.
 Source: {#BuildDir}\Landis.Library.UniversalCohorts-v1.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall ignoreversion
 Source: {#BuildDir}\Landis.Library.Metadata-v2.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall ignoreversion
-Source: {#BuildDir}\Landis.Library.Climate-v4.4.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall ignoreversion
+Source: {#BuildDir}\Landis.Library.Climate-v5.dll; DestDir: {#ExtDir}; Flags: uninsneveruninstall ignoreversion
 
 
 ; LANDIS-II identifies the extension with the info in this .txt file

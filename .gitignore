@@ -278,3 +278,10 @@ testings/Core8-ClimateBDA5.0/bda/budworm-SRD-18.tif
 testings/Core8-ClimateBDA5.0/bda/budworm-NRD-18.tif
 testings/Core8-ClimateBDA5.0/bda/budworm-BDP-18.tif
 testings/Core8-ClimateBDA5.0/bda/bda-log.csv
+testings/Core8-ClimateBDA5.0/bda/budworm-BDP-25.tif
+testings/Core8-ClimateBDA5.0/bda/budworm-NRD-25.tif
+testings/Core8-ClimateBDA5.0/bda/budworm-SRD-25.tif
+testings/Core8-ClimateBDA5.0/Metadata/Climate-Library/Future-Annual-Log_Metadata.xml
+testings/Core8-ClimateBDA5.0/Metadata/Climate-Library/Spinup-Annual-Log_Metadata.xml
+testings/Core8-ClimateBDA5.0/Climate-future-annual-log.csv
+testings/Core8-ClimateBDA5.0/Climate-spinup-annual-log.csv
