@@ -2,7 +2,7 @@
 
 using Landis.Utilities;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     /// <summary>
     /// Extra Ecoregion Paramaters
@@ -14,39 +14,19 @@ namespace Landis.Extension.BaseBDA
 }
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public class EcoParameters
         : IEcoParameters
     {
-        private double ecoModifier;
-
         //---------------------------------------------------------------------
         /// <summary>
         /// </summary>
-        public double EcoModifier{
-            get{
-                return ecoModifier;
-            }
-            set {
-                ecoModifier = value;
-            }
-        }
+        public double EcoModifier { get; set; }
 
         //---------------------------------------------------------------------
         public EcoParameters()
         {
         }
-/*        //---------------------------------------------------------------------
-        public EcoParameters(double ecoModifier)
-        {
-            this.ecoModifier = ecoModifier;
-        }
-
-        //---------------------------------------------------------------------
-        public EcoParameters()
-        {
-            this.ecoModifier        = 0.0;
-        }*/
     }
 }

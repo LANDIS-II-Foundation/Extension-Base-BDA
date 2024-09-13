@@ -1,12 +1,11 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Copyright The LANDIS-II Foundation
+//  Authors:  Robert M. Scheller, Brian Miranda, James B. Domingo
 
-using Landis.Core;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
 
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public class Epicenters
     {
@@ -55,127 +54,90 @@ namespace Landis.Extension.BaseBDA
 
             //Generate New Epicenters based on the location of past outbreaks
             //and the vulnerability of the current landscape:
-            //if(!firstIteration)
-            //{
-                List<Location> oldZoneSiteList = new List<Location>(0);
-                List<Location> outsideSiteList = new List<Location>(0);
+            List<Location> oldZoneSiteList = new List<Location>(0);
+            List<Location> outsideSiteList = new List<Location>(0);
 
 
-                //---------------------------------------------------------
-                //Count the number of potential new inside and outside epicenters:
-                int totalInOut = 0;
-                foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
+            //---------------------------------------------------------
+            //Count the number of potential new inside and outside epicenters:
+            int totalInOut = 0;
+            foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
+            {
+                if ((agent.Severity[site] >= agent.OutbreakEpicenterThresh) || ((SiteVars.TimeOfLastEvent[site] == (PlugIn.ModelCore.CurrentTime - 1)) && (SiteVars.AgentName[site] == agent.AgentName) && (SiteVars.BDASeverity[site] >= agent.OutbreakEpicenterThresh)))
                 {
-                    if ((agent.Severity[site] >= agent.OutbreakEpicenterThresh) || ((SiteVars.TimeOfLastEvent[site] == (PlugIn.ModelCore.CurrentTime - 1)) && (SiteVars.AgentName[site] == agent.AgentName) && (SiteVars.BDASeverity[site] >= agent.OutbreakEpicenterThresh)))
+                    totalInOut++;
+                    numInside++;//potential new epicenter inside last OutbreakZone
+                    oldZoneSiteList.Add(site.Location);
+                    //PlugIn.ModelCore.Log.WriteLine("  Severity = {0}.  Zone = {1}.", agent.Severity[site], agent.OutbreakZone[site]);
+                }
+                else
+                {
+                    if ((agent.OutbreakZone[site] == Zone.Nozone) && (SiteVars.Vulnerability[site] >= agent.EpidemicThresh)) //potential new epicenter
                     {
                         totalInOut++;
-                        numInside++;//potential new epicenter inside last OutbreakZone
-                        oldZoneSiteList.Add(site.Location);
-                        //PlugIn.ModelCore.Log.WriteLine("  Severity = {0}.  Zone = {1}.", agent.Severity[site], agent.OutbreakZone[site]);
-                    }
-                    else
-                    {
-                        if ((agent.OutbreakZone[site] == Zone.Nozone) &&(SiteVars.Vulnerability[site] >= agent.EpidemicThresh)) //potential new epicenter
-                        {
-                            totalInOut++;
-                            numOutside++;//potential new epicenter outside last OutbreakZone
-                            outsideSiteList.Add(site.Location);
-                        }
+                        numOutside++;//potential new epicenter outside last OutbreakZone
+                        outsideSiteList.Add(site.Location);
                     }
                 }
+            }
 
-                    PlugIn.ModelCore.UI.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
 
-                //---------------------------------------------------------
-                //Calculate number of Epicenters that will occur
-                //INSIDE the last epidemic outbreak area.
-                //This always occurs after the first iteration.
-                //PlugIn.ModelCore.Log.WriteLine("   Adding epicenters INSIDE last outbreak zone.");
-                oldZoneSiteList = PlugIn.ModelCore.shuffle(oldZoneSiteList);
+            PlugIn.ModelCore.UI.WriteLine("   Potential Number of Epicenters, Inside = {0}; Outside={1}, total={2}.", numInside, numOutside, totalInOut);
 
-                //numInside = (int)((double) numInside *System.Math.Exp(-1.0 * agent.OutbreakEpicenterCoeff * oldEpicenterNum));
-                numInside = (int)((double)numInside * agent.OutbreakEpicenterCoeff);
+            //---------------------------------------------------------
+            //Calculate number of Epicenters that will occur
+            //INSIDE the last epidemic outbreak area.
+            //This always occurs after the first iteration.
+            //PlugIn.ModelCore.Log.WriteLine("   Adding epicenters INSIDE last outbreak zone.");
+            oldZoneSiteList = PlugIn.ModelCore.shuffle(oldZoneSiteList);
 
-                //PlugIn.ModelCore.Log.WriteLine("   Actual Number Inside = {0}.", numInside);
+            numInside = (int)((double)numInside * agent.OutbreakEpicenterCoeff);
 
-                int listIndex = 0;
-                if(oldZoneSiteList.Count > 0)
+            int listIndex = 0;
+            if (oldZoneSiteList.Count > 0)
+            {
+                while (numInside > 0)
                 {
-                    while (numInside > 0)
-                    {
-                        newSiteList.Add(oldZoneSiteList[listIndex]);
-                        epicenterNum ++;
-                        numInside--;
-                        listIndex++;
-                    } //endwhile
-                }
+                    newSiteList.Add(oldZoneSiteList[listIndex]);
+                    epicenterNum++;
+                    numInside--;
+                    listIndex++;
+                } //endwhile
+            }
 
-                //---------------------------------------------------------
-                //SeedEpicenter determines if new epicenters will seed new outbreaks
-                //OUTSIDE of previous outbreak zones.
-                if (agent.SeedEpicenter)
-                {
-                    PlugIn.ModelCore.UI.WriteLine("Adding epicenters OUTSIDE last outbreak zone.");
+            //---------------------------------------------------------
+            //SeedEpicenter determines if new epicenters will seed new outbreaks
+            //OUTSIDE of previous outbreak zones.
+            if (agent.SeedEpicenter)
+            {
+                PlugIn.ModelCore.UI.WriteLine("Adding epicenters OUTSIDE last outbreak zone.");
 
-                    // Negative exponential function (log-linear) - used in versions < 4.1
-                    /*numOutside = (int)((double) numOutside *
-                                    System.Math.Exp(-1.0 * (double) agent.SeedEpicenterCoeff * (double) oldEpicenterNum));
-                    PlugIn.ModelCore.UI.WriteLine("   Actual Number Outside = {0}.  SeedCoef = {1}.  OldEpiNum = {2}.", numOutside, agent.SeedEpicenterCoeff, oldEpicenterNum);
-                    //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
 
-                    while (numOutside > 0)
-                    {
-                        int i, j;
-                        i = (int) (PlugIn.ModelCore.GenerateUniform() * numRows) + 1;
-                        j = (int) (PlugIn.ModelCore.GenerateUniform() * numCols) + 1;
-
-                        Site rsite = PlugIn.ModelCore.Landscape[i,j];
-                        if(rsite != null && rsite.IsActive)
-                        {
-                            if (SiteVars.Vulnerability[rsite]  > agent.EpidemicThresh &&
-                                agent.OutbreakZone[rsite] == Zone.Nozone)
-                            {
-                                newSiteList.Add(rsite.Location);
-                                //PlugIn.ModelCore.Log.WriteLine("   New Site Added OUTSIDE outbreak area.");
-                                epicenterNum ++;
-                                //numOutside--;
-                                numOutside = (int)((double) numOutside *
-                                    System.Math.Exp(-1.0 * (double) agent.SeedEpicenterCoeff * (double) epicenterNum));
-                            }
-                        }
-                    }*/
-
-                    outsideSiteList = PlugIn.ModelCore.shuffle(outsideSiteList);
-                //numOutside = (int)((double)numOutside * agent.SeedEpicenterCoeff); // Linear function
-                //numOutside = (int)(System.Math.Pow((double)numOutside, agent.SeedEpicenterCoeff)); // Power function
+                outsideSiteList = PlugIn.ModelCore.shuffle(outsideSiteList);
                 // Michaelis-Menton curve
                 double propVuln = (double)numOutside / (double)PlugIn.ModelCore.Landscape.ActiveSiteCount;
                 numOutside = (int)System.Math.Round((agent.SeedEpicenterMax * propVuln) / (agent.SeedEpicenterCoeff + propVuln));
 
-                    //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
+                //PlugIn.ModelCore.Log.WriteLine("   Actual Number Outside = {0}.", numOutside);
 
-                    listIndex = 0;
-                    if (outsideSiteList.Count > 0)
+                listIndex = 0;
+                if (outsideSiteList.Count > 0)
+                {
+                    while (numOutside > 0)
                     {
-                        while (numOutside > 0)
-                        {
-                            newSiteList.Add(outsideSiteList[listIndex]);
-                            epicenterNum++;
-                            numOutside--;
-                            listIndex++;
-                        } //endwhile
-                    }
+                        newSiteList.Add(outsideSiteList[listIndex]);
+                        epicenterNum++;
+                        numOutside--;
+                        listIndex++;
+                    } //endwhile
                 }
-
-            //} //end !firstIteration
+            }
 
             //If necessary, create list from scratch without
             //consideration of previous outbreaks.
-            //if (firstIteration || epicenterNum == 0)
             if (firstIteration)
                 {
                 int i, j;
-                //int cnt = 0;
 
                 while (epicenterNum < oldEpicenterNum)
                 {
@@ -233,14 +195,11 @@ namespace Landis.Extension.BaseBDA
                 if(agent.DispersalTemp != DispersalTemplate.MaxRadius)
                 {
                     //PlugIn.ModelCore.Log.WriteLine("   Begin Percolation Spread to Neighbors.");
-                    //Queue<Site> sitesToConsider = new Queue<Site>();
                     System.Collections.Queue sitesToConsider = new System.Collections.Queue();
                     sitesToConsider.Enqueue(initiationSite);
 
                     while (sitesToConsider.Count > 0 )
                     {
-                        //PlugIn.ModelCore.Log.WriteLine("   There are {0} neighbors being processed.", sitesToConsider.Count);
-
                         Site site = (Site)sitesToConsider.Dequeue();
                         agent.OutbreakZone[site] = Zone.Newzone;
 
@@ -259,11 +218,6 @@ namespace Landis.Extension.BaseBDA
                             if (sitesToConsider.Contains(neighbor))
                                 continue;
 
-                            //PlugIn.ModelCore.Log.WriteLine("Distance between neighbor and center = {0}.", DistanceBetweenSites(neighbor, initiationSite));
-                            //PlugIn.ModelCore.Log.WriteLine("SV={0:0.0}.", SiteVars.Vulnerability[neighbor]);
-                            //PlugIn.ModelCore.Log.WriteLine("Threshold={0:0.0}.", agent.EpidemicThresh);
-                            //if(DistanceBetweenSites(neighbor, initiationSite) <= dispersalDistance
-                             //   && SiteVars.Vulnerability[neighbor] > agent.EpidemicThresh)
                              if (DistanceBetweenSites(neighbor, initiationSite) <= dispersalDistance)
                                {
                                 sitesToConsider.Enqueue(neighbor);
@@ -287,9 +241,6 @@ namespace Landis.Extension.BaseBDA
 
             double aSq = System.Math.Pow(Col,2);
             double bSq = System.Math.Pow(Row,2);
-            //PlugIn.ModelCore.Log.WriteLine("Col={0}, Row={1}.", Col, Row);
-            //PlugIn.ModelCore.Log.WriteLine("aSq={0}, bSq={1}.", aSq, bSq);
-            //PlugIn.ModelCore.Log.WriteLine("Distance in Grid Units = {0}.", System.Math.Sqrt(aSq + bSq));
             return (System.Math.Sqrt(aSq + bSq) * (double) PlugIn.ModelCore.CellLength);
 
         }

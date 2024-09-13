@@ -1,0 +1,21 @@
+LandisData "Climate BDA"
+
+
+Timestep	1
+
+
+>> --------------------------------------
+>> OUTPUTS
+>>-----------------------------------------
+MapNames	bda/{agentName}-{timestep}.tif
+SRDMapNames	bda/{agentName}-SRD-{timestep}.tif
+NRDMapNames	bda/{agentName}-NRD-{timestep}.tif
+BDPMapNames     bda/{agentName}-BDP-{timestep}.tif
+
+LogFile		bda/bda-log.csv
+
+
+>>-----------------
+>> REQUIRED INPUTS
+>>------------------
+BDAInputFiles	Climate-BDA_Agent_BUDWORM.txt

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Landis.Extension.BaseBDA.Agent" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.Agent" BaseTypeListCollapsed="true">
     <Position X="2.75" Y="0.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>h6yEAIs6goIKwOICQJFKQEA7ykAIU5BAKJPQ5KawxiQ=</HashCode>
@@ -8,21 +8,21 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.RelativeLocationWeighted" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.RelativeLocationWeighted" Collapsed="true">
     <Position X="9.75" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAIAAAACACAAAAAgAAAAAAAAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.AgentParameterParser" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.AgentParameterParser" Collapsed="true">
     <Position X="8" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAACAAAAAABAAiAAAAAEAAAEAAAAAAABAEQAAAgA=</HashCode>
       <FileName>AgentParameterParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.DisturbanceType" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.DisturbanceType" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="9.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAAAAAAAABAAAAAQAAAAAAAAAAACQAAAAgAAA=</HashCode>
@@ -30,7 +30,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.EcoParameters" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.EcoParameters" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="11.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAAAAA=</HashCode>
@@ -38,14 +38,14 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.Epicenters" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.Epicenters" Collapsed="true">
     <Position X="13.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAIAAAEAAAABAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Epicenters.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.Epidemic" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.Epidemic" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="8.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAACQQYAAgFBAAAAAAAAIAoACARBEBgAABA=</HashCode>
@@ -53,21 +53,21 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.EventsLog" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.EventsLog" Collapsed="true">
     <Position X="8" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAgACAAAAAAAAAAAAIAAACAAAAAAAAQA=</HashCode>
       <FileName>EventsLog.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.InputParameterParser" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.InputParameterParser" Collapsed="true">
     <Position X="14.5" Y="0.5" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAgA=</HashCode>
       <FileName>InputParameterParser.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.InputParameters" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.InputParameters" BaseTypeListCollapsed="true">
     <Position X="23.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACEACAAJAAkAIQAAAACAAAAAAAAAIIAAAAEAAQAoA=</HashCode>
@@ -75,49 +75,49 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.MapNames" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.MapNames" Collapsed="true">
     <Position X="13.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgAgAAAAAQAAAAAAAABAAAAQAAAAAAAgAAAgAAAAAA=</HashCode>
       <FileName>MapNames.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.MetadataHandler" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.MetadataHandler" Collapsed="true">
     <Position X="10" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAgAAAA=</HashCode>
       <FileName>MetadataHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.PlugIn">
+  <Class Name="Landis.Extension.ClimateBDA.PlugIn">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAIBABQAAQgAAIQAAAAFBAkAAAAAAkACQVAI=</HashCode>
       <FileName>PlugIn.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.ShortPixel" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.ShortPixel" Collapsed="true">
     <Position X="11.5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ShortPixel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.SiteResources" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.SiteResources" Collapsed="true">
     <Position X="13.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAIAAAAAAAIAAAAAAAAEAAAAAAAAAAAA=</HashCode>
       <FileName>SiteResources.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.SiteVars" Collapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.SiteVars" Collapsed="true">
     <Position X="12" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>aEA8AKJIwBAKAQAQQAAgAAAggKAJpBCAgYgAIAAABCA=</HashCode>
       <FileName>SiteVars.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Landis.Extension.BaseBDA.SppParameters" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="Landis.Extension.ClimateBDA.SppParameters" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="8" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABiAAEEEAAABAAASAICAEEAABgAAAIQAABiAQAAIg=</HashCode>
@@ -125,84 +125,84 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Interface Name="Landis.Extension.BaseBDA.IAgent">
+  <Interface Name="Landis.Extension.ClimateBDA.IAgent">
     <Position X="5.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>gCyEAAMCgIAKgOICABACQEAgiAAAUQAAKIJQYISwggQ=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Landis.Extension.BaseBDA.IDisturbanceType" Collapsed="true">
+  <Interface Name="Landis.Extension.ClimateBDA.IDisturbanceType" Collapsed="true">
     <Position X="8" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAAAAAAAAAAAAAAQAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>DisturbanceType.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Landis.Extension.BaseBDA.IEcoParameters" Collapsed="true">
+  <Interface Name="Landis.Extension.ClimateBDA.IEcoParameters" Collapsed="true">
     <Position X="9.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
       <FileName>EcoParameters.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Landis.Extension.BaseBDA.IInputParameters">
+  <Interface Name="Landis.Extension.ClimateBDA.IInputParameters">
     <Position X="15.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEACAAAAAEAAQAAAAAAAAAAAAAAIIAAAAAAAAAoA=</HashCode>
       <FileName>InputParameters.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Landis.Extension.BaseBDA.ISppParameters" Collapsed="true">
+  <Interface Name="Landis.Extension.ClimateBDA.ISppParameters" Collapsed="true">
     <Position X="13.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAgAAAAEAAABAAAQAICAAEAABgAAAAAAABgAAAAAg=</HashCode>
       <FileName>SppParameters.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Enum Name="Landis.Extension.BaseBDA.TemporalType" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.TemporalType" Collapsed="true">
     <Position X="9.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAABAAAAAAAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.OutbreakPattern">
+  <Enum Name="Landis.Extension.ClimateBDA.OutbreakPattern">
     <Position X="11.5" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAQAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.SRDmode" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.SRDmode" Collapsed="true">
     <Position X="13.25" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.DispersalTemplate" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.DispersalTemplate" Collapsed="true">
     <Position X="9.75" Y="8" Width="1.5" />
     <TypeIdentifier>
       <HashCode>CAAAABAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAAAEAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.NeighborShape" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.NeighborShape" Collapsed="true">
     <Position X="8" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.NeighborSpeed" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.NeighborSpeed" Collapsed="true">
     <Position X="9.75" Y="7" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAIAAAAAAAAAAABAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
       <FileName>Agent.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="Landis.Extension.BaseBDA.Zone" Collapsed="true">
+  <Enum Name="Landis.Extension.ClimateBDA.Zone" Collapsed="true">
     <Position X="8" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAIAAAAAAQAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>

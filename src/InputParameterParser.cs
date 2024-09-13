@@ -5,7 +5,7 @@ using Landis.Utilities;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     /// <summary>
     /// A parser that reads the extension parameters from text input.
@@ -60,54 +60,14 @@ namespace Landis.Extension.BaseBDA
             InputVar<string> srdMapNames = new InputVar<string>("SRDMapNames");
             if(ReadOptionalVar(srdMapNames))
                 parameters.SRDMapNames = srdMapNames.Value;
-            /*try
-            {
-                ReadVar(srdMapNames);
-                parameters.SRDMapNames = srdMapNames.Value;
-            }
-            catch (LineReaderException errString)
-            {
-                if (!((errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"SRDMapNames\"")) || (errString.MultiLineMessage[1].Contains("Found the name \"NRDMapNames\" but expected \"SRDMapNames\""))))
-                {
-                    throw errString;
-                }
 
-            }
-            */
             InputVar<string> nrdMapNames = new InputVar<string>("NRDMapNames");
             if(ReadOptionalVar(nrdMapNames))
                 parameters.NRDMapNames = nrdMapNames.Value;
-            /*try
-            {
-                ReadVar(nrdMapNames);
-                parameters.NRDMapNames = nrdMapNames.Value;
-            }
-            catch (LineReaderException errString)
-            {
-                if (!(errString.MultiLineMessage[1].Contains("Found the name \"VulnMapNames\" but expected \"NRDMapNames\"")))
-                {
-                    throw errString;
-                }
 
-            }
-             * */
             InputVar<string> bdpMapNames = new InputVar<string>("BDPMapNames");
             if(ReadOptionalVar(bdpMapNames))
                 parameters.BDPMapNames = bdpMapNames.Value;
-            /*try
-            {
-                ReadVar(bdpMapNames);
-                parameters.BDPMapNames = bdpMapNames.Value;
-            }
-            catch (LineReaderException errString)
-            {
-                if (!(errString.MultiLineMessage[1].Contains("Found the name \"LogFile\" but expected \"VulnMapNames\"")))
-                {
-                    throw errString;
-                }
-
-            }
-            */
 
             InputVar<string> logFile = new InputVar<string>("LogFile");
             ReadVar(logFile);
@@ -149,7 +109,7 @@ namespace Landis.Extension.BaseBDA
             }
             parameters.ManyAgentParameters = agentParameterList;
 
-            return parameters; //.GetComplete();
+            return parameters; 
 
         }
     }

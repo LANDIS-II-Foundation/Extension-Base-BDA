@@ -1,17 +1,17 @@
-//  Copyright 2005-2010 Portland State University, University of Wisconsin
-//  Authors:  Robert M. Scheller,   James B. Domingo
+//  Copyright The LANDIS-II Foundation
+//  Authors:  Robert M. Scheller, Brian Miranda, James B. Domingo
 
 using Landis.Core;
-using Landis.Library.AgeOnlyCohorts;
+using Landis.Library.UniversalCohorts;
 using Landis.SpatialModeling;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace Landis.Extension.BaseBDA
+namespace Landis.Extension.ClimateBDA
 {
     public class Epidemic
-        : ICohortDisturbance
+        : IDisturbance
 
     {
         private static IEcoregionDataset ecoregions;
@@ -23,7 +23,6 @@ namespace Landis.Extension.BaseBDA
         private int siteSeverity;
         private double random;
         private double siteVulnerability;
-        //private int advRegenAgeCutoff;
         private int siteCohortsKilled;
         private int siteCFSconifersKilled;
         private int siteDarkAgesKilled;
@@ -32,10 +31,10 @@ namespace Landis.Extension.BaseBDA
 
         private ActiveSite currentSite; // current site where cohorts are being damaged
 
-        private enum TempPattern        {random, cyclic};
-        private enum NeighborShape      {uniform, linear, gaussian};
-        private enum InitialCondition   {map, none};
-        private enum SRDMode            {SRDmax, SRDmean};
+        //private enum TempPattern        {random, cyclic};
+        //private enum NeighborShape      {uniform, linear, gaussian};
+        //private enum InitialCondition   {map, none};
+        //private enum SRDMode            {SRDmax, SRDmean};
 
 
         //---------------------------------------------------------------------
@@ -150,7 +149,6 @@ namespace Landis.Extension.BaseBDA
             Epidemic CurrentEpidemic = new Epidemic(agent);
             PlugIn.ModelCore.UI.WriteLine("   New BDA Epidemic Activated.");
 
-            //SiteResources.SiteResourceDominance(agent, ROS, SiteVars.Cohorts);
             SiteResources.SiteResourceDominance(agent, ROS);
             SiteResources.SiteResourceDominanceModifier(agent);
 
@@ -208,7 +206,6 @@ namespace Landis.Extension.BaseBDA
             int totalSiteSeverity = 0;
             int siteCohortsKilled = 0;
             int[] cohortsKilled = new int[4];
-            //this.advRegenAgeCutoff = agent.AdvRegenAgeCutoff;
 
             foreach (ActiveSite site in PlugIn.ModelCore.Landscape)
             {
@@ -311,7 +308,7 @@ namespace Landis.Extension.BaseBDA
 
             currentSite = site;
 
-            SiteVars.Cohorts[site].RemoveMarkedCohorts(this); 
+            SiteVars.Cohorts[site].ReduceOrKillCohorts(this); 
 
             int[] cohortsKilled = new int[4];
 
@@ -328,7 +325,7 @@ namespace Landis.Extension.BaseBDA
         // DamageCohort is a filter to determine which cohorts are removed.
         // Each cohort is passed into the function and tested whether it should
         // be killed.
-        bool ICohortDisturbance.MarkCohortForDeath(ICohort cohort)
+        int IDisturbance.ReduceOrKillMarkedCohort(ICohort cohort)
         {
             //PlugIn.ModelCore.Log.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
             
@@ -337,45 +334,26 @@ namespace Landis.Extension.BaseBDA
 
             ISppParameters sppParms = epidemicParms.SppParameters[cohort.Species.Index];
 
-            //foreach (ISpecies mySpecies in epidemicParms.AdvRegenSppList)
-            //{
-            //   if (cohort.Species == mySpecies)
-            //   {
-            //        advRegenSpp = true;
-            //        break;
-            //    }
-
-            //}
-
-            if (cohort.Age >= sppParms.ResistantHostAge)
+            if (cohort.Data.Age >= sppParms.ResistantHostAge)
             {
                 if (this.random <= this.siteVulnerability * sppParms.ResistantHostVuln)
                 {
-                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
-                    //    killCohort = false;
-                    //else
                         killCohort = true;
                 }
             }
 
-            if (cohort.Age >= sppParms.TolerantHostAge)
+            if (cohort.Data.Age >= sppParms.TolerantHostAge)
             {
                 if (this.random <= this.siteVulnerability * sppParms.TolerantHostVuln)
                 {
-                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
-                     //   killCohort = false;
-                    //else
                         killCohort = true;
                 }
             }
 
-            if (cohort.Age >= sppParms.VulnerableHostAge)
+            if (cohort.Data.Age >= sppParms.VulnerableHostAge)
             {
                 if (this.random <= this.siteVulnerability * sppParms.VulnerableHostVuln)
                 {
-                    //if (advRegenSpp && cohort.Age <= this.advRegenAgeCutoff)
-                     //   killCohort = false;
-                    //else
                         killCohort = true;
                 }
             }
@@ -391,16 +369,19 @@ namespace Landis.Extension.BaseBDA
                 if (sppParms.CFSConifer.Equals("dark", StringComparison.OrdinalIgnoreCase))
                 {
                     this.siteCFSconifersKilled++;
-                    this.siteDarkAgesKilled += cohort.Age;
+                    this.siteDarkAgesKilled += cohort.Data.Age;
                 }
                 if (sppParms.CFSConifer.Equals("light", StringComparison.OrdinalIgnoreCase))
                 {
                     this.siteCFSconifersKilled++;
-                    this.siteLightAgesKilled += cohort.Age;                
+                    this.siteLightAgesKilled += cohort.Data.Age;                
                 }
             }
 
-            return killCohort;
+            if (killCohort)
+                return cohort.Data.Biomass;
+
+            return 0;
         }
 
         Dictionary<string, int> CalculateDominantVeg(ActiveSite site)
