@@ -28,7 +28,7 @@ namespace Landis.Extension.ClimateBDA
         private static ISiteVar<double> vulnerability;
         private static ISiteVar<bool> disturbed;
         private static ISiteVar<Dictionary<int,int>> numberCFSconifersKilled;
-        private static ISiteVar<ISiteCohorts> cohorts;
+        private static ISiteVar<SiteCohorts> cohorts;
         private static ISiteVar<int> timeOfNext;
         private static ISiteVar<string> agentName;
         private static ISiteVar<int> bdaSeverity;
@@ -67,7 +67,7 @@ namespace Landis.Extension.ClimateBDA
             SiteVars.BiomassInsectsDefol.ActiveSiteValues = 0;
             SiteVars.DisturbedFuel.ActiveSiteValues = "";
 
-            cohorts = PlugIn.ModelCore.GetSiteVar<ISiteCohorts>("Succession.UniversalCohorts");
+            cohorts = PlugIn.ModelCore.GetSiteVar<SiteCohorts>("Succession.UniversalCohorts");
 
             foreach(ActiveSite site in modelCore.Landscape)
                 SiteVars.NumberCFSconifersKilled[site] = new Dictionary<int, int>();
@@ -215,7 +215,7 @@ namespace Landis.Extension.ClimateBDA
             }
         }
         //---------------------------------------------------------------------
-        public static ISiteVar<ISiteCohorts> Cohorts
+        public static ISiteVar<SiteCohorts> Cohorts
         {
             get
             {

@@ -8,7 +8,9 @@
     <AssemblyCopyright>Landis-II-Foundation</AssemblyCopyright>
     <AssemblyCompany>Landis-II-Foundation</AssemblyCompany>
     <AssemblyVersion>5.0</AssemblyVersion>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	  <Version>5.0</Version>
+	  <FileVersion>5.0.0.0</FileVersion>
+	  <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/LANDIS-II-Foundation/Extension-Base-BDA</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -21,8 +23,6 @@
     <PackageTags>LANDIS-II;Landis;Extension;Biological disturbance agents</PackageTags>
     <Description></Description>
     <PackageReleaseNotes></PackageReleaseNotes>
-    <Version>5.0</Version>
-    <FileVersion>5.0.0.0</FileVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 

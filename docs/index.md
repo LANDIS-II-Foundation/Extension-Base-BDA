@@ -4,7 +4,7 @@ The Climate BDA module simulates tree mortality following major outbreaks of ins
 
 # Release Notes
 
-- Latest official release: Version 5.0.0 — August 2024
+- Latest official release: Version 5.0 — September 2024
 - [View User Guide](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/docs/LANDIS-II%20Biological%20Disturbance%20Agent%20v5%20User%20Guide.pdf).
 - Full release details found in the User Guide and on GitHub.
 
@@ -15,7 +15,7 @@ To use Climate BDA, you need:
 - The [LANDIS-II model v8.0](http://www.landis-ii.org/install) installed on your computer.
 - Example files (see below)
 
-# Download and Run the Extension Installer
+# Download and Install the Extension
 
 The latest version can be downloaded [here](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/deploy/installer/LANDIS-II-V8%20Climate%20BDA%205.0-setup.exe). (Look for the download icon in the upper right corner.)  Launch the installer.
 
