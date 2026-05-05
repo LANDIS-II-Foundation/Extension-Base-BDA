@@ -4,7 +4,7 @@ The Climate BDA module simulates tree mortality following major outbreaks of ins
 
 # Release Notes
 
-- Latest official release: Version 5.0 — May 2026
+- Latest BETA release (still undergoing testing): Version 5.0 — May 2026
 - [View User Guide](https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/blob/master/docs/LANDIS-II%20Biological%20Disturbance%20Agent%20v5%20User%20Guide.pdf).
 - [User Guide for Climate Library](https://github.com/LANDIS-II-Foundation/Library-Climate/blob/v8.0/docs/LANDIS-II%20Climate%20Library%20v5.0%20User%20Guide.pdf)
 
