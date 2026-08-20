@@ -1,13 +1,13 @@
 ; LANDIS-II Extension infomation
 #define CoreRelease "LANDIS-II-V8"
 #define ExtensionName "Climate BDA"
-#define AppVersion "5.0"
+#define AppVersion "5.1"
 ;=======
 #define AppPublisher "LANDIS-II Foundation"
 #define AppURL "http://www.landis-ii.org/"
 
 ; Build directory
-#define BuildDir "..\..\src\bin\Debug"
+#define BuildDir "..\..\src\bin\Release"
 
 ; LANDIS-II installation directories
 #define ExtDir "C:\Program Files\LANDIS-II-v8\extensions"
@@ -19,7 +19,7 @@
 ; NOTE: The value of AppId uniquely identifies this application.
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{9714E7DE-C0A9-43DD-A94F-85BD5449BBFA}
+AppId={{6FB1A141-6296-4CF9-81C5-76A237B44DA7}
 AppName={#CoreRelease} {#ExtensionName}
 AppVersion={#AppVersion}
 ; Name in "Programs and Features"

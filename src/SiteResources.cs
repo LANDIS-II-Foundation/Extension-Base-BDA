@@ -38,9 +38,13 @@ namespace Landis.Extension.ClimateBDA
                 int    numValidSpp = 0;
                 double speciesHostValue = 0;
 
+
                 foreach (ISpecies species in PlugIn.ModelCore.Species)
                 {
-                    ageOldestCohort = Util.GetMaxAge(SiteVars.Cohorts[site][species]);
+                    ISiteCohorts testSiteCohorts = SiteVars.Cohorts[site];
+                    ISpeciesCohorts testSpeciesCohorts = testSiteCohorts[species];
+                    //ISpeciesCohorts tempCohort = SiteVars.Cohorts[site][species];
+                    ageOldestCohort = Util.GetMaxAge(testSpeciesCohorts);
                     ISppParameters sppParms = agent.SppParameters[species.Index];
                     if (sppParms == null)
                         continue;

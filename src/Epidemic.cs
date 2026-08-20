@@ -325,7 +325,7 @@ namespace Landis.Extension.ClimateBDA
         // DamageCohort is a filter to determine which cohorts are removed.
         // Each cohort is passed into the function and tested whether it should
         // be killed.
-        int IDisturbance.ReduceOrKillMarkedCohort(ICohort cohort)
+        double IDisturbance.ReduceOrKillMarkedCohort(ICohort cohort)
         {
             //PlugIn.ModelCore.Log.WriteLine("Cohort={0}, {1}, {2}.", cohort.Species.Name, cohort.Age, cohort.Species.Index);
             
@@ -379,8 +379,9 @@ namespace Landis.Extension.ClimateBDA
             }
 
             if (killCohort)
-                return cohort.Data.Biomass;
-
+                //return cohort.Data.Biomass;
+                //Universal Cohorts ReduceOrKillMarkedCohort() now expects a proportion of biomass removed
+                return 1.0; // kill entire cohort
             return 0;
         }
 
