@@ -1,7 +1,7 @@
 LandisData   Extension
 
 Name         "Climate BDA"
-Version      "5.0"
+Version      "5.2"
 Type         disturbance:BDA
 Assembly     Landis.Extension.ClimateBDA-v5
 Class        Landis.Extension.ClimateBDA.PlugIn
